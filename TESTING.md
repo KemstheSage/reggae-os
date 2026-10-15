@@ -104,3 +104,9 @@ Fixed MIDI renders confirm sustained organ amplitude and decaying bass: RMS at
 behaviour, not similarity to the user's recordings. Raw measurements are in
 build/reggae/articulation-v02.json. Original musical audition WAVs were regenerated.
 The full upstream suite has not been rerun for this bank-only revision.
+
+The 0.2 hardware build also passed the linker/RAM-call/MMIO checks: application
+513,808 bytes, data/BSS 61,000/73,728, pool 328,896/368,640; package 610,090 bytes.
+Physical hardware remains untested. Source commit ae87707; deployed Pages commit
+35b12f0. The public page identifies sound bank 0.2 and versioned WASM loading avoids
+reusing the earlier cached binary. Save files remain in the same browser storage.

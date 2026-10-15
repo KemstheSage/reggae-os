@@ -19,7 +19,10 @@ identifies the Big Ship session's piano player as Wycliffe 'Steelie' Johnson and
 bassist as Errol 'Flabba' Holt, with Roots Radics at Channel One. This is a concrete
 reason to prioritise piano chops and bass-guitar-like articulation alongside organ,
 rather than label a generic organ patch 'Big Ship'. The [official Faded Away release](https://www.youtube.com/watch?v=jyJ2pjS9hfw)
-credits production to Damian Marley. [Steel Pulse's label](https://www.rhino.com/aod/true-democracy-steel-pulse)
+credits production to Damian Marley. In his [first-person interview](https://discover.ticketmaster.co.uk/interview/kabaka-pyramid-56983/),
+Kabaka explains the use of Junior Byles' Fade Away in the newer recording. That
+links the modern reference to an older recording; it does not identify its synth
+patch, and we do not redistribute that sampled audio. [Steel Pulse's label](https://www.rhino.com/aod/true-democracy-steel-pulse)
 places True Democracy in 1982. These credits establish context, not exact patches,
 drawbar settings, instruments on each track, or spectrum measurements.
 
