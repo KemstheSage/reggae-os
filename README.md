@@ -13,6 +13,11 @@ MIDI paths, effects, sequencing and flash-backed user-preset system.
 This is the first organ/bass slice, not the completed instrument library.
 See [TESTING.md](TESTING.md) for measured results and known limitations.
 
+Sound bank 0.2 revises the registrations, dry organ articulation and plucked bass
+envelopes following musician feedback. The listening brief is Big Ship, Faded Away
+and Soldiers; these patches are audition candidates, not verified recreations.
+See [SOUND_DESIGN.md](SOUND_DESIGN.md) for sources, exact changes and limitations.
+
 ## Play on iPhone or desktop
 
 Open **https://kemsthesage.github.io/reggae-os/** in Safari and tap **Switch on**.

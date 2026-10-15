@@ -93,3 +93,14 @@ Local raw logs and sound/screen evidence are retained in `build/reggae/evidence/
 and `build/reggae/`. Host instruction counts are not device timing measurements.
 No claim of a completely passing upstream suite, verified musical authenticity,
 iPhone operation or physical hardware operation is made.
+
+## Sound bank 0.2 — 15 October 2026
+
+All 20 focused native audio cases passed after the registration/envelope revisions,
+and all 20 matched WebAssembly PCM exactly (176,384 stereo frames each).
+Fixed MIDI renders confirm sustained organ amplitude and decaying bass: RMS at
+700–900 ms divided by RMS at 30–130 ms is 1.002 / 0.963 for the two organs,
+0.226 for Deep Roots and 0.0079 for Digital Bass. These ratios establish envelope
+behaviour, not similarity to the user's recordings. Raw measurements are in
+build/reggae/articulation-v02.json. Original musical audition WAVs were regenerated.
+The full upstream suite has not been rerun for this bank-only revision.

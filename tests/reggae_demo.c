@@ -13,14 +13,14 @@ int main(int argc,char **argv) {
         if(frame>=off) for(unsigned n=0;n<3;n++) if(held[n]){web_midi(0x80,held[n],0);held[n]=0;}
         if(frame>=next && step<32) {
             unsigned pos=step%16;
-            if(preset<2 && pos%4==2) {
+            if(preset<2 && pos%4!=0) {
                 int root=step<16?60:65;
-                held[0]=root;held[1]=root+3;held[2]=root+7;
-                for(unsigned n=0;n<3;n++)web_midi(0x90,held[n],100);
-                off=frame+4410;
+                held[0]=root+3;held[1]=root+7;held[2]=pos%4==2?root+12:0;
+                for(unsigned n=0;n<3;n++)if(held[n])web_midi(0x90,held[n],pos%4==2?100:78);
+                off=frame+(pos%4==2?3528:2205);
             } else if(preset>=2) {
                 static const int notes[16]={36,0,0,36,0,0,31,0,34,0,0,31,0,36,0,0};
-                if(notes[pos]){held[0]=notes[pos]+(step>=16?5:0);web_midi(0x90,held[0],108);off=frame+6615;}
+                if(notes[pos]){held[0]=notes[pos]+(step>=16?5:0);web_midi(0x90,held[0],108);off=frame+(pos==0?13230:6615);}
             }
             step++; next=(step*44100u*3u)/16u; /* 80 BPM sixteenths */
         }

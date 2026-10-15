@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 const bytes=fs.readFileSync('build/emu/felucca.wasm');
-const turns=[[13,8,1,121],[2,10,2,111],[91,119,51,115],[70,105,29,107]];
+const turns=[[12,8,2,124],[11,8,2,122],[75,127,55,123],[79,127,51,123]];
 for(let p=0;p<4;p++) for(let knob=-1;knob<4;knob++) {
   const {instance}=await WebAssembly.instantiate(bytes,{}), e=instance.exports;
   e._initialize(); e.web_nor_erase(); e.web_boot();
