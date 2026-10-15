@@ -13,6 +13,12 @@ MIDI paths, effects, sequencing and flash-backed user-preset system.
 This is the first organ/bass slice, not the completed instrument library.
 See [TESTING.md](TESTING.md) for measured results and known limitations.
 
+## Play on iPhone or desktop
+
+Open **https://kemsthesage.github.io/reggae-os/** in Safari and tap **Switch on**.
+This HTTPS deployment runs the same firmware WASM as the local emulator.
+Actual iPhone audio and multitouch operation still need device verification.
+
 ## Play the local emulator
 
 After [building](BUILDING.md):
@@ -32,8 +38,8 @@ Drag knobs upward/right, use the mouse wheel, or focus a knob and use arrow keys
 - SAVE retains the original user-preset workflow. Held HOME opens the menu;
   MENU ANIM OFF reduces performance-screen motion. Existing factory patches retain their original HOME controls.
 
-There is no public hosted URL yet. An iPhone cannot use the Mac's `localhost`;
-a secure HTTPS deployment is needed for remote AudioWorklet use. The original
+The public GitHub Pages link above works independently of this Mac. An iPhone
+cannot use the Mac's `localhost`; use the HTTPS deployment instead. The original
 emulator already provides touch controls and a rearranged phone-sized hardware
 panel. Actual mobile Safari audio, touch polyphony and interruptions still require testing.
 

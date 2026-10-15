@@ -45,8 +45,8 @@ through p3.png are 240×240; they are not browser mockups.
 
 Hardware: COMPILES, HARDWARE UNTESTED. Desktop: EMULATOR TESTED. Architecture:
 CONFIRMED from source. Physical flashing/recovery, audio timing, MIDI electronics
-and EP-40 sampling levels remain untested. Actual iPhone Safari and public HTTPS
-hosting are pending. CI is prepared but has not run on GitHub.
+and EP-40 sampling levels remain untested. Public HTTPS hosting is available at https://kemsthesage.github.io/reggae-os/.
+Actual iPhone Safari verification remains pending. CI is prepared but has not run on GitHub.
 
 Next: audition and refine organ articulation/bass levels; then implement melodica,
 electric piano, brass/skank and siren using existing engines, followed by dedicated
