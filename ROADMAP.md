@@ -7,7 +7,9 @@
    branding, four parameter columns and bounded animation. Broader screen polish remains.
 3. Organ/bass: implemented four new synthesis patches and direct knob assignments;
    audible-output, release, persistence and native/WASM parity checks passed.
-   Desktop emulator verified; musician audition and physical testing remain.
+   Desktop emulator verified. Roots Organ 0.2 audition approved as the starting point
+   on 15 October 2026; preserve it and develop separate organ variants. Other
+   presets still need musician approval; physical testing remains.
 4. Extended instruments: not implemented as REGGAE-OS instruments. Existing Felucca
    FM6, PHYS, SAMPLE and other engines remain accessible. Next: musician audition
    and organ/bass refinement before melodica, electric piano, brass, skank and siren.

@@ -5,6 +5,21 @@ character. Passing DSP tests is not evidence of convincing reggae sound. This
 revision corrects identifiable synthesis problems; it is a new audition candidate,
 not a claim to have matched a commercial recording.
 
+## Approved organ starting point — 15 October 2026
+
+The user auditioned Roots Organ from sound bank 0.2, liked it, and explicitly
+approved it as the starting point. Preserve this sound while developing additional
+organ registrations as separate variants. Compare changes to shared DSP against
+this reference so refinements do not accidentally lose its character.
+
+The exact settings and WAV checksum are in
+[roots-organ-approved.json](assets/reggae-reference/roots-organ-approved.json).
+The original firmware-rendered audition is preserved as
+[roots-organ-approved.wav](assets/reggae-reference/roots-organ-approved.wav).
+Its original composition/rendering code is tests/reggae_demo.c at commit ae87707;
+no commercial recording is included. Approval applies to this organ audition only.
+Other sounds and direct similarity to the reference records still require audition.
+
 ## Listening brief
 
 The user's references are Freddie McGregor **Big Ship**, Kabaka Pyramid and Buju

@@ -1,0 +1,39 @@
+{
+  "approved_date": "2026-10-15",
+  "approval": "User approved sound bank 0.2 Roots Organ audition as the starting point.",
+  "source_commit": "ae87707",
+  "engine": "WHEEL",
+  "engine_index": 7,
+  "preset_index": 5,
+  "name": "ROOTS ORGAN",
+  "drawbars": "838000000",
+  "engine_parameters": [
+    3,
+    0,
+    0,
+    0,
+    0,
+    10,
+    3,
+    0
+  ],
+  "adsr": [
+    0,
+    64,
+    127,
+    20
+  ],
+  "filter_envelope": 0,
+  "mono": false,
+  "effects_sends": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "pattern": 0,
+  "audition_source": "tests/reggae_demo.c at ae87707",
+  "audition_sha256": "781f3cd3c69d09c2a9600b4ab06b7cb689cae9a74d2055efea99c72cd4fe55a4",
+  "development_rule": "Keep this patch and audition as the approved reference. Develop new organ sounds as separate variants. Compare shared DSP changes against this reference before changing its sound.",
+  "scope": "Approval of this organ audition, not of other presets or a claim of matching a commercial recording."
+}
