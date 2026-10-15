@@ -1,3 +1,44 @@
+# Building REGGAE-OS
+
+REGGAE-OS uses the upstream build and emulator. Use recursive submodules. The
+engines remain pinned to `c46e0086f69bdc26df1cd144dca9e683cc4531dd`.
+
+First generate tables/fonts with Python, Pillow **with libraqm**, and fontTools:
+
+```sh
+sh tools/reggae/generate.sh
+# Alternative on macOS without libraqm (Docker must be running):
+sh tools/reggae/generate-docker.sh
+```
+
+Build the shared firmware emulator with Emscripten (tested version:
+4.0.15), then serve its directory:
+
+```sh
+web/emu/build.sh
+python3 -m http.server 8790 --bind 127.0.0.1 --directory build/emu
+# http://localhost:8790 — click Switch on, then play the emulated keys
+sh tools/reggae/test.sh
+```
+
+For hardware, install the JieLi toolchain and pinned AC79 SDK as described below.
+Keep source and compiler inside a Docker-shared directory. Colima's default mounts
+do not necessarily expose `/private/tmp`. After separate table generation:
+
+```sh
+PYTHON=python3 JIELI_TOOLCHAIN=/path/to/toolchain AC79_SDK=/path/to/sdk ./build.sh --skip-generate
+```
+
+`--skip-generate` uses existing headers; regenerate whenever fonts/tables change.
+Do not distribute a package without complete corresponding source (including the
+engines), LICENSE, LICENSING.md, LICENSES and sample attribution.
+
+An iPhone needs an HTTPS-hosted emulator: a Mac's `localhost` URL cannot be opened
+from the phone. Plain LAN HTTP is not a secure context for AudioWorklet. Pages
+workflow preparation/public deployment is separate from the local build.
+
+## Upstream instructions (retained for reference)
+
 # Building Felucca
 
 The build makes three files in `build/`:

@@ -1708,6 +1708,21 @@ static void eng_list_step(int32_t direction)         /* the next / previous soun
 
 static void preset_step(int32_t direction)
 {
+    /* On the performance page, cycle the four REGGAE-OS instruments.
+     * PRESETS browse and all other pages retain the complete upstream library. */
+    static const uint8_t bank[4][2] = {{7, 5}, {7, 6}, {0, 12}, {0, 13}};
+    uint32_t r;
+    if (ui.home && !home_levels() && !TSEL->user && !list_mode()) {
+        for (r = 0; r < 4; r++)
+            if (TSEL->eng_req == bank[r][0] && TSEL->preset == bank[r][1]) {
+                r = (r + (direction > 0 ? 1u : 3u)) % 4u;
+                if (TSEL->eng_req != bank[r][0]) select_engine(bank[r][0]);
+                apply_preset(bank[r][1]);
+                preset_hinted();
+                return;
+            }
+    }
+
     uint32_t total, cur = preset_pos(&total);
     if (!total) { ui_message(list_mode() == 1u ? "NO FAVORITES" : "NO SOUNDS IN LIST"); return; }
     preset_go(cur >= total ? (direction > 0 ? 0 : total - 1) :
@@ -1734,6 +1749,11 @@ static track_t *home_trk(uint32_t k) { return home_levels() ? &trk[k & 3u] : TSE
 static const param_desc_t *home_param(uint32_t k, int16_t **vp)
 {
     uint32_t id = home_levels() ? (uint32_t)P_LEVEL : ENGINES[TSEL->eng_req % NENGINES]->knob[k & 3u];
+    if (!home_levels() && reggae_patch(TSEL)) {
+        static const uint8_t organ[4] = {P_E0, P_E3, P_E7, P_E6};
+        static const uint8_t bass[4] = {P_E4, P_E5, P_ED_FLT, P_E6};
+        id = (TSEL->eng_req == 7u ? organ : bass)[k & 3u];
+    }
     *vp = &home_trk(k)->p[id];
     return track_desc(home_trk(k), id);
 }

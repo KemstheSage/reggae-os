@@ -98,7 +98,9 @@ static void fm1_fault(const fm1_crash_t *c)
     fm1_reboot();
 }
 
-/* power-on: the parts with their default sounds (TRK_DEF); the sequencers empty */
+/* REGGAE-OS fresh power-on bank. TRK_DEF must remain unchanged: legacy project
+ * migration uses it to reconstruct old parts, including the original drum kit. */
+static const uint8_t REGGAE_BOOT[NPART][2] = {{7, 5}, {7, 6}, {0, 12}, {0, 13}};
 static void felucca_init(void)
 {
     uint32_t i;
@@ -110,8 +112,8 @@ static void felucca_init(void)
     for (i = 0; i < NTRK; i++) {
         track_t *t = &trk[i];
         track_defaults(t);
-        set_engine_of(t, TRK_DEF[i][0]);
-        apply_preset_to(t, TRK_DEF[i][1]);    /* with its sends */
+        set_engine_of(t, REGGAE_BOOT[i][0]);
+        apply_preset_to(t, REGGAE_BOOT[i][1]);    /* with its sends */
         t->engine = t->eng_req;
         eng_mem_claim(t);                     /* (zeros already: no note can come before) */
         track_defaults_steps(t);              /* (a sound load never touches them) */

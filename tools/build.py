@@ -374,6 +374,7 @@ def mmio_check():
 def main():
     global PRODUCT, VERSION
     ap = argparse.ArgumentParser()
+    ap.add_argument("--skip-generate", action="store_true", help="use existing build/gen headers (generated separately)")
     ap.add_argument("--release", metavar="X.Y", help="release build: identity FM-1_9XY, version string vX.Y")
     ap.add_argument("--sdk", type=Path, help="JieLi AC79 SDK checkout (default: $AC79_SDK)")
     a = ap.parse_args()
@@ -394,7 +395,7 @@ def main():
             print(f"warning: SDK {rel} differs from AC79NN_SDK_V1.2.1; the package will not match the reference")
     OUT.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(2) as ex:
-        gen, ldr = ex.submit(generate), ex.submit(build_loader)
+        gen, ldr = ex.submit((lambda: None) if a.skip_generate else generate), ex.submit(build_loader)
         gen.result()
         ota = ldr.result()
     img, syms, dis, rt = build_app()

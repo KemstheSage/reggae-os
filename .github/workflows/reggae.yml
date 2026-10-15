@@ -1,0 +1,41 @@
+name: REGGAE-OS emulator
+on:
+  push:
+    branches: [reggae-os]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  emulator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Firmware font dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-pil python3-fonttools libraqm0
+      - name: Generate shared tables
+        run: PYTHON=/usr/bin/python3 sh tools/reggae/generate.sh
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 4.0.15
+      - name: Test firmware sound bank
+        run: sh tools/reggae/test.sh
+      - name: Build actual firmware WebAssembly
+        run: sh web/emu/build.sh
+      - name: REGGAE-OS native/WebAssembly audio parity
+        run: node tests/reggae_wasm.mjs
+      - name: Emulator regression
+        run: |
+          cc -O2 -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/native web/emu/native_check.c -lm
+          build/reggae/native build/reggae/native.f32
+          node web/emu/emu_test.mjs build/emu/felucca.wasm build/reggae/native.f32
+      - name: Bundle corresponding source and licences
+        run: sh tools/reggae/package-emulator.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reggae-os-emulator-and-evidence
+          path: |
+            build/emu
+            build/reggae
