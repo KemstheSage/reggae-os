@@ -30,5 +30,15 @@ int main(void) {
     web_enc(EN_PRESET,1);advance(110);assert(!reggae_focus_active());
     puts("PASS: focused parameter follows panel turns, expires, and clears on preset change");
     puts("PASS: real rotary changes the illustration; ANIM OFF freezes it; thirteen native screens captured");
+    cv_begin(32,32,RG_BG);reggae_disc(16,16,10,RG_INK);
+    assert(cv_px[16*32+16]==swap16(RG_INK));assert(cv_px[0]==swap16(RG_BG));
+    unsigned blended=0;
+    for(unsigned y=6;y<=26;y++)for(unsigned x=6;x<=26;x++) {
+        assert(cv_px[y*32+x]==cv_px[y*32+32-x]);
+        if(cv_px[y*32+x]!=swap16(RG_BG) && cv_px[y*32+x]!=swap16(RG_INK))blended++;
+    }
+    assert(blended>0);
+    reggae_disc(-2,-2,8,RG_INK);reggae_line(-5,-5,35,35,RG_GREEN);
+    puts("PASS: antialiased circle has solid centre, blended symmetric edges and clipped primitives");
     return 0;
 }

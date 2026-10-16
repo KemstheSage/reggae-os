@@ -90,3 +90,9 @@ original refinement of the hardware UI: musical labels, distinct control colours
 a brief enlarged parameter view and a parameter-linked bass filter illustration.
 [Preview and implementation report](docs/reports/ui-0.3.1.md). Sound bank 0.3 and
 the approved organ are unchanged. The future no-Felucca implementation is deferred.
+
+## Artwork refinement 0.3.2
+
+Smoother native curves and more developed organ/speaker artwork, with refined
+piano, brass and siren housings. [Before/after and report](docs/reports/ui-0.3.2.md).
+The physical screen remains 240 × 240; this is an artwork/rendering improvement.

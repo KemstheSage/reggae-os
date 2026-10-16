@@ -51,3 +51,7 @@ physical controls, flashing and recovery remain unverified on a physical FM-1.
 
 UI 0.3.1 final target build: application 518,524 B; data+BSS 61,032 / 73,728 B;
 pool 328,896 / 368,640 B. COMPILES; physical hardware remains untested.
+
+UI 0.3.2 target build: application 519,948 B; data+BSS 61,032 / 73,728 B;
+pool 328,896 / 368,640 B. COMPILES. Integer edge smoothing adds rendering work;
+physical audio/display timing remains HARDWARE UNTESTED.

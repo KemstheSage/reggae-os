@@ -59,3 +59,27 @@ and control assignments are unchanged. Analogue bass now shows a schematic filte
 knee/crest that responds to cutoff/resonance. It is not a measured frequency plot.
 Further work includes category browsing, effect engagement states and artwork
 refinement; this is not a complete TE-style interface replacement.
+
+## UI 0.3.2 — artwork quality
+
+The display remains 240 × 240. Quality comes from stronger shapes, controlled
+material colours and edge coverage, not a browser-only high-resolution substitute.
+Original organ artwork now has a rounded console, inset controls, graduated
+registration rails, two shaded manuals and an integrated rotary cabinet. Bass
+cabinets have recessed baffles, layered cones, corner fittings and restrained
+wood-toned edges. Piano, brass and siren housings also gain fuller shapes.
+
+Native circles use 4 × 4 coverage samples only around their boundary; interiors
+use filled spans. Sloping lines use integer coverage blending. Both composite
+into the existing strip buffer; no floating-point graphics, heap allocation,
+additional framebuffer or TE bitmap assets are introduced. The same helpers
+smooth the rest of the instruments, effects and knob rings.
+
+Speaker motion has a bounded visual gain so normal playing levels produce visible
+movement. It still follows the track peak envelope, not a decorative oscillator.
+The drawbar registration and actual rotary phase remain connected. The 10 Hz cap
+and ANIM OFF behaviour remain. Real hardware timing is still unmeasured; a build
+pass cannot prove that the extra boundary calculations leave enough audio headroom.
+
+[Native before/after comparison](docs/images/ui-0.3.2-comparison.png) ·
+[Full current bank](docs/images/ui-0.3.2-bank.png).

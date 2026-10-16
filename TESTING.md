@@ -151,3 +151,18 @@ parameter-linked illustrations, not evidence of acoustic authenticity.
   data+BSS 61,032 / 73,728 B; pool 328,896 / 368,640 B.
 - Hardware timing and iPhone Safari remain unverified. Research used official
   manuals/static artwork, not hands-on testing of TE hardware.
+
+## UI 0.3.2 — 16 October 2026
+
+- Native graphics tests pass under AddressSanitizer, including clipped primitives,
+  symmetric antialiased circle edges, animation and parameter focus. All thirteen
+  native 240 × 240 screens inspected.
+- All 65 native/WASM audio comparisons remain bit-identical. Upstream emulator
+  regression passes. WASM build: 799,011 bytes.
+- Hardware build passes linker/MMIO checks: application 519,948 B; data+BSS
+  61,032 / 73,728 B; pool 328,896 / 368,640 B.
+- Desktop WASM benchmark, median of three runs rendering ten seconds with a held
+  note (before → after, milliseconds): organ 135.1 → 191.6; bass 168.7 → 175.4;
+  siren 129.5 → 143.4; kit 83.4 → 165.6. These include audio and UI work, and show
+  added rendering cost. They do not establish physical FM-1 real-time headroom.
+- Physical display performance, DAC audio and iPhone Safari remain untested.
