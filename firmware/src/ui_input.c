@@ -1809,6 +1809,7 @@ static void ui_input(void)
         } else {
             edit_param(k, s);
         }
+        reggae_focus_turn(k);
     }
     ui_notices();
 }

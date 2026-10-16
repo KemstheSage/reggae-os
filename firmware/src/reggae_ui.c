@@ -7,6 +7,23 @@
 #define RG_GOLD RGB(235,172,47)
 #define RG_GREEN RGB(83,143,112)
 #define RG_RED RGB(207,73,47)
+static const uint16_t RG_CONTROL_COLOR[]={RG_GOLD,RG_GREEN,RG_INK,RG_RED};
+/* Musical labels for the curated bank; parameter descriptors retain exact units. */
+static const char *const RG_CONTROL_NAME[][4]={
+    {"HARM","TONE","ROTOR","DRIVE"}, {"HARM","TONE","ROTOR","DRIVE"},
+    {"CUTOFF","RES","ENV","DRIVE"}, {"CUTOFF","RES","ENV","DRIVE"},
+    {"ATTACK","TONE","VIBRATO","RELEASE"}, {"TIMBRE","ENV","CHORUS","DETUNE"},
+    {"TONE","DECAY","DRIVE","RELEASE"}, {"TONE","ATTACK","ENV","RELEASE"},
+    {"BRIGHT","DAMP","PLUCK","RELEASE"}, {"PITCH","RATE","ECHO","TONE"},
+    {"TIMBRE","ENV","RATIO","LEVEL"}, {"HARM","TONE","ROTOR","ECHO"},
+    {"TONE","DECAY","SNAP","DRIVE"},
+};
+static struct {
+    uint32_t ms;
+    int index;
+    const page_t *page;
+    uint8_t valid,knob,part,home;
+} rg_focus;
 
 static int reggae_fxscreen(void)
 {
@@ -15,6 +32,53 @@ static int reggae_fxscreen(void)
 static int reggae_screen(void)
 {
     return (ui.home && ui_home_view == HV_SCOPE && reggae_patch(TSEL)) || reggae_fxscreen();
+}
+/* UI-only notification: no parameter or DSP changes. Physical encoders and
+ * emulated panel events share this path. No encoder-click hardware assumed. */
+static void reggae_focus_turn(uint32_t k)
+{
+    int16_t *v;
+    const param_desc_t *d;
+    rg_focus.valid=0;
+    if(!reggae_screen())return;
+    d=ui.home?home_param(k,&v):page_desc(cur_page(),k,&v);
+    if(!d || !d->label || d->label[0]=='-')return;
+    rg_focus.ms=fm1_ms;rg_focus.knob=k;rg_focus.part=song.sel;
+    rg_focus.index=reggae_index(TSEL);rg_focus.page=cur_page();rg_focus.home=ui.home;
+    rg_focus.valid=1;
+}
+static int reggae_focus_active(void)
+{
+    return rg_focus.valid && (uint32_t)(fm1_ms-rg_focus.ms)<1200u &&
+        rg_focus.part==song.sel && rg_focus.index==reggae_index(TSEL) &&
+        rg_focus.home==ui.home && rg_focus.page==cur_page();
+}
+static const char *reggae_control_name(int idx,unsigned k,const param_desc_t *d)
+{ return ui.home && idx>=0?RG_CONTROL_NAME[idx][k]:d->label; }
+static void reggae_value(const param_desc_t *d,int value,char *s,uint32_t len)
+{
+    const char *unit;
+    param_format(d,value,s,&unit);
+    if(*unit){uint32_t n=str_len(s);if(n<len)str_cpy(s+n,unit,len-n);}
+}
+static void reggae_focus_art(int idx)
+{
+    unsigned k=rg_focus.knob;int16_t *v;char value[32],number[2]={(char)('1'+k),0};
+    const param_desc_t *d=ui.home?home_param(k,&v):page_desc(cur_page(),k,&v);
+    int ratio=d->max>d->min?clamp((*v-d->min)*127/(d->max-d->min),0,127):0;
+    uint16_t color=RG_CONTROL_COLOR[k];
+    const char *unit;int numeric=1;
+    param_format(d,*v,value,&unit);
+    for(unsigned n=0;value[n];n++)if(!((value[n]>='0' && value[n]<='9') || value[n]=='.' || value[n]=='-' || value[n]=='+'))numeric=0;
+    cv_rect(12,5,18,18,color);cv_text_in(12,7,18,&AF_S,number,RG_BG,color);
+    cv_text(39,6,&AF_M,reggae_control_name(idx,k,d),color);
+    cv_text_in(12,35,216,numeric && text_w(&AF_L,value)<=216?&AF_L:&AF_M,value,RG_INK,RG_BG);
+    cv_text_in(12,65,216,&AF_S,unit,RG_INK,RG_BG);
+    /* Segmented range, with a distinct origin for bipolar parameters. */
+    for(int n=0;n<24;n++)cv_rect(12+n*9,84,6,9,n*127<=ratio*23?color:RG_PANEL);
+    if(d->min<0 && d->max>0){int x=12+(-d->min)*207/(d->max-d->min);cv_rect(x,97,2,5,RG_INK);}
+    cv_rect(12+ratio*207/127,77,3,5,RG_INK);
+    cv_text_in(0,108,240,&AF_S,"RETURNS TO PLAY AUTOMATICALLY",RG_INK,RG_BG);
 }
 static void reggae_disc(int x,int y,int r,uint16_t col)
 {
@@ -69,6 +133,14 @@ static void reggae_art(track_t *t,int kind,int level,int motion)
         reggae_speaker(24,73,43,15,pulse/3);
         reggae_speaker(175,69,43,17,pulse/3);
         for(k=0;k<9;k++)cv_rect(223,108-k*9,5,5,level>k*2800?RG_GOLD:RG_PANEL);
+        if(t->eng_req==0) {
+            /* Schematic filter aperture: cutoff moves the knee; resonance
+             * raises its crest. This is not a measured frequency response. */
+            int knee=23+t->p[P_E4]*40/127,crest=t->p[P_E5]*14/127;
+            cv_line(16,30,knee-5,30,RG_GOLD);
+            cv_line(knee-5,30,knee,30-crest,RG_GREEN);
+            cv_line(knee,30-crest,72,52,RG_GOLD);
+        }
     } else if(kind==RG_REED) {
         /* A compact reed player; airflow follows envelope, wave phase follows vibrato. */
         reggae_disc(179,35,18,RG_INK);
@@ -151,8 +223,8 @@ static void reggae_draw(void)
     int idx=reggae_index(t),fx=reggae_fxscreen(),kind=idx>=0?REGGAE_BANK[idx].kind:RG_BASS;
     uint8_t old_mono=ux.mono,old_light=ux.light;
     uint32_t now=fm1_ms,k;
-    int motion=!(ui_prefs&PREF_ANIM_OFF),mode=0;
-    char name[32],val[24];const char *unit;
+    int motion=!(ui_prefs&PREF_ANIM_OFF),mode=0,focus=reggae_focus_active();
+    char name[32],val[24];
     if(!ui.force && (uint32_t)(now-last)<100u)return;
     last=now;ux.mono=ux.light=0;ux.gen++;
     {int pk=clamp(t->peak,0,32767);t->peak=0;envelope=pk>envelope?pk:envelope*3/4;}
@@ -164,21 +236,21 @@ static void reggae_draw(void)
     else str_cpy(name,ENGINES[t->eng_req]->presets[t->preset].name,sizeof name);
     cv_text(12,31,&AF_M,name,RG_INK);cv_blit(0,0);
     cv_begin(240,124,RG_BG);
-    if(fx){mode=str_eq(name,"DLY")?1:str_eq(name,"REVERB")?2:0;reggae_effect_art(mode,motion,envelope);}
+    if(focus)reggae_focus_art(idx);
+    else if(fx){mode=str_eq(name,"DLY")?1:str_eq(name,"REVERB")?2:0;reggae_effect_art(mode,motion,envelope);}
     else reggae_art(t,kind,envelope,motion);
     cv_blit(0,56);
     cv_begin(240,60,RG_BG);
     for(k=0;k<4;k++) {
-        static const uint16_t colors[]={RG_GOLD,RG_GREEN,RG_GREEN,RG_RED};
         int16_t *vp;const param_desc_t *d=fx?page_desc(cur_page(),k,&vp):home_param(k,&vp);
         int x=k*60,hot=ui.hot_t && ui.hot_col==k,ratio,ph,dx,dy;
         if(!d || !d->label || d->label[0]=='-')continue;
         ratio=d->max>d->min?clamp((*vp-d->min)*127/(d->max-d->min),0,127):0;
         ph=(640+ratio*6)&1023;dx=SINE[ph]*8/32768;dy=-SINE[(ph+256)&1023]*8/32768;
-        reggae_ring(x+30,12,10,colors[k],RG_BG);cv_line(x+30,12,x+30+dx,12+dy,RG_INK);
-        param_format(d,*vp,val,&unit);
-        if(*unit){uint32_t n=str_len(val);str_cpy(val+n,unit,sizeof val-n);}
-        cv_text_in(x+1,24,58,&AF_S,d->label,hot?RG_GOLD:RG_INK,RG_BG);
+        reggae_ring(x+30,12,10,RG_CONTROL_COLOR[k],RG_BG);cv_line(x+30,12,x+30+dx,12+dy,RG_INK);
+        reggae_value(d,*vp,val,sizeof val);
+        cv_text_in(x+1,24,58,&AF_S,reggae_control_name(idx,k,d),RG_CONTROL_COLOR[k],RG_BG);
+        if(hot)cv_rect(x+4,1,3,3,RG_CONTROL_COLOR[k]);
         cv_text_in(x+1,36,58,&AF_S,val,RG_INK,RG_BG);
     }
     cv_text_in(0,48,240,&AF_S,ui.msg_t?ui.msg:fx?"FX: PAGE / HOME: PLAY":"PRESETS: SOUND / EDIT",RG_INK,RG_BG);

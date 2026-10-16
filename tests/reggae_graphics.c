@@ -19,6 +19,16 @@ int main(void) {
     uint32_t a=art_hash();advance(300);assert(a!=art_hash());
     ui_prefs|=PREF_ANIM_OFF;ui.force=1;advance(500);a=art_hash();
     advance(300);assert(a==art_hash());
+    web_midi(0x80,60,0);
+    for(unsigned i=0;i<4;i++){web_enc(EN_PRESET,1);advance(200);}
+    assert(reggae_index(TSEL)==2);
+    web_enc(EN_K1,12);advance(110);
+    assert(reggae_focus_active());picture("build/reggae/focus-cutoff.ppm");
+    advance(1300);assert(!reggae_focus_active());picture("build/reggae/play-cutoff.ppm");
+    web_enc(EN_K2,12);advance(110);assert(reggae_focus_active());
+    picture("build/reggae/focus-resonance.ppm");
+    web_enc(EN_PRESET,1);advance(110);assert(!reggae_focus_active());
+    puts("PASS: focused parameter follows panel turns, expires, and clears on preset change");
     puts("PASS: real rotary changes the illustration; ANIM OFF freezes it; thirteen native screens captured");
     return 0;
 }

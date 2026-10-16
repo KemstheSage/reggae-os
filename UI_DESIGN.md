@@ -46,3 +46,16 @@ confirmations and advanced editors retain their tested upstream layouts with the
 new REGGAE palette. An illustrated category grid and bespoke layouts for every
 advanced page remain unfinished. Saved user patches use upstream HOME controls
 because their engine alone cannot identify whether a patch is bass, reed or brass.
+
+## UI 0.3.1 — researched interaction refinement
+
+See [the OP-1 field / Sidekick study](docs/research/te-interface-study.md) for official
+sources and the distinction between observations and our own design decisions.
+The current prototype implements four distinct control colours, musical labels,
+and an enlarged value/range view lasting 1.2 seconds after an encoder turn. It
+returns automatically to the instrument illustration; changing preset/page also
+hides it. This is native C drawing shared by firmware and emulator. Audio patches
+and control assignments are unchanged. Analogue bass now shows a schematic filter
+knee/crest that responds to cutoff/resonance. It is not a measured frequency plot.
+Further work includes category browsing, effect engagement states and artwork
+refinement; this is not a complete TE-style interface replacement.

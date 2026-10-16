@@ -23,3 +23,9 @@
 8. Final polish: pending auditions and hardware validation.
 
 This repository is an early instrument prototype, not the complete final vision.
+
+User direction, 16 October 2026: ultimately remove all Felucca code. This is a
+separate later rewrite, not satisfied by renaming the fork or hiding attribution.
+Current work continues in the existing prototype to develop and validate sounds,
+original UI design and interaction requirements. Research and first native UI
+refinements are recorded in `docs/research/te-interface-study.md`.

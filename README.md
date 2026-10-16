@@ -82,3 +82,11 @@ submodule's contents. `tools/reggae/package-emulator.sh` prepares that alongside
 the emulator. No proprietary TE artwork or commercial recordings are included.
 M-VAVE, FM-1 and Teenage Engineering product names belong to their respective owners;
 this project is independent and has no claimed endorsement.
+
+## UI refinement 0.3.1
+
+The [OP-1 field / Sidekick study](docs/research/te-interface-study.md) informs an
+original refinement of the hardware UI: musical labels, distinct control colours,
+a brief enlarged parameter view and a parameter-linked bass filter illustration.
+[Preview and implementation report](docs/reports/ui-0.3.1.md). Sound bank 0.3 and
+the approved organ are unchanged. The future no-Felucca implementation is deferred.

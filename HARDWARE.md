@@ -9,7 +9,7 @@ No physical FM-1 has been used for this project.
 | CPU | JieLi AC79/WL82 family, pi32v2 target; `firmware/hal`, `tools/build.py` |
 | Display | ST7789-class, 240 × 240, RGB565 big endian, SPI1 at configured 12 MHz; `src/lcd.c` |
 | Rendering | Existing 240 × 124 strip buffer, 59,520 bytes, reused for every section; `src/gfx.c`. No new framebuffer on hardware. |
-| Display throughput | A full 115,200-byte frame alone takes at least 76.8 ms at 12 MHz. REGGAE-OS throttles to 10 Hz; header redraws only on change. Actual scheduling/audio contention requires hardware measurement. |
+| Display throughput | A full 115,200-byte frame alone takes at least 76.8 ms at 12 MHz. REGGAE-OS throttles to 10 Hz; the current prototype redraws all three strips. Actual scheduling/audio contention requires hardware measurement. |
 | Memory map | `firmware/app.ld`: 72 KiB data/BSS, 360 KiB pool, 24 KiB RAM code region, retained region and guarded stacks within the SRAM map. These are linker allocations, not additional memory chips. |
 | Flash | Existing 1 MiB NOR layout and 0x8DFBC-byte XIP application region; retain all partition boundaries. |
 | Audio | Fixed-point DSP, 44.1 kHz, 32-sample control blocks, 128-frame I2S DMA halves. Eight voices shared across four parts. |
@@ -26,7 +26,7 @@ The default matrix mappings and hardware calibration are retained; upstream note
 some label mapping as a best guess and PLAY/REC as hardware measured.
 Do not treat every mapping as independently verified.
 
-HOME opens the performance view. PRESETS cycles the four initial sounds when
+HOME opens the performance view. PRESETS cycles the thirteen curated sounds when
 already on one of them on HOME; other pages retain full-library browsing.
 EDIT, ENV, FX, held HOME menu and SAVE retain upstream navigation.
 Select lower octaves for bass. Original MIDI channels and four-part operation remain.
@@ -48,3 +48,6 @@ bytes; pool 328,896 / 368,640 bytes. The expanded bank uses existing engines and
 buffers. No additional audio-ISR graphics work or full-screen framebuffer.
 HARDWARE UNTESTED: DAC output, real-time audio headroom during 10 Hz screen updates,
 physical controls, flashing and recovery remain unverified on a physical FM-1.
+
+UI 0.3.1 final target build: application 518,524 B; data+BSS 61,032 / 73,728 B;
+pool 328,896 / 368,640 B. COMPILES; physical hardware remains untested.

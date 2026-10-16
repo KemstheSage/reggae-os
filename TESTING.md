@@ -137,3 +137,17 @@ Reproduce extended auditions by running `sh tools/reggae/test.sh`; WAVs are in
 `build/reggae/extended-4.wav` through `extended-12.wav`. The packaging script gives
 these descriptive names under `auditions/`. Visual waveform/coil mechanisms are
 parameter-linked illustrations, not evidence of acoustic authenticity.
+
+## UI 0.3.1 — 16 October 2026
+
+- Native graphics test passes: real rotor motion, ANIM OFF, parameter focus from
+  panel input, 1.2-second expiry, and cancellation on a preset change. Native
+  screenshots were inspected at 240 × 240; units use a supported smaller font.
+- All 65 WebAssembly renders match the bank 0.3 native PCM references exactly;
+  no sound or DSP changes. Upstream emulator regression passes.
+- Desktop browser verified startup, musical labels, control colours and focused
+  parameter view through the actual virtual KNOB 1 input.
+- Final hardware build passes linker/MMIO checks: application 518,524 B;
+  data+BSS 61,032 / 73,728 B; pool 328,896 / 368,640 B.
+- Hardware timing and iPhone Safari remain unverified. Research used official
+  manuals/static artwork, not hands-on testing of TE hardware.
