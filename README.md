@@ -4,14 +4,16 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
-The first implementation supplies **Roots Organ, Rocksteady, Deep Roots and
-Digital Bass**, direct four-knob editing, and an original 240 × 240 animated
-organ / sound-system performance screen. It preserves the original engines,
+Sound bank 0.3 supplies **13 playable presets**, including organ, bass, reed
+melodica, electric piano, piano chop, brass stabs, muted string skank, dub siren
+and an eight-piece drum kit. Four-knob editing and animated 240 × 240 illustrations
+run inside the firmware. It preserves the original engines,
 MIDI paths, effects, sequencing and flash-backed user-preset system.
 
 **Early development build. Physical hardware and iPhone Safari are untested.**
-This is the first organ/bass slice, not the completed instrument library.
-See [TESTING.md](TESTING.md) for measured results and known limitations.
+The expanded sounds are audition candidates; musical refinement is ongoing.
+See [TESTING.md](TESTING.md) for measured results and known limitations, and the
+[bank 0.3 milestone report](docs/reports/bank-0.3.md) for screenshots and scope.
 
 Sound bank 0.2 revises the registrations, dry organ articulation and plucked bass
 envelopes following musician feedback. The listening brief is Big Ship, Faded Away
@@ -36,9 +38,13 @@ Open **http://localhost:8790/** on the Mac and click **Switch on**.
 Play the onscreen FM-1 keys (or the keyboard shortcuts shown below the panel).
 Drag knobs upward/right, use the mouse wheel, or focus a knob and use arrow keys.
 
-- Starts on Roots Organ. On HOME, PRESETS cycles the four curated sounds.
+- Starts on Roots Organ. On HOME, PRESETS cycles the thirteen curated sounds.
 - Organ knobs: registration, upper harmonics, rotary speed, drive.
 - Bass knobs: cutoff, resonance, filter-envelope amount, drive. Use OCT− to play low notes.
+- ROOTS KIT maps MIDI notes 36/38/39/42/46/45/37/56 to kick, snare, clap,
+  closed/open hi-hat, tom, rim and bell. It is a playable kit, not a new sequencer.
+- Fresh settings use the REGGAE palette throughout menus. Existing users can select
+  REGGAE in MENU → PALETTE; saved preferences are retained.
 - EDIT and ENV expose the existing deeper parameters; FX retains Felucca effects.
 - SAVE retains the original user-preset workflow. Held HOME opens the menu;
   MENU ANIM OFF reduces performance-screen motion. Existing factory patches retain their original HOME controls.

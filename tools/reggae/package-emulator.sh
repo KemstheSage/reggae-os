@@ -15,3 +15,12 @@ if test -f build/reggae/roots-organ.wav; then
   cp build/reggae/roots-organ.wav build/reggae/rocksteady.wav \
      build/reggae/deep-roots-bass.wav build/reggae/digital-bass.wav build/emu/auditions/
 fi
+# Extended audition phrases use the same firmware, including each drum lane.
+mkdir -p build/emu/auditions
+i=4
+for name in reed-melodica warm-tine piano-chop brass-stabs muted-skank dub-siren round-fm-bass dub-drawbars roots-kit; do
+  if test -f "build/reggae/extended-$i.wav"; then
+    cp "build/reggae/extended-$i.wav" "build/emu/auditions/$name.wav"
+  fi
+  i=$((i + 1))
+done

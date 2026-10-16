@@ -1376,6 +1376,7 @@ static void apply_preset_to(track_t *t, uint32_t pi)
         for (i = 0; i < 4u; i++)
             t->p[P_DIST + i] = (int16_t)(pr->fx[i] ? pr->fx[i] - 1 : FX_DEF[i]);
     }
+    reggae_loaded(t);
     fm6_track_loaded(t);                              /* FM6: the preset's patch (its SLOT) */
     load_end(t);
 }
@@ -1708,19 +1709,15 @@ static void eng_list_step(int32_t direction)         /* the next / previous soun
 
 static void preset_step(int32_t direction)
 {
-    /* On the performance page, cycle the four REGGAE-OS instruments.
+    /* On the performance page, cycle the curated REGGAE-OS instruments.
      * PRESETS browse and all other pages retain the complete upstream library. */
-    static const uint8_t bank[4][2] = {{7, 5}, {7, 6}, {0, 12}, {0, 13}};
-    uint32_t r;
-    if (ui.home && !home_levels() && !TSEL->user && !list_mode()) {
-        for (r = 0; r < 4; r++)
-            if (TSEL->eng_req == bank[r][0] && TSEL->preset == bank[r][1]) {
-                r = (r + (direction > 0 ? 1u : 3u)) % 4u;
-                if (TSEL->eng_req != bank[r][0]) select_engine(bank[r][0]);
-                apply_preset(bank[r][1]);
-                preset_hinted();
-                return;
-            }
+    int r = reggae_index(TSEL);
+    if (ui.home && !home_levels() && r >= 0 && !list_mode()) {
+        r = (r + (direction > 0 ? 1 : NELEM(REGGAE_BANK)-1)) % NELEM(REGGAE_BANK);
+        if (TSEL->eng_req != REGGAE_BANK[r].engine) select_engine(REGGAE_BANK[r].engine);
+        apply_preset(REGGAE_BANK[r].preset);
+        preset_hinted();
+        return;
     }
 
     uint32_t total, cur = preset_pos(&total);
@@ -1750,9 +1747,7 @@ static const param_desc_t *home_param(uint32_t k, int16_t **vp)
 {
     uint32_t id = home_levels() ? (uint32_t)P_LEVEL : ENGINES[TSEL->eng_req % NENGINES]->knob[k & 3u];
     if (!home_levels() && reggae_patch(TSEL)) {
-        static const uint8_t organ[4] = {P_E0, P_E3, P_E7, P_E6};
-        static const uint8_t bass[4] = {P_E4, P_E5, P_ED_FLT, P_E6};
-        id = (TSEL->eng_req == 7u ? organ : bass)[k & 3u];
+        id = REGGAE_BANK[reggae_index(TSEL)].knob[k & 3u];
     }
     *vp = &home_trk(k)->p[id];
     return track_desc(home_trk(k), id);

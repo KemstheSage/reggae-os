@@ -40,3 +40,11 @@ Upstream's CLI accepts a local `.fwsc` (`tools/fm1_install.py`); the public Felu
 installer installs upstream Felucca, not this development build. Retain the official
 vendor firmware locally for recovery; it is not redistributed here. A failed boot
 may require transporter recovery. Physical installation/recovery remains **HARDWARE UNTESTED**.
+
+## Bank 0.3 target build
+
+COMPILES: FM-1_900 package, application 517,516 bytes; data + BSS 61,000 / 73,728
+bytes; pool 328,896 / 368,640 bytes. The expanded bank uses existing engines and
+buffers. No additional audio-ISR graphics work or full-screen framebuffer.
+HARDWARE UNTESTED: DAC output, real-time audio headroom during 10 Hz screen updates,
+physical controls, flashing and recovery remain unverified on a physical FM-1.

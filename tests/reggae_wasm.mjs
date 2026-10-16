@@ -3,18 +3,18 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 const bytes=fs.readFileSync('build/emu/felucca.wasm');
-const turns=[[12,8,2,124],[11,8,2,122],[75,127,55,123],[79,127,51,123]];
-for(let p=0;p<4;p++) for(let knob=-1;knob<4;knob++) {
+const cases=fs.readFileSync('build/reggae/audio-report.txt','utf8').trim().split('\n').map(line=>Object.fromEntries([...line.matchAll(/(\w+)=([^ ]+)/g)].map(m=>[m[1],Number(m[2])])));
+for(const row of cases) {
+  const {preset:p,knob,delta,note,chord}=row;
   const {instance}=await WebAssembly.instantiate(bytes,{}), e=instance.exports;
   e._initialize(); e.web_nor_erase(); e.web_boot();
   const advance=ms=>{for(let n=0;n<Math.floor(ms*441/10);n+=128)e.web_render(128);};
   advance(1000);
   for(let i=0;i<p;i++){e.web_enc(2,1);advance(100);}
-  if(knob>=0)e.web_enc(3+knob,turns[p][knob]);
+  if(knob>=0)e.web_enc(3+knob,delta);
   advance(200);
-  const note=p<2?60:36;
   e.web_midi(0x90,note,100);
-  if(p<2){e.web_midi(0x90,note+3,100);e.web_midi(0x90,note+7,100);}
+  if(chord){e.web_midi(0x90,note+3,100);e.web_midi(0x90,note+7,100);}
   const blocks=Math.floor(44100*4/128), pcm=Buffer.alloc(blocks*128*4);
   let at=0, energy=0;
   for(let b=0;b<blocks;b++) {

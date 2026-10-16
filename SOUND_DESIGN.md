@@ -117,3 +117,33 @@ MIDI test renders provide the controlled synthesis comparison.
 Next priorities: user reference audition, piano chops, an FM bass candidate with
 independent body/brightness envelopes, and more realistic plucked-bass behaviour.
 Do not call the library authentic or reference-matched until listening supports it.
+
+## Bank 0.3 — expanded audition candidates
+
+The approved Roots Organ bank 0.2 is unchanged. Nine additions extend the four
+existing sounds using the firmware engines, with no new sample library:
+
+| Sound | Method | Four HOME controls |
+|---|---|---|
+| Reed Melodica | Filtered pulse/PWM reed approximation, slow attack, subtle delayed pitch LFO | Attack, cutoff, vibrato depth, release |
+| Warm Tine | Existing six-operator tine patch with reduced modulator level and envelope macro, detune and chorus | Modulator level, envelope macro, chorus, detune |
+| Piano Chop | Existing licensed piano sample, short envelope and mild drive | Cutoff, decay, drive, release |
+| Brass Stabs | Detuned filtered oscillators and filter envelope | Cutoff, attack, filter envelope, release |
+| Muted Skank | Existing PHYS string model, damping and excitation position | Brightness, damping, position, release |
+| Dub Siren | Sine oscillator, sustained envelope, pitch LFO and echo send | Envelope pitch offset, LFO rate, delay send, cutoff |
+| Round FM Bass | Existing six-operator FM bass patch with reduced modulation/envelope macros | Modulator level, envelope macro, modulator ratio, output level |
+| Dub Drawbars | Separate dark WHEEL registration with slow rotary and echo | Registration, upper harmonics, rotary, delay send |
+| Roots Kit | Existing TIGHT drum model, adjusted tone, decay, snap, accent and drive | Tone, decay, snap, drive |
+
+The FM additions use the original factory operator patches with changed synthesis
+macros. They are not new hand-authored six-operator algorithms. Melodica, brass and
+guitar remain synthetic approximations, not authenticated acoustic recreations.
+The siren's pitch control acts on synthesis (including external MIDI), not just
+keyboard transposition. Echo HOME controls are send levels; feedback is on FX → DLY.
+
+Roots Kit uses original synthesized drums: MIDI 36 kick, 38 snare, 39 clap, 42 closed
+hat, 46 open hat, 45 tom, 37 rim and 56 bell. Keep the traditional one-drop or
+steppers rhythm in the performance/external sequencer; a kit timbre alone does not
+produce a reggae rhythm. No commercial recording samples are redistributed.
+The new ten-second auditions play eight individual notes/chords or drum lanes,
+with space to inspect articulation; they are test phrases, not finished arrangements.

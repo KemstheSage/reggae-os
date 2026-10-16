@@ -233,6 +233,7 @@ static const preset_t PHYS_PRESETS[] = {
     /* SYMP: {MODEL, CHRD, BRIT, DAMP, SYMP, ACC, BUZZ, EXC} */
     {"DRONE STRING", {PM_SYMP, 127, 80, 88, 64, 100, 92, 0}, {0, 100, 127, 90}, 0, 0, FX(0, 10, 20, 50), PAT(3)},
     {"HARP", {PM_SYMP, 8, 62, 74, 60, 90, 0, 0}, {0, 100, 127, 80}, 0, 0, FX(0, 20, 20, 60), PAT(3)},
+    {"MUTED SKANK", {PM_STRING, 38, 62, 34, 76, 80, 0, 0}, {0, 75, 100, 24}, 0, 0, FX(0, 0, 0, 5), PAT(0)},
 };
 
 static const engine_t ENG_PHYS = {

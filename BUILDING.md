@@ -19,6 +19,7 @@ web/emu/build.sh
 python3 -m http.server 8790 --bind 127.0.0.1 --directory build/emu
 # http://localhost:8790 — click Switch on, then play the emulated keys
 sh tools/reggae/test.sh
+node tests/reggae_wasm.mjs
 ```
 
 For hardware, install the JieLi toolchain and pinned AC79 SDK as described below.

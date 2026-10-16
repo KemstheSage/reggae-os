@@ -15,15 +15,34 @@ an engineering prototype, not a completed survey of Jamaican graphic traditions.
 Organ: nine drawbar positions reflect actual registration plus SUB/BODY/TOP offsets;
 the percussion-disabled top bar is reflected. Rotary pointer reads actual WHEEL
 rotor phase, including speed ramping. Keys react to measured track audio level.
-Bass: two speaker cones react to the existing track peak meter with visual decay;
-filter rail reflects cutoff; high drive changes cone colour. This is an amplitude
-indicator, not a drawing of every low-frequency oscillation.
+Bass: four speaker cabinets react to the existing track peak meter with visual decay.
+This is an amplitude indicator, not a drawing of every low-frequency oscillation.
+The four knob pointers and values always reflect the assigned parameter; bass
+cutoff and drive currently change these indicators, not the cabinet geometry.
+
+Bank 0.3 follows the supplied Direction 3 reference using original integer-drawn
+artwork. Reed airflow follows note level and vibrato phase/depth; keyboard hammers
+and brass bursts follow track amplitude; plucked strings move with amplitude;
+siren trajectory follows the actual LFO phase. Drum strike highlights follow
+actual voice activity for each of the eight GM lanes. Key highlights represent
+level, not an exact map of the held notes.
+
+FX, DLY and REVERB pages have shared native illustrations. Delay repeat spacing
+reflects the time-division selection and marks reflect feedback. The record spins
+as an illustrative mechanism, not a measured tape or audio transport. Reverb coil
+height reflects damping and its motion amplitude reflects size and track level;
+it is not an analysis of the wet effect tail. Reverb TYPE retains ROOM/SPRING/HALL;
+the coil is a metaphor and does not turn every algorithm into spring reverb.
 
 10 Hz upper bound, no heap allocation, integer drawing, existing strip buffer.
-Rendering occurs in the main/UI loop, never in the audio callback. Existing MENU
-ANIM OFF freezes rotor and cone motion; bars/values remain live. The first version
-redraws the illustration and parameter strip; narrower dirty rectangles and
-hardware timing measurements are outstanding. No full-screen framebuffer added.
+Rendering occurs in the main/UI loop, never in the audio callback. MENU ANIM OFF
+freezes time-driven rotor, cone and LFO motion; values and note activity remain
+live. Full 240 × 240 updates at 10 Hz require about 1.15 MB/s before SPI overhead
+against the nominal 1.5 MB/s link. Dirty rectangles and hardware timing measurements
+remain outstanding; no additional full-screen framebuffer is allocated.
 
-Secondary pages, SAVE, modal confirmations and layers keep upstream rendering.
-The bespoke palette currently applies only to the organ/bass performance screen.
+The boot screen uses cream typography/artwork. Preset lists, settings, SAVE,
+confirmations and advanced editors retain their tested upstream layouts with the
+new REGGAE palette. An illustrated category grid and bespoke layouts for every
+advanced page remain unfinished. Saved user patches use upstream HOME controls
+because their engine alone cannot identify whether a patch is bass, reed or brass.

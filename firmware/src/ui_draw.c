@@ -1351,15 +1351,24 @@ static void splash_band(uint32_t y, uint32_t h, int32_t ly, const char *const *l
 }
 static void draw_splash(void)
 {
-    int32_t h = SPL_PAD - AF_M_CAP_Y + SPL_PITCH + AF_M.h;     /* a band: its two lines, the descenders in */
-    int32_t lb = h - SPL_PAD - AF_M_CAP_H - AF_M_CAP_Y;         /* the bottom band's last line: its top */
-    lcd_fill(0, 0, 240, 240, T_BG);
-    lcd_fill(SPL_X0, SPL_X0, SPL_SQ, SPL_SQ, T_RAISE);
-    splash_band(SPL_X0, (uint32_t)h, SPL_PAD - AF_M_CAP_Y, SPLASH_LINES, AL_V, SPL_PAD,
-                SPL_PAD + SPL_PITCH + AF_M_CAP_H, "splash name + version SPL_PAD from the top");
-    splash_band(SPL_X0 + SPL_SQ - (uint32_t)h, (uint32_t)h, lb - SPL_PITCH, SPLASH_LINES + 2, AL_B, 0, h - SPL_PAD,
-                "splash maker's baseline SPL_PAD from the bottom");
-    lcd_sync();
+    /* The same small strip renderer as every hardware page. */
+    uint16_t paper=RGB(239,224,187),ink=RGB(12,17,16),red=RGB(207,73,47);
+    uint8_t mono=ux.mono,light=ux.light;
+    uint32_t k;
+    ux.mono=0;ux.light=1;ux.gen++;
+    cv_begin(240,120,paper);
+    cv_text(16,20,&AF_L,"REGGAE-OS",ink);
+    cv_text(18,62,&AF_M,"SOUND SYSTEM",ink);
+    cv_text(18,83,&AF_M,"SYNTHESIZER",ink);
+    cv_rect(18,110,43,5,RGB(83,143,112));cv_rect(61,110,43,5,RGB(235,172,47));cv_rect(104,110,43,5,red);
+    cv_blit(0,0);
+    cv_begin(240,120,paper);
+    for(k=0;k<48;k++) {int d=(int)k-24,w=24-(d*d)/25;cv_rect(178-w,13+k,w*2,1,red);}
+    for(k=0;k<12;k++){int h=6+(k*17)%31;cv_rect(18+k*10,62-h,5,h,ink);}
+    cv_text(18,78,&AF_S,"0.3 / FELUCCA 1.6.1",ink);
+    cv_text(18,98,&AF_S,"HUGELTON FIRMWARE FOUNDATION",ink);
+    cv_blit(0,120);lcd_sync();
+    ux.mono=mono;ux.light=light;ux.gen++;
 }
 
 /* UPDATE MODE countdown (main.c: OCT- + OCT+ held): over everything, the menu and the dialogs too */

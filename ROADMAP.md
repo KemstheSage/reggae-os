@@ -10,12 +10,14 @@
    Desktop emulator verified. Roots Organ 0.2 audition approved as the starting point
    on 15 October 2026; preserve it and develop separate organ variants. Other
    presets still need musician approval; physical testing remains.
-4. Extended instruments: not implemented as REGGAE-OS instruments. Existing Felucca
-   FM6, PHYS, SAMPLE and other engines remain accessible. Next: musician audition
-   and organ/bass refinement before melodica, electric piano, brass, skank and siren.
-5. Dub effects: retained upstream effects; dedicated performance mapping/graphics pending.
-6. Presets: retained flash storage, full browsing and save/recall. Four-sound HOME bank
-   implemented; genre banks and at least twelve curated instruments pending.
+4. Extended instruments: bank 0.3 adds melodica, electric piano, piano chop, brass,
+   skank, siren, FM bass, dub organ and an eight-piece kit. All require musician
+   audition/refinement; acoustic realism is limited.
+5. Dub effects: retained upstream effects; FX, delay and reverb now have native
+   animated illustrations. Siren/dub organ expose delay send. Echo throws and
+   deeper tape/spring refinements remain.
+6. Presets: retained flash storage, full browsing and save/recall. Thirteen-sound HOME bank
+   implemented; illustrated genre/category browsing remains.
 7. Hardware optimisation: no physical device. Linker and target builds are necessary
    but cannot establish DAC quality, timing, controls, flashing or recovery on hardware.
 8. Final polish: pending auditions and hardware validation.

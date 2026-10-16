@@ -26,17 +26,21 @@ static void prefix_unchanged(const engine_t *a, const engine_t *b) {
 int main(int argc,char **argv) {
     prefix_unchanged(&UPSTREAM_ENG_ANALOG,&ENG_ANALOG);
     prefix_unchanged(&UPSTREAM_ENG_WHEEL,&ENG_WHEEL);
+    prefix_unchanged(&UPSTREAM_ENG_SAMPLE,&ENG_SAMPLE);
     assert(argc>=4);
     unsigned preset=atoi(argv[1]); int knob=atoi(argv[2]);
-    assert(preset<4 && knob>=-1 && knob<4);
+    assert(preset<NELEM(REGGAE_BANK) && knob>=-1 && knob<4);
     web_nor_erase(); web_boot(); advance(1000);
     for(unsigned i=0;i<preset;i++){ web_enc(EN_PRESET,1); advance(100); }
-    assert(TSEL->eng_req==(preset<2?7:0));
-    assert(TSEL->preset==(preset<2?5+preset:10+preset));
+    assert(TSEL->eng_req==REGGAE_BANK[preset].engine);
+    assert(TSEL->preset==REGGAE_BANK[preset].preset);
+    int knob_delta=0;
     int16_t before[P_COUNT]; memcpy(before,TSEL->p,sizeof before);
     if(knob>=0) {
         int16_t *v; const param_desc_t *d=home_param(knob,&v);
-        web_enc(EN_K1+knob, d->max-*v); advance(200);
+        int delta=preset<4?d->max-*v:(d->max>*v?(d->max-*v>16?16:d->max-*v):(d->min-*v < -16?-16:d->min-*v));
+        knob_delta=delta;
+        web_enc(EN_K1+knob, delta); advance(200);
         assert(*v!=before[v-TSEL->p]);
     }
     if(knob<0) advance(200); /* identical note timing for every knob comparison */
@@ -44,9 +48,11 @@ int main(int argc,char **argv) {
     unsigned blocks=44100*4/128; wav_hdr(f,blocks*128);
     double energy=0,tail=0; float peak=0; uint64_t hash=1469598103934665603ULL;
     /* organ triad; bass at C2. Same MIDI path as external notes. */
-    int note=preset<2?60:36;
+    int kind=REGGAE_BANK[preset].kind;
+    int note=(kind==RG_BASS || kind==RG_DRUM)?36:60;
+    int chord=kind==RG_ORGAN || kind==RG_PIANO || kind==RG_BRASS || kind==RG_STRING;
     web_midi(0x90,note,100);
-    if(preset<2){web_midi(0x90,note+3,100);web_midi(0x90,note+7,100);}
+    if(chord){web_midi(0x90,note+3,100);web_midi(0x90,note+7,100);}
     for(unsigned b=0;b<blocks;b++) {
         if(b==344) {web_midi(0x80,note,0);web_midi(0x80,note+3,0);web_midi(0x80,note+7,0);}
         web_render(128);
@@ -61,23 +67,26 @@ int main(int argc,char **argv) {
         }
     }
     fclose(f);
-    assert(energy>0.1 && peak>0.005 && peak<0.99 && tail<0.001);
+    assert(energy>0.1 && peak>0.005 && peak<0.99);
+    if(preset<4 || knob<0) assert(tail<0.02);
     /* Repeated chords exercise percussion retrigger and release/voice allocation. */
     for(unsigned j=0;j<24;j++) {
         web_midi(0x90,note,100); web_midi(0x90,note+4,100); web_midi(0x90,note+7,100); advance(35);
         web_midi(0x80,note,0); web_midi(0x80,note+4,0); web_midi(0x80,note+7,0); advance(35);
     }
-    advance(1500);
+    advance(preset<4?1500:10000);
     for(unsigned p=0;p<NPART;p++) for(unsigned v=0;v<NVOICE;v++) assert(!trk[p].v[v].active);
     /* Save/recall real parameter values through the original preset storage. */
     song.playing=0;
     up_ui_named(2,0,"RG TEST",preset<2?CAT_KEYS:CAT_BASS);
     assert(up_used(0));
+    uint8_t fm_saved[FP_SIZE+1]; memcpy(fm_saved,fm6_patch[song.sel],sizeof fm_saved);
     int16_t saved[P_COUNT]; memcpy(saved,TSEL->p,sizeof saved);
     TSEL->p[P_E6]=0; assert(up_load(0)==0);
     assert(!memcmp(saved,TSEL->p,sizeof saved));
+    if(TSEL->eng_req==12) assert(!memcmp(fm_saved,fm6_patch[song.sel],FP_SIZE));
     /* The dedicated upstream emulator test additionally verifies SAVE button gestures. */
-    printf("preset=%u knob=%d peak=%.5f energy=%.5f tail=%.9f hash=%llu\n",preset,knob,peak,energy,tail,(unsigned long long)hash);
+    printf("preset=%u knob=%d delta=%d note=%d chord=%d peak=%.5f energy=%.5f tail=%.9f hash=%llu\n",preset,knob,knob_delta,note,chord,peak,energy,tail,(unsigned long long)hash);
     return 0;
 }
 

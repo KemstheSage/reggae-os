@@ -24,11 +24,12 @@ real audio ISR, virtual panel and simulated NOR storage. Each sound/knob variant
 runs in a fresh process. It writes stereo WAV and 240 × 240 PPM evidence into
 `build/reggae/` and checks:
 
-- four presets selected through the PRESETS encoder;
+- thirteen presets selected through the PRESETS encoder;
 - each assigned encoder changes the firmware parameter;
-- all sixteen variants produce distinct audio, with identical note timing;
+- all fifty-two knob variants differ from their default and each other, with identical note timing;
 - finite, non-silent stereo output, peak below 0.99 full scale;
-- tail energy below 0.001 after release;
+- default-preset tail energy below 0.02 after release; large effect/envelope variants
+  may have longer tails and are checked for eventual voice release;
 - repeated triads release all voices;
 - saved parameter values survive a change and user-preset recall.
 
@@ -110,3 +111,29 @@ The 0.2 hardware build also passed the linker/RAM-call/MMIO checks: application
 Physical hardware remains untested. Source commit ae87707; deployed Pages commit
 35b12f0. The public page identifies sound bank 0.2 and versioned WASM loading avoids
 reusing the earlier cached binary. Save files remain in the same browser storage.
+
+## Bank 0.3 verification — 16 October 2026
+
+- Native firmware: 13 defaults + 52 knob variants passed finite/non-silent/bounded
+  PCM, encoder changes, repeated-note voice release and NOR parameter recall.
+  FM6 recalled operator-patch bytes also match.
+- `node tests/reggae_wasm.mjs`: all 65 cases produce bit-identical native/WASM
+  16-bit stereo PCM (176,384 frames each).
+- `tests/reggae_extended.c`: all nine additions produce audible eight-strike
+  auditions; each of the eight Roots Kit lanes is exercised. Voices release.
+- Approved organ eight-second WAV remains byte-for-byte identical to
+  `assets/reggae-reference/roots-organ-approved.wav`.
+- Upstream WebAssembly regression passes, including MIDI, panel, save, screen,
+  deterministic rendering and the heavy mixed-engine song. Desktop execution time
+  is not a hardware CPU measurement.
+- Web editor regression passes using freshly generated firmware descriptors:
+  `FELUCCA_DESC=build/reggae/desc-v03.json node web/test_web.mjs`.
+  Assertions were updated for the appended presets/palette while preserving the
+  original preset ordering, sample-set aliases and factory pattern defaults.
+- Native 240 × 240 images and desktop browser screens inspected. Hardware builds
+  pass linker/MMIO checks; no physical FM-1 or iPhone Safari test has occurred.
+
+Reproduce extended auditions by running `sh tools/reggae/test.sh`; WAVs are in
+`build/reggae/extended-4.wav` through `extended-12.wav`. The packaging script gives
+these descriptive names under `auditions/`. Visual waveform/coil mechanisms are
+parameter-linked illustrations, not evidence of acoustic authenticity.
