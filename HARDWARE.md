@@ -55,3 +55,7 @@ pool 328,896 / 368,640 B. COMPILES; physical hardware remains untested.
 UI 0.3.2 target build: application 519,948 B; data+BSS 61,032 / 73,728 B;
 pool 328,896 / 368,640 B. COMPILES. Integer edge smoothing adds rendering work;
 physical audio/display timing remains HARDWARE UNTESTED.
+
+UI 0.3.3 target build: application 520,240 B; data+BSS 61,032 / 73,728 B;
+pool 328,896 / 368,640 B. COMPILES; character rendering remains in the UI loop.
+Physical hardware timing remains unverified.

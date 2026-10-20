@@ -96,3 +96,7 @@ the approved organ are unchanged. The future no-Felucca implementation is deferr
 Smoother native curves and more developed organ/speaker artwork, with refined
 piano, brass and siren housings. [Before/after and report](docs/reports/ui-0.3.2.md).
 The physical screen remains 240 × 240; this is an artwork/rendering improvement.
+
+UI 0.3.3 gives the melodica an expressive reed-player character: its mouth opens,
+cheeks puff and breath appears with the sound. See the
+[native rest/play comparison](docs/images/ui-0.3.3-melodica.png).

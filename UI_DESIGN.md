@@ -83,3 +83,15 @@ pass cannot prove that the extra boundary calculations leave enough audio headro
 
 [Native before/after comparison](docs/images/ui-0.3.2-comparison.png) ·
 [Full current bank](docs/images/ui-0.3.2-bank.png).
+
+## UI 0.3.3 — melodica character
+
+The reed player has a clearly drawn face, closed eyes, ribbed cap, rounded body,
+and a mouthpiece visibly connected to the melodica. Mouth opening and cheek
+expansion use the existing smoothed audio peak, sampled by the 10 Hz UI. The mouth
+closes below the activity threshold and opens progressively to eight pixels.
+Breath lines appear with that same activity; pitch-LFO phase/depth shapes their
+wave. This is an expressive level illustration, not a breath-pressure sensor.
+ANIM OFF holds the mouth closed and hides breath lines. No DSP changes or new
+allocation; all artwork is shared native firmware code. This character treatment
+is implemented for melodica; additional character identities are future work.

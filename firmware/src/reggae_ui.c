@@ -204,17 +204,37 @@ static void reggae_art(track_t *t,int kind,int level,int motion)
             reggae_line(knee,30-crest,72,52,RG_GOLD);
         }
     } else if(kind==RG_REED) {
-        /* A compact reed player; airflow follows envelope, wave phase follows vibrato. */
-        reggae_disc(179,35,18,RG_INK);
-        reggae_disc(179,26,19,RG_RED);cv_rect(159,29,40,6,RG_RED);
-        for(k=0;k<5;k++)reggae_line(165+k*6,11,162+k*8,28,RG_BG);
-        cv_rect(174,37,3,3,RG_BG);cv_rect(185,37,3,3,RG_BG);
-        cv_rect(166,55,31,49,RG_PANEL);reggae_line(166,62,137,85,RG_INK);
-        reggae_keys(29,82,9,22,level);
-        cv_frame(24,77,136,31,RG_INK);
-        for(k=0;k<3;k++) { int x,py=39+k*11;
-            for(x=20;x<145;x+=5) { int y=39+k*11+SINE[(ph+x*8)&1023]*(2+t->p[P_LD_PIT]/4)/32768;
-                if(level>300)reggae_line(x-5,py,x,y,RG_GREEN);py=y; }
+        /* Original little reed player. Mouth and cheeks follow the same
+         * low-rate audio envelope as breath; no per-sample graphics work. */
+        int breath=motion?clamp((level-200)*8/6000,0,8):0;
+        cv_rrect(161,57,43,49,-9,RG_GREEN,RG_BG);
+        reggae_disc(181,36,23,RG_INK);
+        reggae_disc(181,23,23,RG_RED);
+        cv_rect(157,25,48,7,RG_RED);
+        for(k=0;k<6;k++)reggae_line(164+k*6,9,160+k*8,25,RG_EDGE);
+        cv_rect(157,30,48,3,RG_WOOD);
+        /* Closed eyes and a small nose keep the face legible at native size. */
+        reggae_line(166,38,170,41,RG_BG);reggae_line(170,41,174,38,RG_BG);
+        reggae_line(185,38,189,41,RG_BG);reggae_line(189,41,193,38,RG_BG);
+        reggae_line(179,40,177,45,RG_WOOD);
+        reggae_disc(164,48,2+breath/4,RG_GOLD);
+        reggae_disc(197,48,2+breath/4,RG_GOLD);
+        if(breath) {
+            cv_rrect(174,48,12,3+breath,-3,RG_BG,RG_INK);
+            cv_rect(177,50+breath,6,1,RG_RED);
+        } else reggae_line(174,51,185,51,RG_BG);
+        /* Visible mouthpiece and tube join the face to the keyboard. */
+        reggae_line(174,53,150,60,RG_INK);reggae_line(150,60,139,78,RG_INK);
+        cv_rect(170,52,6,3,RG_WOOD);
+        reggae_line(165,70,139,91,RG_INK);reggae_disc(139,91,4,RG_INK);
+        cv_rrect(23,78,137,31,-3,RG_GREEN,RG_BG);
+        reggae_keys(28,82,9,23,level);
+        /* Breath waves leave the reed body; vibrato depth/phase shape them. */
+        for(k=0;k<3;k++) { int x,py=29+k*12;
+            for(x=20;x<137;x+=5) {
+                int y=29+k*12+SINE[(ph+x*8)&1023]*(2+t->p[P_LD_PIT]/4)/32768;
+                if(breath)reggae_line(x-5,py,x,y,RG_GREEN);py=y;
+            }
         }
     } else if(kind==RG_PIANO) {
         cv_rrect(25,38,190,65,-5,RG_WOOD,RG_BG);

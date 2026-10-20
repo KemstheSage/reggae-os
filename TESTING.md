@@ -166,3 +166,14 @@ parameter-linked illustrations, not evidence of acoustic authenticity.
   siren 129.5 → 143.4; kit 83.4 → 165.6. These include audio and UI work, and show
   added rendering cost. They do not establish physical FM-1 real-time headroom.
 - Physical display performance, DAC audio and iPhone Safari remain untested.
+
+## UI 0.3.3 — 20 October 2026
+
+- AddressSanitizer native graphics checks pass: mouth opens with audio level,
+  rests with ANIM OFF, plus existing focus/rotary and edge-clipping checks.
+- Rest/playing screenshots inspected at the native 240 × 240 resolution.
+- All 65 WASM/native PCM comparisons remain bit-identical. Upstream emulator
+  regression passes. WASM size: 800,135 bytes.
+- No DSP or preset changes. Physical FM-1 timing and iPhone Safari remain untested.
+- Hardware build passes linker/MMIO checks: application 520,240 B; data+BSS
+  61,032 / 73,728 B; pool 328,896 / 368,640 B. COMPILES, not physically tested.

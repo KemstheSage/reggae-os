@@ -30,6 +30,17 @@ int main(void) {
     web_enc(EN_PRESET,1);advance(110);assert(!reggae_focus_active());
     puts("PASS: focused parameter follows panel turns, expires, and clears on preset change");
     puts("PASS: real rotary changes the illustration; ANIM OFF freezes it; thirteen native screens captured");
+    web_enc(EN_PRESET,1);advance(1500);assert(reggae_index(TSEL)==4);
+    /* Render deterministic rest/play frames and inspect the actual mouth. */
+    cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,0,1);
+    uint16_t closed=cv_px[53*240+180];cv_blit(0,56);
+    picture("build/reggae/melodica-rest.ppm");
+    cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,6000,1);
+    assert(cv_px[53*240+180]!=closed);cv_blit(0,56);
+    picture("build/reggae/melodica-playing.ppm");
+    cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,6000,0);
+    assert(cv_px[53*240+180]==closed);
+    puts("PASS: melodica mouth opens with level and rests with animations disabled");
     cv_begin(32,32,RG_BG);reggae_disc(16,16,10,RG_INK);
     assert(cv_px[16*32+16]==swap16(RG_INK));assert(cv_px[0]==swap16(RG_BG));
     unsigned blended=0;
