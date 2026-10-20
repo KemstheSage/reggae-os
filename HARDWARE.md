@@ -59,3 +59,7 @@ physical audio/display timing remains HARDWARE UNTESTED.
 UI 0.3.3 target build: application 520,240 B; data+BSS 61,032 / 73,728 B;
 pool 328,896 / 368,640 B. COMPILES; character rendering remains in the UI loop.
 Physical hardware timing remains unverified.
+
+UI 0.3.4 target build: application 521,276 B; data+BSS 61,032 / 73,728 B;
+pool 328,896 / 368,640 B. COMPILES. The character family reuses the existing
+strip buffer and UI cadence; physical rendering headroom remains unverified.

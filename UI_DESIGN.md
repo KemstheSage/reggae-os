@@ -95,3 +95,30 @@ wave. This is an expressive level illustration, not a breath-pressure sensor.
 ANIM OFF holds the mouth closed and hides breath lines. No DSP changes or new
 allocation; all artwork is shared native firmware code. This character treatment
 is implemented for melodica; additional character identities are future work.
+
+## UI 0.3.4 — instrument creatures (supersedes the human reed player)
+
+A shared family uses cream eyes, dark pupils, restrained colours and musical
+movements. The melodica is now a keyboard creature with a bellows-like body:
+fold spacing and mouth opening follow the smoothed audio level. Bellows are an
+expressive breath metaphor, not a claim about melodica construction. Vibrato moves
+its gaze. The siren's pupils follow its pitch LFO and its mouth follows amplitude.
+Each drum head opens its own mouth when a voice assigned to that lane is active.
+
+The guitar stays an instrument illustration: two body bouts, a waist, soundhole,
+bridge, aligned fretboard, six strings and three-a-side tuners. String movement
+uses audio activity. It remains the same synthetic plucked-string patch.
+
+The FX page replaces four bar columns with a toothy drive box, paired chorus
+companions, an echo record and a coil-shaped reverb creature. Amount strips stay
+visible. Drive changes the jaw/teeth, chorus amount changes separation in motion,
+echo send adds marks, and reverb send scales activity. Detailed echo uses the real
+clamped tempo/division delay length for rotation cadence and repeat spacing;
+feedback changes repeat count, colour changes their palette. These are parameter
+illustrations, not a measured wet-signal display. Room/Hall use architectural
+bodies on the detailed reverb page; only Spring uses the spring body. Size and
+level scale movement and spring damping changes its width.
+
+All rendering remains integer geometry at 240 × 240, capped at 10 Hz, using the
+existing strip buffer. ANIM OFF freezes time-based motion; control changes and
+static status indicators still update. No DSP, control mapping or presets changed.

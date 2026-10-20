@@ -154,6 +154,17 @@ static void reggae_speaker(int x,int y,int w,int r,int pulse)
     cv_rect(x+5,y+5,2,2,RG_INK);cv_rect(x+w-7,y+5,2,2,RG_INK);
     cv_rect(x+5,y+h-7,2,2,RG_INK);cv_rect(x+w-7,y+h-7,2,2,RG_INK);
 }
+/* A shared visual family: cream eyes, dark pupils and simple musical gestures. */
+static void reggae_eye(int x,int y,int r,int dx,int dy)
+{
+    reggae_disc(x,y,r,RG_INK);
+    reggae_disc(x+clamp(dx,-r/3,r/3),y+clamp(dy,-r/3,r/3),r/3,RG_BG);
+}
+static void reggae_mouth(int x,int y,int w,int opening,uint16_t body)
+{
+    cv_rrect(x,y,w,3+opening,-2,RG_BG,body);
+    if(opening>3)cv_rect(x+3,y+opening,w-6,2,RG_RED);
+}
 static void reggae_art(track_t *t,int kind,int level,int motion)
 {
     int k,ph=motion?(int)(t->lfo_ph>>22):0;
@@ -204,37 +215,27 @@ static void reggae_art(track_t *t,int kind,int level,int motion)
             reggae_line(knee,30-crest,72,52,RG_GOLD);
         }
     } else if(kind==RG_REED) {
-        /* Original little reed player. Mouth and cheeks follow the same
-         * low-rate audio envelope as breath; no per-sample graphics work. */
+        /* Bellows are a breath metaphor, not a model of the physical reed. */
         int breath=motion?clamp((level-200)*8/6000,0,8):0;
-        cv_rrect(161,57,43,49,-9,RG_GREEN,RG_BG);
-        reggae_disc(181,36,23,RG_INK);
-        reggae_disc(181,23,23,RG_RED);
-        cv_rect(157,25,48,7,RG_RED);
-        for(k=0;k<6;k++)reggae_line(164+k*6,9,160+k*8,25,RG_EDGE);
-        cv_rect(157,30,48,3,RG_WOOD);
-        /* Closed eyes and a small nose keep the face legible at native size. */
-        reggae_line(166,38,170,41,RG_BG);reggae_line(170,41,174,38,RG_BG);
-        reggae_line(185,38,189,41,RG_BG);reggae_line(189,41,193,38,RG_BG);
-        reggae_line(179,40,177,45,RG_WOOD);
-        reggae_disc(164,48,2+breath/4,RG_GOLD);
-        reggae_disc(197,48,2+breath/4,RG_GOLD);
-        if(breath) {
-            cv_rrect(174,48,12,3+breath,-3,RG_BG,RG_INK);
-            cv_rect(177,50+breath,6,1,RG_RED);
-        } else reggae_line(174,51,185,51,RG_BG);
-        /* Visible mouthpiece and tube join the face to the keyboard. */
-        reggae_line(174,53,150,60,RG_INK);reggae_line(150,60,139,78,RG_INK);
-        cv_rect(170,52,6,3,RG_WOOD);
-        reggae_line(165,70,139,91,RG_INK);reggae_disc(139,91,4,RG_INK);
-        cv_rrect(23,78,137,31,-3,RG_GREEN,RG_BG);
-        reggae_keys(28,82,9,23,level);
-        /* Breath waves leave the reed body; vibrato depth/phase shape them. */
-        for(k=0;k<3;k++) { int x,py=29+k*12;
-            for(x=20;x<137;x+=5) {
-                int y=29+k*12+SINE[(ph+x*8)&1023]*(2+t->p[P_LD_PIT]/4)/32768;
-                if(breath)reggae_line(x-5,py,x,y,RG_GREEN);py=y;
-            }
+        int sway=motion?t->lfo_val*2/32768:0;
+        cv_rrect(27,36,180,72,-7,RG_EDGE,RG_BG);
+        cv_rrect(25,32,180,72,-7,RG_GREEN,RG_BG);
+        cv_rrect(34,38,104,38,-3,RG_PANEL,RG_GREEN);
+        for(k=0;k<10;k++) {
+            int x=38+k*(8+breath/4);
+            reggae_line(x,40,x+4,56,RG_INK);
+            reggae_line(x+4,56,x,73,RG_WOOD);
+        }
+        reggae_eye(158,49,12,sway,breath/3);
+        reggae_eye(187,49,12,sway,breath/3);
+        reggae_mouth(164,69,21,breath,RG_GREEN);
+        reggae_keys(33,83,9,18,level);
+        cv_rect(169,91,23,3,RG_GOLD);
+        reggae_line(45,105,40,113,RG_INK);reggae_line(40,113,54,113,RG_INK);
+        reggae_line(183,105,188,113,RG_INK);reggae_line(188,113,174,113,RG_INK);
+        if(breath)for(k=0;k<3;k++) {
+            int y=66+k*8;
+            reggae_line(210,y,216+breath,y+sway,RG_GREEN);
         }
     } else if(kind==RG_PIANO) {
         cv_rrect(25,38,190,65,-5,RG_WOOD,RG_BG);
@@ -255,24 +256,34 @@ static void reggae_art(track_t *t,int kind,int level,int motion)
         cv_rect(28,48,9,4,RG_INK);
         for(k=0;k<3;k++)if(level>500)reggae_line(186,55,199+pulse*2,30+k*25,RG_GREEN);
     } else if(kind==RG_STRING) {
-        reggae_disc(67,77,29,RG_GOLD);reggae_disc(91,60,22,RG_GOLD);
-        cv_rect(90,48,113,15,RG_INK);cv_rect(193,43,24,25,RG_GREEN);
-        reggae_disc(77,68,11,RG_BG);
-        for(k=0;k<5;k++) {
-            int y=50+k*3; reggae_line(42,79+k,85, y+(motion?pulse:0),RG_BG);
-            reggae_line(85,y+(motion?pulse:0),211,y,RG_BG);
+        /* Horizontal acoustic silhouette: lower/upper bouts, waist, aligned
+         * fingerboard, six strings, soundhole, bridge and three-a-side tuners. */
+        reggae_disc(49,67,32,RG_WOOD);reggae_disc(81,67,24,RG_WOOD);
+        reggae_disc(49,67,29,RG_GOLD);reggae_disc(81,67,21,RG_GOLD);
+        reggae_disc(70,30,16,RG_BG);reggae_disc(70,104,16,RG_BG);
+        cv_rect(89,59,106,17,RG_WOOD);cv_rect(90,61,105,13,RG_PANEL);
+        cv_rrect(192,55,28,24,-4,RG_WOOD,RG_BG);
+        reggae_ring(65,67,14,RG_INK,RG_GOLD);reggae_disc(65,67,11,RG_BG);
+        cv_rrect(35,56,6,23,-2,RG_EDGE,RG_GOLD);
+        for(k=0;k<10;k++)cv_rect(98+k*9,61,1,13,RG_WOOD);
+        for(k=0;k<6;k++) {
+            int y=62+k*2,vib=motion && k%2?pulse/2:0;
+            reggae_line(39,y,67,y+vib,RG_INK);reggae_line(67,y+vib,213,y,RG_INK);
         }
-        for(k=0;k<8;k++)cv_rect(108+k*10,48,1,15,RG_PANEL);
+        for(k=0;k<3;k++) {
+            cv_rect(199+k*7,51,3,6,RG_INK);cv_rect(199+k*7,78,3,6,RG_INK);
+        }
+        cv_rect(191,59,3,17,RG_INK);
     } else if(kind==RG_SIREN) {
-        int dy=motion?t->lfo_val*15/32768:0;
-        cv_rrect(88,38,65,65,-5,RG_EDGE,RG_BG);
-        cv_rrect(84,34,65,65,-5,RG_RED,RG_BG);
-        cv_rect(89,40,3,3,RG_INK);cv_rect(141,40,3,3,RG_INK);
-        cv_rect(89,90,3,3,RG_INK);cv_rect(141,90,3,3,RG_INK);
-        reggae_ring(116,66,22,RG_INK,RG_BG);reggae_disc(116,66+dy/3,7,RG_GOLD);
-        cv_rect(96,101,41,9,RG_PANEL);cv_rect(91,111,51,6,RG_INK);
+        int dy=motion?t->lfo_val*5/32768:0;
+        cv_rrect(83,29,80,76,-7,RG_EDGE,RG_BG);
+        cv_rrect(79,25,80,76,-7,RG_RED,RG_BG);
+        reggae_eye(99,48,17,dy,0);reggae_eye(139,48,17,dy,0);
+        reggae_mouth(97,76,43,4+pulse,RG_RED);
+        for(k=0;k<5;k++)cv_rect(101+k*7,77,3,3,RG_INK);
+        cv_rect(96,103,45,7,RG_PANEL);cv_rect(90,112,57,5,RG_INK);
         for(k=0;k<3;k++)if(level>300){reggae_line(62-k*10,34-k*5,55-k*10,65,RG_GOLD);reggae_line(55-k*10,65,62-k*10,96+k*5,RG_GOLD);}
-        for(k=0;k<50;k+=4)cv_rect(168+k,62+SINE[(ph+k*20)&1023]*20/32768,3,3,RG_GREEN);
+        for(k=0;k<50;k+=4)cv_rect(170+k,62+SINE[(ph+k*20)&1023]*20/32768,3,3,RG_GREEN);
     } else {
         /* Each lane uses actual voice activity, not a decorative beat loop. */
         for(k=0;k<8;k++) {
@@ -280,32 +291,85 @@ static void reggae_art(track_t *t,int kind,int level,int motion)
             int active=0,v;
             for(v=0;v<NVOICE;v++)if(t->v[v].active && drum_lane(t->v[v].note)==(uint32_t)k)active=1;
             reggae_ring(x,y,19+(motion&&active?2:0),active?RG_GOLD:RG_INK,RG_PANEL);
-            reggae_line(x-12,y-14,x+10,y+(active?4:-5),RG_RED);
+            reggae_eye(x-7,y-5,5,0,0);reggae_eye(x+7,y-5,5,0,0);
+            reggae_mouth(x-6,y+5,12,motion&&active?6:0,RG_PANEL);
             cv_text_in(x-25,y+23,50,&AF_S,drum_lane_name(t,(uint32_t)k),RG_INK,RG_BG);
         }
     }
 }
+/* Effects are visual metaphors for actual amounts and activity. No new DSP.
+ * Record cadence uses the real tempo/division delay length, including clamps. */
 static void reggae_effect_art(int mode,int motion,int level)
 {
     int k,phase=motion?(int)(fm1_ms/8)&1023:0;
+    int pulse=motion?clamp(level*18/32768,0,5):0;
     if(mode==2) {
-        int amp=motion?level*(5+song.g[G_RSIZE]/8)/32768:0,py=62;
-        int height=5+(127-song.g[G_RDAMP])/10;
-        cv_rect(18,40,5,42,RG_INK);cv_rect(217,40,5,42,RG_INK);
-        for(k=23;k<218;k+=3){int y=62+SINE[((k-23)*32)&1023]*height/32768 + SINE[phase]*amp/32768;reggae_line(k-3,py,k,y,RG_INK);py=y;}
-        cv_text_in(0,101,240,&AF_S,"DECAY / DAMPING",RG_GREEN,RG_BG);
+        int amp=motion?level*(5+song.g[G_RSIZE]/8)/32768:0;
+        int bounce=SINE[phase]*amp/32768,model=song.g[G_RTYPE];
+        cv_rrect(70,7+bounce,100,33,-9,RG_GREEN,RG_BG);
+        reggae_eye(100,22+bounce,10,0,0);reggae_eye(140,22+bounce,10,0,0);
+        if(model==1) {
+            int py=45+bounce,height=12+(127-song.g[G_RDAMP])/8;
+            for(k=45;k<=98;k+=2) {
+                int x=120+SINE[((k-45)*62)&1023]*height/32768;
+                reggae_line(120+SINE[((k-47)*62)&1023]*height/32768,py,x,k+bounce,RG_INK);py=k+bounce;
+            }
+        } else {
+            /* Room/hall are architectural bodies; never labelled as spring. */
+            for(k=0;k<(model==2?5:3);k++)cv_frame(79+k*8,44+k*5+bounce,82-k*16,53-k*7,RG_INK);
+        }
+        reggae_line(105,99+bounce,97,107,RG_GREEN);reggae_line(135,99+bounce,143,107,RG_GREEN);
+        cv_text_in(0,111,240,&AF_S,model==1?"SPRING":model==2?"HALL":"ROOM",RG_INK,RG_BG);
     } else if(mode==1) {
-        int spacing=13+song.g[G_DTIME]*2;
-        for(k=0;k<4;k++) {int x=22+k*spacing;if(x>115)break;reggae_disc(x,65,3+k*3,RG_INK);}
-        reggae_disc(166,61,43,RG_RED);reggae_ring(166,61,33,RG_INK,RG_BG);
-        reggae_disc(166,61,12,RG_GOLD);
-        {int dx=SINE[phase]*36/32768,dy=SINE[(phase+256)&1023]*36/32768;reggae_line(166,61,166+dx,61+dy,RG_INK);}
-        for(k=0;k<song.g[G_DFDBK]/20;k++)cv_rect(118+k*15,111,9,3,RG_GREEN);
+        uint32_t ms=delay_samples()*1000u/FS;
+        int turn=motion?(int)((fm1_ms%(ms?ms:1))*1024u/(ms?ms:1)):0;
+        int spacing=12+(int)ms/60,count=1+song.g[G_DFDBK]/24;
+        for(k=0;k<count;k++) {
+            int x=105-k*spacing;if(x<12)break;
+            reggae_ring(x,65,clamp(13-k*2,3,13),song.g[G_DCOLOR]>63?RG_GOLD:RG_GREEN,RG_BG);
+        }
+        reggae_disc(170,61,43,RG_PANEL);reggae_ring(170,61,38,RG_WOOD,RG_PANEL);
+        reggae_ring(170,61,31,RG_WOOD,RG_PANEL);reggae_disc(170,61,24,RG_RED);
+        reggae_eye(161,56,7,0,0);reggae_eye(180,56,7,0,0);
+        reggae_mouth(164,69,13,pulse,RG_RED);
+        {int dx=SINE[turn]*37/32768,dy=SINE[(turn+256)&1023]*37/32768;reggae_disc(170+dx,61+dy,3,RG_INK);}
+        cv_text_in(0,111,240,&AF_S,"REPEATS / FEEDBACK",RG_GREEN,RG_BG);
     } else {
         static const char *const names[]={"DRIVE","CHORUS","ECHO","REVERB"};
-        for(k=0;k<4;k++){int x=12+k*57,h=TSEL->p[P_DIST+k]*64/127;
-            cv_frame(x,16,48,76,RG_INK);cv_rect(x+6,85-h,36,h+1,k==2?RG_RED:k==3?RG_GREEN:RG_GOLD);
-            cv_text_in(x-3,99,54,&AF_S,names[k],RG_INK,RG_BG);}
+        for(k=0;k<4;k++) {
+            int x=12+k*57,amount=TSEL->p[P_DIST+k],energy=pulse*amount/127;
+            uint16_t color=k==0?RG_GOLD:k==1?RG_GREEN:k==2?RG_RED:RG_INK;
+            if(k==0) {
+                cv_rrect(x,31,47,53,-5,RG_GOLD,RG_BG);
+                reggae_eye(x+13,43,7,0,0);reggae_eye(x+34,43,7,0,0);
+                cv_rrect(x+5,58,37,10+amount/16+energy,-3,RG_BG,RG_GOLD);
+                for(int j=0;j<5;j++){cv_rect(x+8+j*6,59,3,3+amount/32,RG_INK);cv_rect(x+8+j*6,65+amount/16+energy,3,3,RG_INK);}
+            } else if(k==1) {
+                int sway=motion?SINE[phase]*amount/32768/32:0;
+                cv_rrect(x,39+sway,24,39,-6,RG_GREEN,RG_BG);
+                cv_rrect(x+24,39-sway,24,39,-6,RG_WOOD,RG_BG);
+                reggae_eye(x+12,51+sway,8,0,0);reggae_eye(x+36,51-sway,8,0,0);
+                reggae_mouth(x+7,66+sway,10,energy,RG_GREEN);
+                reggae_mouth(x+31,66-sway,10,energy,RG_WOOD);
+                reggae_line(x+18,81,x+30,81,RG_INK);
+            } else if(k==2) {
+                reggae_disc(x+24,59,24,RG_PANEL);reggae_ring(x+24,59,21,RG_WOOD,RG_PANEL);
+                reggae_disc(x+24,59,16,RG_RED);
+                reggae_eye(x+18,55,5,0,0);reggae_eye(x+31,55,5,0,0);
+                reggae_mouth(x+18,65,13,energy,RG_RED);
+                for(int j=0;j<amount/25;j++)cv_rect(x+4+j*8,28,4,3,RG_RED);
+            } else {
+                int y=33+energy;
+                cv_rrect(x+4,y,40,22,-7,RG_GREEN,RG_BG);
+                reggae_eye(x+15,y+10,6,0,0);reggae_eye(x+33,y+10,6,0,0);
+                for(int j=0;j<5;j++) {
+                    int yy=y+24+j*5;
+                    reggae_line(x+9,yy,x+39,yy+3,RG_INK);reggae_line(x+39,yy+3,x+9,yy+5,RG_INK);
+                }
+            }
+            cv_rect(x+2,91,44,3,RG_PANEL);cv_rect(x+2,91,amount*44/127,3,color);
+            cv_text_in(x-3,103,54,&AF_S,names[k],RG_INK,RG_BG);
+        }
     }
 }
 static void reggae_draw(void)

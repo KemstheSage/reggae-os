@@ -100,3 +100,7 @@ The physical screen remains 240 × 240; this is an artwork/rendering improvement
 UI 0.3.3 gives the melodica an expressive reed-player character: its mouth opens,
 cheeks puff and breath appears with the sound. See the
 [native rest/play comparison](docs/images/ui-0.3.3-melodica.png).
+
+UI 0.3.4 replaces the human melodica player with an instrument creature and adds
+siren/drum personalities, a clearer guitar, and characterful effects pages.
+[See eight native screens](docs/images/ui-0.3.4-characters.png).

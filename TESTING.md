@@ -177,3 +177,15 @@ parameter-linked illustrations, not evidence of acoustic authenticity.
 - No DSP or preset changes. Physical FM-1 timing and iPhone Safari remain untested.
 - Hardware build passes linker/MMIO checks: application 520,240 B; data+BSS
   61,032 / 73,728 B; pool 328,896 / 368,640 B. COMPILES, not physically tested.
+
+## UI 0.3.4 — 20 October 2026
+
+- Native graphics tests pass under AddressSanitizer: melodica mouth/audio-level
+  response, ANIM OFF, all four FX amount responses, and existing focus/rotary and
+  primitive clipping checks. Real FX pages and eight redesigned screens inspected
+  at native 240 × 240 resolution.
+- All 65 native/WASM PCM comparisons remain bit-identical. Upstream emulator
+  regression passes; WASM 803,173 bytes. No DSP or sound-bank edits.
+- FM-1 build passes linker/MMIO checks: application 521,276 B; data+BSS
+  61,032 / 73,728 B; pool 328,896 / 368,640 B. COMPILES.
+- Physical FM-1 audio/display timing and actual iPhone Safari remain untested.

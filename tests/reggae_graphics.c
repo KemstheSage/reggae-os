@@ -33,14 +33,35 @@ int main(void) {
     web_enc(EN_PRESET,1);advance(1500);assert(reggae_index(TSEL)==4);
     /* Render deterministic rest/play frames and inspect the actual mouth. */
     cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,0,1);
-    uint16_t closed=cv_px[53*240+180];cv_blit(0,56);
+    uint16_t closed=cv_px[74*240+174];cv_blit(0,56);
     picture("build/reggae/melodica-rest.ppm");
     cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,6000,1);
-    assert(cv_px[53*240+180]!=closed);cv_blit(0,56);
+    assert(cv_px[74*240+174]!=closed);cv_blit(0,56);
     picture("build/reggae/melodica-playing.ppm");
     cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,6000,0);
-    assert(cv_px[53*240+180]==closed);
+    assert(cv_px[74*240+174]==closed);
     puts("PASS: melodica mouth opens with level and rests with animations disabled");
+    /* Every FX amount must affect its own native illustration. */
+    for(unsigned k=0;k<4;k++) {
+        TSEL->p[P_DIST+k]=0;
+        cv_begin(240,124,RG_BG);reggae_effect_art(0,1,6000);cv_blit(0,56);a=art_hash();
+        TSEL->p[P_DIST+k]=100;
+        cv_begin(240,124,RG_BG);reggae_effect_art(0,1,6000);cv_blit(0,56);assert(a!=art_hash());
+    }
+    cv_begin(240,124,RG_BG);reggae_effect_art(0,0,6000);cv_blit(0,56);a=art_hash();
+    fm1_ms+=333;
+    cv_begin(240,124,RG_BG);reggae_effect_art(0,0,6000);cv_blit(0,56);assert(a==art_hash());
+    /* Capture real firmware FX pages, including model-specific reverb bodies. */
+    ui_prefs&=~PREF_ANIM_OFF;ui.home=0;rg_focus.valid=0;
+    for(unsigned n=0;n<NPAGES;n++)if(str_eq(PAGES[n].title,"FX") || str_eq(PAGES[n].title,"DLY") || str_eq(PAGES[n].title,"REVERB")) {
+        char path[100];ui.page=n;ui.force=1;TSEL->peak=6000;reggae_draw();
+        snprintf(path,sizeof path,"build/reggae/character-%s.ppm",PAGES[n].title);picture(path);
+        if(str_eq(PAGES[n].title,"REVERB"))for(unsigned model=0;model<3;model++) {
+            song.g[G_RTYPE]=model;TSEL->peak=6000;ui.force=1;reggae_draw();
+            snprintf(path,sizeof path,"build/reggae/character-reverb-%u.ppm",model);picture(path);
+        }
+    }
+    puts("PASS: all four FX controls change artwork; ANIM OFF freezes movement; real FX pages captured");
     cv_begin(32,32,RG_BG);reggae_disc(16,16,10,RG_INK);
     assert(cv_px[16*32+16]==swap16(RG_INK));assert(cv_px[0]==swap16(RG_BG));
     unsigned blended=0;
