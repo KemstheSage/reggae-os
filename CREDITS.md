@@ -29,3 +29,9 @@ thanks the work below; each keeps its own licence (see [LICENSE](LICENSE), [LICE
   [jasonpersinger](https://github.com/jasonpersinger) (the ROOM reverb click fix, #121),
   [renebohne](https://github.com/renebohne) (MIDI Program Change, #179),
   [gospodindilly-ops](https://github.com/gospodindilly-ops) (the second core, #247)
+
+REGGAE-OS bank 0.5: three trumpet sustains from Versilian Studios / Sam Gossner's
+VSCO 2 Community Edition, CC0-1.0. Full source recordings, pinned URLs, SHA-256
+hashes and upstream license: [assets/samples-cc0/BRASS](assets/samples-cc0/BRASS/PROVENANCE.json).
+Converted to mono 22,050 Hz IMA ADPCM, trimmed, looped and pitch-corrected at playback.
+No recordings from the musical reference releases are included.
