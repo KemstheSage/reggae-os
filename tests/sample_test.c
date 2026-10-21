@@ -193,8 +193,8 @@ int main(int argc, char **argv)
         check("PIANO: SET 0, its aliases 1 and 4 the same zones; FLUTE 2, SAX 3, USR1..3 5..7; 4 presets",
               SMP_NSETS == 5u && str_eq(SMP_SETS[0].name, "PIANO") && SMP_SETS[1].z0 == s->z0 && SMP_SETS[4].z0 == s->z0 &&
               SMP_SETS[1].nz == s->nz && SMP_SETS[4].nz == s->nz && str_eq(SMP_SETS[2].name, "FLUTE") &&
-              str_eq(SMP_SETS[3].name, "SAX") && str_eq(SMP_ALL_NAMES[5], "USR1") && ENG_SAMPLE.edit[0].max == 7 &&
-              ENG_SAMPLE.npresets == 4u);
+              str_eq(SMP_SETS[3].name, "SAX") && str_eq(SMP_ALL_NAMES[5], "USR1") && ENG_SAMPLE.edit[0].max == 8 &&
+              UPSTREAM_ENG_SAMPLE.npresets == 4u);
         for (i = 0; ok && i < 5u; i++) {
             bytes += (z[i].n + 1u) / 2u;
             ok &= z[i].rate == 32768u && z[i].root16 == ROOT[i] * 16u && z[i].lo == LO[i] && z[i].hi == HI[i] &&
@@ -222,6 +222,20 @@ int main(int argc, char **argv)
         check("PIANO: GRAIN SRC 0 takes its zones (the middle C zone for note 60, not the sine)",
               zone == 2 && rms(FS / 2u, FS) > 100.0);
     }
+
+    /* REGGAE extension follows user IDs, in SAMPLE and GRAIN; no missing-sample fallback. */
+    check("sample IDs: USR1..3 remain 5..7; recorded trumpet appended as ID 8",
+          SMP_BRASS_ID == 8 && SMP_NALL == 9 && !smp_builtin(5) && !smp_builtin(6) &&
+          !smp_builtin(7) && smp_builtin(8) && !smp_set_missing(8) && smp_set(8)->nz == 3);
+    for (i = 60; i <= 79; i++) {
+        render(ENGI_SAMPLE, 8, i, &ended, &zone);
+        check("TRUMPET: real sample, sustained through loop, audible", zone >= 11 && zone <= 13 &&
+              ended == 0 && rms(FS, 2*FS) > 100.0);
+        pitch_ok("TRUMPET", i);
+    }
+    render(8u, 8, 67, 0, &zone);
+    check("TRUMPET: GRAIN resolves appended ROM source without touching user slots",
+          zone >= 0 && zone < 3 && rms(FS / 2u, FS) > 100.0);
 
     /* 2: SLICE's PIANO, SAMPLE PIANO's middle C zone itself */
     check("SLICE PIANO: SAMPLE PIANO's middle C zone itself (16537 samples at 22,050 Hz, no copy)",

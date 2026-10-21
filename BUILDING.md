@@ -193,3 +193,14 @@ cd /tmp/felucca-site && python3 -m http.server 8000
 
 Installing firmware is at your own risk. If an install fails and the FM-1 no longer
 starts, recovery needs [FM-1-transporter](https://github.com/kurogedelic/FM-1-transporter).
+
+### Bank 0.5 horn sources
+
+The three CC0 trumpet source WAVs and license are checked in under
+`assets/samples-cc0/BRASS/`. `python3 tools/reggae/fetch-horns.py` verifies their
+hashes or restores missing files from pinned upstream URLs. Regenerate
+`build/gen/felucca_samples.h` with `python3 tools/gen_samples.py
+build/gen/felucca_samples.h` before compiling. Existing built-in sample IDs 0–4
+and user slots 5–7 remain unchanged; trumpet is public sample ID 8. Its ROM data
+is appended after existing sample/slice data. Do not increase `SMP_NSETS` to add
+this set: that constant marks the historical user-slot boundary.

@@ -206,3 +206,28 @@ parameter-linked illustrations, not evidence of acoustic authenticity.
 - Final WASM/native parity passes all 65 cases; upstream emulator regression passes.
   WASM: 803,259 bytes. FM-1 linker/MMIO checks pass: application 521,344 B;
   data+BSS 61,032 / 73,728 B; pool 328,896 / 368,640 B. COMPILES.
+
+## Sound bank 0.5 — 21 October 2026
+
+- `REGGAE_TEST_CFLAGS=-O0 sh tools/reggae/test.sh`: 75 default/control audio
+  renders, release, repeated notes and storage; extended auditions and fifteen
+  native 240 × 240 screens. Graphics assertions pass.
+- `node tests/reggae_wasm.mjs`: all 75 renders byte-identical to native PCM.
+- `python3 tools/reggae/check-protected.py`: all 40 approved organ/piano/bass
+  default/control renders match the pre-change hashes.
+- `node web/emu/emu_test.mjs build/emu/felucca.wasm`: existing regression passes.
+- `tests/sample_test.c` compiled at -O0: original piano and legacy USR1 playback,
+  new sample-ID mapping, trumpet sustain and measured pitch across MIDI 60–79,
+  and GRAIN source selection all pass. PIANO HD matches at twelve notes.
+- `tests/reggae_siren.c`: four repeated Jungle Signal triggers; held key fades
+  to silence, and note-off releases the voice. Also included in test.sh.
+- `tests/reggae_graphics.c` compiled with AddressSanitizer: all checks pass.
+- Final hardware build: app 553,340 / 581,564 bytes; data+BSS 61,032 / 73,728;
+  pool 328,896 / 368,640. Package 610,090 bytes, identity FM-1_900. Existing HAL,
+  register-access and interrupt/c1-text build guards pass. WASM 834,312 bytes.
+
+Hardware status: COMPILES, HARDWARE UNTESTED. Emulator audio tested by directly
+executing the actual WASM exports; iPhone Safari interaction remains untested.
+The final test runs were individual commands as well as the main script; the
+held-key siren check was added to the script after its successful standalone run.
+No subjective listening comparison or physical CPU-headroom measurement is claimed.

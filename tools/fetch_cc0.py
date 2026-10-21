@@ -34,7 +34,7 @@ PICK = {
             [r"_A#1_vl2_rr1", r"_A#2_vl2_rr1", r"_A#3_vl2_rr1"]),
     "ORGAN": (VCSL, "Aerophones/Edge-blown Aerophones/Pipe Organ/Quiet", [r"_C2_rr1", r"_C3_rr1", r"_C4_rr1"]),
     "STRINGS": (VSCO, "Strings/Violin Section/susVib", [r"_A2_v1", r"_A3_v1", r"_B4_v1"]),
-    "BRASS": (VSCO, "Brass/Trumpet/sus", [r"_A2_v1_rr1", r"_C3_v1_rr1", r"_A4_v1_rr1"]),
+    "BRASS": (VSCO, "Brass/Trumpet/sus", [r"_C3_v1_rr1", r"_G3_v1_rr1", r"_D4_v1_rr1"]),
     "FLUTE": (VSCO, "Woodwinds/Flute/susvib", [r"_C4_v1_1", r"_C5_v1_1", r"_C6_v1_1"]),
     "SAX": (VCSL, "Aerophones/Reed Aerophones/Tenor Saxophone/Non-Vibrato",
             [r"_A#1_vl2_rr1", r"_A#2_vl2_rr1", r"_A#3_vl2_rr1"]),
@@ -79,7 +79,7 @@ def main():
                 print(f"  {name}: no match for {rx} in {d}")
                 continue
             src = cand[0]
-            dest = DEST / name / f"{k:02d}_{src.rsplit('/', 1)[1]}"
+            dest = DEST / name / (src.rsplit("/", 1)[1] if name == "BRASS" else f"{k:02d}_{src.rsplit('/', 1)[1]}")
             n = fetch(repo, src, dest)
             total += n
             credits.append(f"{name}/{dest.name}  <-  sgossner/{repo}: {src}")

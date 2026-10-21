@@ -4,7 +4,7 @@
 #define REGGAE_NO_MAIN 1
 #include "reggae_test.c"
 int main(int argc,char **argv) {
-    assert(argc==3); unsigned preset=atoi(argv[1]); assert(preset>=4 && preset<13);
+    assert(argc==3); unsigned preset=atoi(argv[1]); assert(preset>=4 && preset<NELEM(REGGAE_BANK));
     web_nor_erase();web_boot();advance(1000);
     for(unsigned i=0;i<preset;i++){web_enc(EN_PRESET,1);advance(100);}
     FILE *f=fopen(argv[2],"wb");assert(f);

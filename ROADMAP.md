@@ -16,7 +16,7 @@
 5. Dub effects: retained upstream effects; FX, delay and reverb now have native
    animated illustrations. Siren/dub organ expose delay send. Echo throws and
    deeper tape/spring refinements remain.
-6. Presets: retained flash storage, full browsing and save/recall. Thirteen-sound HOME bank
+6. Presets: retained flash storage, full browsing and save/recall. Fifteen-sound HOME bank
    implemented; illustrated genre/category browsing remains.
 7. Hardware optimisation: no physical device. Linker and target builds are necessary
    but cannot establish DAC quality, timing, controls, flashing or recovery on hardware.
@@ -29,3 +29,7 @@ separate later rewrite, not satisfied by renaming the fork or hiding attribution
 Current work continues in the existing prototype to develop and validate sounds,
 original UI design and interaction requirements. Research and first native UI
 refinements are recorded in `docs/research/te-interface-study.md`.
+
+Bank 0.5 adds a compact sampled roots trumpet and separate dub wail, jungle signal
+and fast alarm candidates. Horn section layering remains future work. See
+[bank 0.5](docs/reports/bank-0.5.md) for validation and limitations.

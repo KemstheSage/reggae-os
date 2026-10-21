@@ -206,3 +206,32 @@ upper-voiced 100 ms guitar chops, short horn stabs, a melodic reed line, siren k
 moves, and kick/rim on beat three with light eighth-note hats. They do not add a
 sequencer to the instrument. Play guitar around C4–C5, brass C4–C5, melodica G4–D5,
 and siren around C5 before exploring wider registers. Preset names/indices stay put.
+
+## Bank 0.5 — recorded roots trumpet and three sirens
+
+ROOTS TRUMPET replaces the curated BRASS STABS entry with a recorded acoustic
+trumpet, not a full horn section. The old ANALOG preset remains available and
+saved patches retain their engine and preset numbers. CC0 VSCO 2 CE sustains
+use C4/G4/D5 zones (the source names use C3 for middle C), 0.95 seconds each,
+with crossfaded sustain loops beginning at 0.4 seconds. Measured source pitch
+is compensated using the existing fractional root-pitch metadata. Tone, attack,
+decay and release remain real SAMPLE/ADSR controls. The original tongued onset
+is retained; modest room send, no chorus or distortion. Audition around C4–G5;
+extreme transpositions will sound less natural. All chords remain freely playable.
+
+DUB WAIL uses a sine oscillator, triangle pitch LFO and echo send. JUNGLE SIGNAL
+uses a filtered pulse with a descending pitch envelope tied to its decaying
+amplitude (zero sustain): a held key still produces a short signal. FALL sets
+pitch-envelope amount, LENGTH sets decay, ECHO is delay send and TONE is cutoff.
+FAST ALARM uses a filtered pulse and square pitch LFO; RANGE changes pitch span,
+RATE changes alternation speed. The engine's existing square LFO has abrupt
+pitch changes; this is an intentional alarm character. These are original
+synthesis candidates, not copies of the sampled effects in named records.
+
+Existing siren character art is reused; its mouth follows signal level and its
+eyes follow LFO activity. No new browser-only graphics or audio code.
+
+The expanded [reference brief](docs/reports/roots-horns-and-sirens.md) distinguishes
+research from verified listening. Musical approval still requires auditioning;
+automated checks establish technical behavior, not authenticity. All approved
+organ/piano/bass patch definitions remain unchanged.

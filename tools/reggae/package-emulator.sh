@@ -18,7 +18,7 @@ fi
 # Extended audition phrases use the same firmware, including each drum lane.
 mkdir -p build/emu/auditions
 i=4
-for name in reed-melodica warm-tine piano-chop brass-stabs muted-skank dub-siren round-fm-bass dub-drawbars roots-kit; do
+for name in reed-melodica warm-tine piano-chop brass-stabs muted-skank dub-siren round-fm-bass dub-drawbars roots-kit jungle-signal fast-alarm; do
   if test -f "build/reggae/extended-$i.wav"; then
     cp "build/reggae/extended-$i.wav" "build/emu/auditions/$name.wav"
   fi
@@ -35,3 +35,6 @@ for entry in 4:reed-melodica 7:brass-stabs 8:muted-skank 9:dub-siren 12:roots-ki
     cp "build/reggae/before-bank04/extended-$number.wav" "build/emu/auditions/$name-before-bank04.wav"
   fi
 done
+
+# Clear name for the sampled replacement; retain brass-stabs.wav for existing bookmarks.
+cp build/emu/auditions/brass-stabs.wav build/emu/auditions/roots-trumpet.wav

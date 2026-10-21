@@ -21,7 +21,9 @@ static const preset_t REGGAE_ANALOG_PRESETS[] = {
     {"DIGITAL BASS", {1, 0, 0, 0, 48, 0, 4, 64}, {9, 90, 0, 34}, 12, 1, FX(0, 0, 0, 0), PAT(0)},
     {"REED MELODICA", {4, 0, 0, 1, 79, 10, 2, 80}, {36, 75, 116, 43}, 6, 1, FX(0, 0, 0, 8), PAT(0)},
     {"BRASS STABS", {0, 7, 46, 0, 67, 6, 4, 78}, {40, 82, 76, 37}, 30, 0, FX(0, 0, 0, 9), PAT(0)},
-    {"DUB SIREN", {1, 0, 0, 0, 84, 0, 4, 0}, {6, 64, 127, 42}, 0, 1, FX(0, 0, 42, 10), PAT(0)},
+    {"DUB WAIL", {3, 0, 0, 0, 100, 0, 3, 0}, {6, 64, 127, 36}, 0, 1, FX(0, 0, 38, 8), PAT(0)},
+    {"JUNGLE SIGNAL", {1, 0, 0, 0, 88, 0, 3, 0}, {0, 86, 0, 24}, 0, 1, FX(0, 0, 28, 0), PAT(0)},
+    {"FAST ALARM", {1, 0, 0, 0, 77, 0, 2, 0}, {3, 64, 127, 22}, 0, 1, FX(0, 0, 24, 0), PAT(0)},
 };
 
 static const engine_t ENG_ANALOG = {
@@ -87,6 +89,7 @@ static const preset_t REGGAE_SAMPLE_PRESETS[] = {
     {"SAX", {3, 0, 0, 1, 127, 0, 0, 0}, {12, 80, 120, 60}, 0, 0},
     {"PIANO", {0, 0, 0, 1, 127, 0, 0, 0}, {0, 127, 127, 70}, 0, 0},
     {"PIANO CHOP", {0, 0, 0, 0, 105, 0, 7, 0}, {0, 82, 64, 25}, 0, 0, FX(0, 0, 0, 8), PAT(0)},
+    {"ROOTS TRUMPET", {SMP_BRASS_ID, 0, 0, 1, 113, 0, 0, 0}, {0, 76, 104, 28}, 0, 0, FX(0, 0, 0, 7), PAT(0)},
 };
 
 static const engine_t ENG_SAMPLE = {
@@ -122,12 +125,14 @@ static const reggae_sound_t REGGAE_BANK[] = {
     {0,14,RG_REED,"MELODICA",{P_ATK,P_E4,P_LD_PIT,P_REL}},
     {12,8,RG_PIANO,"E-PIANO",{P_E2,P_E4,P_CHOR,P_E6}},
     {4,5,RG_PIANO,"PIANO",{P_E4,P_DEC,P_E6,P_REL}},
-    {0,15,RG_BRASS,"BRASS",{P_E4,P_ATK,P_ED_FLT,P_REL}},
+    {4,6,RG_BRASS,"BRASS",{P_E4,P_ATK,P_DEC,P_REL}},
     {9,9,RG_STRING,"SKANK",{P_E2,P_E3,P_E4,P_REL}},
     {0,16,RG_SIREN,"SIREN",{P_ED_PIT,P_LRATE,P_DLY,P_E4}},
     {12,9,RG_BASS,"FM BASS",{P_E2,P_E4,P_E3,P_LEVEL}},
     {7,7,RG_ORGAN,"DUB ORGAN",{P_E0,P_E3,P_E7,P_DLY}},
     {10,4,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
+    {0,17,RG_SIREN,"SIREN",{P_ED_PIT,P_DEC,P_DLY,P_E4}},
+    {0,18,RG_SIREN,"SIREN",{P_LD_PIT,P_LRATE,P_DLY,P_E4}},
 };
 static int reggae_index(const track_t *t)
 {
@@ -143,7 +148,9 @@ static int reggae_patch(const track_t *t) { return reggae_index(t)>=0; }
 static void reggae_loaded(track_t *t)
 {
     if(t->eng_req==0 && t->preset==14) { t->p[P_LRATE]=88; t->p[P_LD_PIT]=1; t->p[P_LFADE]=68; t->p[P_ED_SHP]=-24; }
-    if(t->eng_req==0 && t->preset==16) { t->p[P_LRATE]=72; t->p[P_LD_PIT]=40; t->p[P_LWAVE]=1; }
+    if(t->eng_req==0 && t->preset==16) { t->p[P_LRATE]=65; t->p[P_LD_PIT]=32; t->p[P_LWAVE]=1; }
+    if(t->eng_req==0 && t->preset==17) { t->p[P_ED_PIT]=63; }
+    if(t->eng_req==0 && t->preset==18) { t->p[P_LRATE]=96; t->p[P_LD_PIT]=32; t->p[P_LWAVE]=3; }
     if(t->eng_req==10 && t->preset==4) {
         static const int16_t levels[8]={127,114,82,92,86,110,127,94};
         for(unsigned i=0;i<8;i++)t->p[P_LN0+i]=levels[i];

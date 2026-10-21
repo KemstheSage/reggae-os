@@ -47,7 +47,8 @@ static uint32_t pow2_q16(int32_t d16)
 #define SMP_USER_SIZE 0x14000u
 #define SMP_USER_DATA 512u
 #define SMP_USER_MAGIC 0x504D5346u                  /* "FSMP" */
-#define SMP_NALL (SMP_NSETS + SMP_USER_SLOTS)
+#define SMP_BRASS_ID (SMP_NSETS + SMP_USER_SLOTS)
+#define SMP_NALL (SMP_BRASS_ID + SMP_HAS_BRASS)
 typedef struct {
     uint32_t magic;
     uint16_t version;
@@ -58,7 +59,14 @@ typedef struct {
 } smp_user_hdr_t;                                   /* 32 + 16 x 28 = 480 B, data at +512 */
 static smp_zone_t usr_zone[SMP_USER_SLOTS][16];     /* RAM copy, off rebased onto SMP_DATA */
 static uint8_t usr_nz[SMP_USER_SLOTS];
-static const char *const SMP_ALL_NAMES[SMP_NALL] = {SMP_SET_NAMES_INIT, "USR1", "USR2", "USR3"};
+static const char *const SMP_ALL_NAMES[SMP_NALL] = {SMP_SET_NAMES_INIT, "USR1", "USR2", "USR3"
+#if SMP_HAS_BRASS
+    , "TRUMPET"
+#endif
+};
+/* Public sample IDs are persistent. New ROM sets follow the existing user slots. */
+static int smp_builtin(uint32_t si) { return si < SMP_NSETS || (SMP_HAS_BRASS && si == SMP_BRASS_ID); }
+static const smp_set_t *smp_set(uint32_t si) { return &SMP_SETS[si == SMP_BRASS_ID ? SMP_NSETS : si]; }
 
 #ifndef SMP_USER_XIP                                /* host tests: a RAM image of the slots */
 #define SMP_USER_XIP(k) fm1_xip_ptr(SMP_USER_BASE + (k) * SMP_USER_SIZE)
@@ -123,8 +131,8 @@ static void smp_sine(int32_t *out, uint32_t n, const vmod_t *m, int32_t d16, int
 /* SET / SRC si (0..SMP_NALL - 1) has no sample data: an empty or invalid user slot, a built-in set without data */
 static int smp_set_missing(uint32_t si)
 {
-    if (si < SMP_NSETS)
-        return !SMP_ZONES[SMP_SETS[si].z0].n;
+    if (smp_builtin(si))
+        return !SMP_ZONES[smp_set(si)->z0].n;
     return !usr_nz[(si - SMP_NSETS) % SMP_USER_SLOTS];
 }
 
@@ -162,8 +170,8 @@ static inline int32_t sample_next(const smp_zone_t *z, voice_t *v, int loop)
 static void sample_note_on(track_t *t, voice_t *v)
 {
     uint32_t si = (uint32_t)t->p[P_E0] % SMP_NALL, i, zi = 0xFFFFu, width = 128u;
-    if (si < SMP_NSETS) {                           /* a built-in set: its zones split the keyboard */
-        const smp_set_t *set = &SMP_SETS[si];
+    if (smp_builtin(si)) {                           /* a built-in set: its zones split the keyboard */
+        const smp_set_t *set = smp_set(si);
         for (i = 0; i < set->nz; i++)
             if (v->note >= SMP_ZONES[set->z0 + i].lo && v->note <= SMP_ZONES[set->z0 + i].hi) {
                 zi = set->z0 + i;

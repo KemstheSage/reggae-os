@@ -39,10 +39,11 @@ static const char *const RG_CONTROL_NAME[][4]={
     {"HARM","TONE","ROTOR","DRIVE"}, {"HARM","TONE","ROTOR","DRIVE"},
     {"CUTOFF","RES","ENV","DRIVE"}, {"CUTOFF","RES","ENV","DRIVE"},
     {"ATTACK","TONE","VIBRATO","RELEASE"}, {"TIMBRE","ENV","CHORUS","DETUNE"},
-    {"TONE","DECAY","DRIVE","RELEASE"}, {"TONE","ATTACK","ENV","RELEASE"},
+    {"TONE","DECAY","DRIVE","RELEASE"}, {"TONE","ATTACK","DECAY","RELEASE"},
     {"BRIGHT","DAMP","PLUCK","RELEASE"}, {"PITCH","RATE","ECHO","TONE"},
     {"TIMBRE","ENV","RATIO","LEVEL"}, {"HARM","TONE","ROTOR","ECHO"},
     {"TONE","DECAY","SNAP","DRIVE"},
+    {"FALL","LENGTH","ECHO","TONE"}, {"RANGE","RATE","ECHO","TONE"},
 };
 static struct {
     uint32_t ms;

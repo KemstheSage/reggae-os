@@ -1,0 +1,25 @@
+{
+  "source": "Versilian Studios / Sam Gossner, VSCO 2 CE",
+  "license": "CC0-1.0",
+  "revision": "440300901dfe9275fd84e0b7763af1f8443ae62e",
+  "files": [
+    {
+      "file": "Sum_SHTrumpet_sus_C3_v1_rr1.wav",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Brass/Trumpet/sus/Sum_SHTrumpet_sus_C3_v1_rr1.wav",
+      "sha256": "fc49adedf0922c42583145eedd7ba4707cf97a92fb446b73bf160003190efebe",
+      "bytes": 2677040
+    },
+    {
+      "file": "Sum_SHTrumpet_sus_G3_v1_rr1.wav",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Brass/Trumpet/sus/Sum_SHTrumpet_sus_G3_v1_rr1.wav",
+      "sha256": "949446498df4e1402f00023c91bd45c3b9a793ce8076a871b800e76ce144d4fa",
+      "bytes": 3010072
+    },
+    {
+      "file": "Sum_SHTrumpet_sus_D4_v1_rr1.wav",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Brass/Trumpet/sus/Sum_SHTrumpet_sus_D4_v1_rr1.wav",
+      "sha256": "fa4a3f77ead22cb58afdaa1732b9b6c8ec6033708ae339df6446a56c1b7cc8e9",
+      "bytes": 2878200
+    }
+  ]
+}

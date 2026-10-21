@@ -4,8 +4,8 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
-Sound bank 0.3 supplies **13 playable presets**, including organ, bass, reed
-melodica, electric piano, piano chop, brass stabs, muted string skank, dub siren
+Sound bank 0.5 supplies **15 playable presets**, including organ, bass, reed
+melodica, electric piano, piano chop, sampled roots trumpet, muted string skank, three dub/jungle sirens
 and an eight-piece drum kit. Four-knob editing and animated 240 × 240 illustrations
 run inside the firmware. It preserves the original engines,
 MIDI paths, effects, sequencing and flash-backed user-preset system.
@@ -38,7 +38,9 @@ Open **http://localhost:8790/** on the Mac and click **Switch on**.
 Play the onscreen FM-1 keys (or the keyboard shortcuts shown below the panel).
 Drag knobs upward/right, use the mouse wheel, or focus a knob and use arrow keys.
 
-- Starts on Roots Organ. On HOME, PRESETS cycles the thirteen curated sounds.
+- Starts on Roots Organ. On HOME, PRESETS cycles the fifteen curated sounds.
+- Horn knobs: tone, attack, decay and release. ROOTS TRUMPET uses three CC0 recorded notes.
+- Sirens: DUB WAIL, JUNGLE SIGNAL (fall/length/echo/tone), FAST ALARM (range/rate/echo/tone).
 - Organ knobs: registration, upper harmonics, rotary speed, drive.
 - Bass knobs: cutoff, resonance, filter-envelope amount, drive. Use OCT− to play low notes.
 - ROOTS KIT maps MIDI notes 36/38/39/42/46/45/37/56 to kick, snare, clap,

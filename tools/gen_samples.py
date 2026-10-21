@@ -72,7 +72,7 @@ TR = 22050                                   # stored sample rate
 # PIANO too (PERC_SLOT; its sounds load as the DRUM engine)
 CC0_SETS = [("PIANO", "oneshot"), ("PIANO", "alias"), ("FLUTE", "sus"), ("SAX", "sus"), ("PIANO", "alias")]
 PERC_SLOT = 4                                # core.h SMP_SET_PERC: SAMPLE's factory presets end before it
-MEASURED_TUNING = ()                         # sets whose recordings are not at A440 (was TRANH, ~+35 ct)
+MEASURED_TUNING = ("BRASS",)                         # sets whose recordings are not at A440 (was TRANH, ~+35 ct)
 
 
 KIT_BASE = 53                     # F3, the lowest FM-1 key
@@ -169,7 +169,8 @@ def cc0_entries(setname, kind):
             ls, le, xf = int(0.40 * TR), n - 1, int(0.06 * TR)
             for i in range(xf):
                 a = i / xf
-                x[le - xf + i] = x[le - xf + i] * (1 - a) + x[ls - xf + i] * a
+                end = n - xf + i if setname == "BRASS" else le - xf + i
+                x[end] = x[end] * (1 - a) + x[ls - xf + i] * a
             loop = (ls, le)
         else:
             if setname in SET_FADE:                  # a shortened set: a long raised-cosine fade-out
@@ -350,8 +351,10 @@ class Builder:
         if not sets:
             L.append('    {"NONE", 0, 1},')
         L.append("};")
-        L.append(f"#define SMP_NSETS {max(1, len(sets))}")
-        named = sets or [("NONE", 0, 0)]
+        # Historical built-ins stay 0..4; USR1..3 stay 5..7. Extra ROM set is public ID 8.
+        L.append(f"#define SMP_NSETS {max(1, len(sets) - (1 if self.kinds.get('BRASS') else 0))}")
+        L.append(f"#define SMP_HAS_BRASS {1 if self.kinds.get('BRASS') else 0}")
+        named = (sets[:-1] if self.kinds.get("BRASS") else sets) or [("NONE", 0, 0)]
         perc = PERC_SLOT if len(named) > PERC_SLOT else len(named)
         L.append(f"#define SMP_NPRESETS {perc}")
         if len(named) > PERC_SLOT:
@@ -458,6 +461,10 @@ def main(out):
     if slice_on():                                  # SLICE's BREAK: only when that engine is built
         b.slice_break()                             # last: the sets' offsets stay as they were
         b.slice_piano()                             # (no data of its own: the PIANO set's)
+    if have_cc0:
+        if len(list((CC0 / "BRASS").glob("*.wav"))) != 3:
+            raise SystemExit("REGGAE-OS needs the three licensed BRASS source WAVs; see assets/samples-cc0/BRASS/PROVENANCE.json")
+        b.cc0_set("BRASS", "sus")  # append data: existing sample and slice offsets remain stable
     text = b.header()
     Path(out).write_text(text)
     CACHE.parent.mkdir(parents=True, exist_ok=True)

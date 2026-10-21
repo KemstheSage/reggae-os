@@ -67,3 +67,9 @@ strip buffer and UI cadence; physical rendering headroom remains unverified.
 Sound bank 0.4: application 521,344 B; data+BSS 61,032 / 73,728 B;
 pool 328,896 / 368,640 B. COMPILES. Only preset data/loading defaults changed;
 no new DSP or buffers. Physical operation remains untested.
+
+Bank 0.5 target build: application 553,340 bytes (28,224 bytes remain in the
+581,564-byte application slot). Data+BSS 61,032 bytes and pool 328,896 bytes are
+unchanged. Three trumpet zones occupy 31,422 encoded bytes plus alignment and
+metadata in flash. Existing built-in sample IDs 0–4 and user slots 5–7 retain
+their meanings; trumpet is ID 8. No partitions or bootloader behavior changed.
