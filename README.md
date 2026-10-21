@@ -104,3 +104,7 @@ cheeks puff and breath appears with the sound. See the
 UI 0.3.4 replaces the human melodica player with an instrument creature and adds
 siren/drum personalities, a clearer guitar, and characterful effects pages.
 [See eight native screens](docs/images/ui-0.3.4-characters.png).
+
+Sound bank 0.4 refines only melodica, brass, guitar, dub siren and drums.
+The approved organ, piano and bass patches are protected by forty PCM hashes.
+The changes are audition candidates; see [SOUND_DESIGN.md](SOUND_DESIGN.md).

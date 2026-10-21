@@ -147,3 +147,62 @@ steppers rhythm in the performance/external sequencer; a kit timbre alone does n
 produce a reggae rhythm. No commercial recording samples are redistributed.
 The new ten-second auditions play eight individual notes/chords or drum lanes,
 with space to inspect articulation; they are test phrases, not finished arrangements.
+
+## Bank 0.4 — five-patch audit, 21 October 2026
+
+Scope: only Reed Melodica, Brass Stabs, Muted Skank, Dub Siren and Roots Kit.
+All eight organ/piano/bass presets and their DSP are deliberately unchanged.
+Forty fixed-MIDI renders (defaults plus four knob variants per protected preset)
+are checked against SHA-256 hashes captured before editing. No global effects,
+audio engine or instrument model changes. The new sound parameters use existing
+save/recall paths; existing user-saved patches are not overwritten.
+
+### Evidence and limits
+
+- [Yamaha's Pianica explanation](https://hub.yamaha.com/winds/w-gearguide/pianica-a-great-way-to-start-a-musical-journey/)
+  describes air routed across individual tuned reeds. Its
+  [P-37E2 description](https://usa.yamaha.com/products/musical_instruments/winds/pianica/p-37e/features.html)
+  describes breath flow and internal damping as contributors to tone. This supports
+  a controlled reed spectrum and breathing articulation, not a noise-heavy flute.
+- [SoundFingers' own reggae guitar manual](https://soundfingers.com/wp-content/uploads/2022/01/Le-Skank-User-Guide-v1.2.6.pdf),
+  introduction and guitar setup, emphasises damped offbeat chords and distinguishes
+  pickup brightness. It informs articulation; no audio or code from that product
+  is used here.
+- [Gordon Reid's brass synthesis study](https://www.soundonsound.com/techniques/synthesizing-brass-instruments)
+  motivates envelope/spectral shaping. The exact settings below are our synthesis
+  choices, not measured acoustic brass or settings supplied by the article.
+- [Drumeo's performance lesson](https://www.drumeo.com/beat/musical-drumming-in-different-styles/)
+  and its [reggae play-along description](https://www.drumeo.com/free-playalongs/)
+  inform the cross-stick-led audition. Kit sound and a one-drop rhythm are separate.
+- [Benidub's DS01](https://benidub.com/products/ds01-dub-siren/) provides a real
+  dub-siren design reference. Our filtered oscillator and modulation remain a
+  firmware approximation, not an emulation of that circuit.
+
+There has been no verified subjective listening or direct comparison against the
+user's three commercial references in this audit. Numerical tests establish
+articulation, stability and preservation, not musical authenticity. These are
+research-informed audition candidates requiring the musician's judgement. No
+copyrighted recordings have been sampled or redistributed.
+
+### Specific changes
+
+| Patch | Adjustment | Intended result |
+|---|---|---|
+| Reed Melodica | PWM shape envelope −24; cutoff 73→79; noise 2→1; attack 32→36, sustain 112→116, release 34→43; retain ~5.1 Hz shallow delayed vibrato | Add even harmonics to the previously symmetric pulse, keep reed clarity, soften breath entry/exit without a pad-like attack |
+| Brass Stabs | Attack 23→40 (~5→18 ms); decay 67→82; sustain 80→76; filter envelope 25→30, drive 7→4, release 26→37 | Brief blown attack with stronger brightness development, less distortion, clean releases; remains synthetic ensemble brass |
+| Muted Skank | STRC 38→32 (neutral string stiffness region); brightness 62→78; pluck position 76→38; accent 80→52; slight pick excitation; ADSR 0/68/28/30 | Cleaner harmonic string body, sharper pick and shorter chord body, with less ringing while held. Three-voice PHYS limit remains: use compact three-note voicings |
+| Dub Siren | Sine→filtered square; triangle pitch LFO, depth 24→40 (about ±7.5 semitones), rate 59→72 (~2.2 Hz), reduced drive and echo send | Richer sound-system wail and wider pitch movement. Rate/depth/waveform remain editable. No global delay changes |
+| Roots Kit | Keep TIGHT model; restore designed tuning (57→64), tone 51→60, decay 48→55, snap 72→62, lower accent/drive; rebalance individual lanes | Preserve the dry short kit while giving kick/rim priority over hats and clap. It remains a synthesized electronic kit, not a sampled acoustic roots session |
+
+Lane levels (0–127): kick 127, snare 114, clap 82, closed hat 92, open hat 86,
+tom 110, rim 127, bell 94. MIDI 37 is the cross-stick/rim candidate. Drum note-off
+correctly does not truncate one-shot hits; closed hat chokes open hat.
+
+### Auditioning
+
+The existing isolated phrases retain identical MIDI before/after and are the
+controlled comparison. New `style-*` WAVs are original 80 BPM performance studies:
+upper-voiced 100 ms guitar chops, short horn stabs, a melodic reed line, siren knob
+moves, and kick/rim on beat three with light eighth-note hats. They do not add a
+sequencer to the instrument. Play guitar around C4–C5, brass C4–C5, melodica G4–D5,
+and siren around C5 before exploring wider registers. Preset names/indices stay put.

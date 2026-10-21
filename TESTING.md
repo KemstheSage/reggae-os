@@ -189,3 +189,20 @@ parameter-linked illustrations, not evidence of acoustic authenticity.
 - FM-1 build passes linker/MMIO checks: application 521,276 B; data+BSS
   61,032 / 73,728 B; pool 328,896 / 368,640 B. COMPILES.
 - Physical FM-1 audio/display timing and actual iPhone Safari remain untested.
+
+## Sound bank 0.4 — 21 October 2026
+
+- Native 65-case defaults/knob suite passes: finite, non-silent, bounded audio,
+  distinct knob outputs, repeated-note release and NOR preset recall.
+- `python3 tools/reggae/check-protected.py`: all 40 organ/piano/bass render hashes
+  match the pre-edit bank. This check is now part of tools/reggae/test.sh.
+- Existing extended auditions exercise all eight drum lanes and all additions.
+- Five new original 16-second performance studies pass finite/non-silent/unclipped
+  audio and released-voice checks. Peaks: reed 0.08601, brass 0.24225, guitar
+  0.07556, siren 0.11870, kit 0.26428 (full scale 1.0).
+- Graphics regression passes. No renderer changes in this sound-only update.
+- Numerical evidence is not subjective listening validation or proof of stylistic
+  authenticity. Physical FM-1 and actual iPhone Safari remain untested.
+- Final WASM/native parity passes all 65 cases; upstream emulator regression passes.
+  WASM: 803,259 bytes. FM-1 linker/MMIO checks pass: application 521,344 B;
+  data+BSS 61,032 / 73,728 B; pool 328,896 / 368,640 B. COMPILES.

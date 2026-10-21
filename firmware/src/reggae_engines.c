@@ -19,9 +19,9 @@ static const preset_t REGGAE_ANALOG_PRESETS[] = {
     {"STRINGS", {0, 25, 64, 0, 70, 10, 0, 32}, {70, 90, 115, 90}, 5, 0, FX(0, 60, 20, 70), PAT(5)},
     {"DEEP ROOTS", {0, 0, 0, 0, 52, 0, 4, 96}, {14, 98, 18, 43}, 8, 1, FX(0, 0, 0, 0), PAT(0)},
     {"DIGITAL BASS", {1, 0, 0, 0, 48, 0, 4, 64}, {9, 90, 0, 34}, 12, 1, FX(0, 0, 0, 0), PAT(0)},
-    {"REED MELODICA", {4, 0, 0, 2, 73, 12, 2, 80}, {32, 70, 112, 34}, 5, 1, FX(0, 0, 0, 8), PAT(0)},
-    {"BRASS STABS", {0, 7, 46, 0, 64, 8, 7, 78}, {23, 67, 80, 26}, 25, 0, FX(0, 0, 0, 9), PAT(0)},
-    {"DUB SIREN", {3, 0, 0, 0, 100, 0, 8, 0}, {6, 64, 127, 42}, 0, 1, FX(0, 0, 48, 10), PAT(0)},
+    {"REED MELODICA", {4, 0, 0, 1, 79, 10, 2, 80}, {36, 75, 116, 43}, 6, 1, FX(0, 0, 0, 8), PAT(0)},
+    {"BRASS STABS", {0, 7, 46, 0, 67, 6, 4, 78}, {40, 82, 76, 37}, 30, 0, FX(0, 0, 0, 9), PAT(0)},
+    {"DUB SIREN", {1, 0, 0, 0, 84, 0, 4, 0}, {6, 64, 127, 42}, 0, 1, FX(0, 0, 42, 10), PAT(0)},
 };
 
 static const engine_t ENG_ANALOG = {
@@ -142,6 +142,10 @@ static int reggae_patch(const track_t *t) { return reggae_index(t)>=0; }
  * never on user-preset recall: normal storage already preserves these parameters. */
 static void reggae_loaded(track_t *t)
 {
-    if(t->eng_req==0 && t->preset==14) { t->p[P_LRATE]=88; t->p[P_LD_PIT]=1; t->p[P_LFADE]=68; }
-    if(t->eng_req==0 && t->preset==16) { t->p[P_LRATE]=59; t->p[P_LD_PIT]=24; }
+    if(t->eng_req==0 && t->preset==14) { t->p[P_LRATE]=88; t->p[P_LD_PIT]=1; t->p[P_LFADE]=68; t->p[P_ED_SHP]=-24; }
+    if(t->eng_req==0 && t->preset==16) { t->p[P_LRATE]=72; t->p[P_LD_PIT]=40; t->p[P_LWAVE]=1; }
+    if(t->eng_req==10 && t->preset==4) {
+        static const int16_t levels[8]={127,114,82,92,86,110,127,94};
+        for(unsigned i=0;i<8;i++)t->p[P_LN0+i]=levels[i];
+    }
 }

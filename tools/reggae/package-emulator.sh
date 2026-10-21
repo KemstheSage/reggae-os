@@ -24,3 +24,14 @@ for name in reed-melodica warm-tine piano-chop brass-stabs muted-skank dub-siren
   fi
   i=$((i + 1))
 done
+# Musical audition candidates (original MIDI studies) and controlled old phrases.
+for entry in 4:reed-melodica 7:brass-stabs 8:muted-skank 9:dub-siren 12:roots-kit; do
+  number=${entry%%:*}
+  name=${entry#*:}
+  if test -f "build/reggae/style-$number.wav"; then
+    cp "build/reggae/style-$number.wav" "build/emu/auditions/$name-style.wav"
+  fi
+  if test -f "build/reggae/before-bank04/extended-$number.wav"; then
+    cp "build/reggae/before-bank04/extended-$number.wav" "build/emu/auditions/$name-before-bank04.wav"
+  fi
+done

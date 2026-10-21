@@ -63,3 +63,7 @@ Physical hardware timing remains unverified.
 UI 0.3.4 target build: application 521,276 B; data+BSS 61,032 / 73,728 B;
 pool 328,896 / 368,640 B. COMPILES. The character family reuses the existing
 strip buffer and UI cadence; physical rendering headroom remains unverified.
+
+Sound bank 0.4: application 521,344 B; data+BSS 61,032 / 73,728 B;
+pool 328,896 / 368,640 B. COMPILES. Only preset data/loading defaults changed;
+no new DSP or buffers. Physical operation remains untested.

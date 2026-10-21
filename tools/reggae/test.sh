@@ -20,9 +20,14 @@ for p in range(13):
 print('PASS: thirteen presets, fifty-two knob variants: audible, finite, bounded, release to silence, distinct audio; preset recall.')
 print(Path('build/reggae/audio-report.txt').read_text())
 PY
+python3 tools/reggae/check-protected.py
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/extended tests/reggae_extended.c -lm
 for preset in 4 5 6 7 8 9 10 11 12; do
   build/reggae/extended "$preset" "build/reggae/extended-$preset.wav"
 done > build/reggae/extended-report.txt
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/graphics tests/reggae_graphics.c -lm
 build/reggae/graphics
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/style tests/reggae_style_demo.c -lm
+for preset in 4 7 8 9 12; do
+  build/reggae/style "$preset" "build/reggae/style-$preset.wav"
+done > build/reggae/style-report.txt
