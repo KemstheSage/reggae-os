@@ -248,3 +248,16 @@ Hardware app: 556,380 B; data+BSS 61,032 B; pool 328,896 B. Same memory limits;
 25,184 B application space remains. WASM 844,855 B. Build guards pass. No physical
 FM-1 or iPhone Safari test and no hardware CPU-budget measurement. Scope and
 remaining screens are recorded in docs/reports/ui-0.4.0.md.
+
+## UI 0.4.1 — simple pads, 24 October 2026
+
+The expanded arranger test passes under AddressSanitizer, including selected-drum
+lane changes and reaching step 64 through the physical encoder path. Existing
+section creation/repeats, audible song playback, automatic stop, recall and drum
+hit editing still pass. Native 240 × 240 note/drum screenshots inspected.
+
+WASM navigation smoke test and existing emulator regression pass. All 75
+instrument/control renders match bank-0.5 native PCM byte-for-byte. Hardware
+build passes: app 557,280 / 581,564 B; data+BSS 61,032 / 73,728 B; pool
+328,896 / 368,640 B. WASM 847,651 B. No new DSP or audio buffers.
+Physical FM-1 and iPhone Safari remain untested.

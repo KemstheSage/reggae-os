@@ -22,8 +22,9 @@ See [SOUND_DESIGN.md](SOUND_DESIGN.md) for sources, exact changes and limitation
 
 ## Sequence and arrange
 
-UI 0.4.0 adds REGGAE-OS note-pattern, drum-grid and song-arrangement screens.
-Use SEQ for patterns and GLO for ARRANGE. Four parts can play a sixteen-section
+UI 0.4.1 simplifies pattern editing into sixteen large step pads and one drum lane
+at a time, alongside the song-arrangement screen.
+Use SEQ for patterns and GLO for SONG. Four parts can play a sixteen-section
 song from four saved pattern sources, with per-track mutes and section repeats.
 See [the song-making guide](SEQUENCER.md) for controls, saving and limits.
 

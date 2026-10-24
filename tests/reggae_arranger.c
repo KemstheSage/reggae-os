@@ -46,5 +46,11 @@ int main(void) {
     memset(TSEL->step,0,sizeof TSEL->step);tap(9);ui.cursor=0;ui.lane=0;
     web_enc(EN_K3,1);advance(150);assert(step_lanes(&TSEL->step[0])&1);
     picture("build/reggae/sequence-drums.ppm");
+    /* Simple pads: switching lanes changes hits, and the final 16-step page is safe. */
+    uint16_t kick_frame[240*240];memcpy(kick_frame,web_fb,sizeof kick_frame);
+    web_enc(EN_K2,1);advance(150);assert(ui.lane==1);
+    assert(memcmp(kick_frame,web_fb,sizeof kick_frame));
+    TSEL->p[P_SLEN]=64;web_enc(EN_K1,63);advance(150);assert(ui.cursor==63&&ui.bank==3);
+    picture("build/reggae/sequence-last.ppm");
     puts("PASS: physical SEQ/GLO navigation, step edit, add sections, repeats, audible song, stop and NOR recall");
 }

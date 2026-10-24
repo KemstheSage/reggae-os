@@ -137,3 +137,13 @@ strip renders at 10 Hz; no full framebuffer or audio-callback drawing.
 
 DETAIL, automation, mixer, project browser and held-button tools retain their
 upstream layouts. See SEQUENCER.md for the actual hardware workflow and limits.
+
+## UI 0.4.1 — simple pads
+
+Main STEP now shows a four-by-four bank of large numbered pads, replacing the
+piano roll and simultaneous eight-drum display. A pad shows its first note
+(with + for chords), HOLD for a tie, or HIT for the selected drum lane. Cream
+outlines mark editing; green underlines follow actual playback. Accent and lock
+markers remain. Steps beyond length are dim. Existing four knobs, keyboard,
+recording, transport and deeper DETAIL/AUTOMATION pages are unchanged. Titles
+and hints use task language: MAKE A PATTERN, MAKE A BEAT and SONG.

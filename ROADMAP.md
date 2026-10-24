@@ -38,3 +38,7 @@ UI 0.4.0 begins the expanded workstation request: native note/drum editing and
 song arrangement now share the REGGAE-OS layout. Existing four-part, four-source,
 sixteen-section song playback is retained. Next: mixer, automation and project
 management visual/workflow pass; full device timing and usability validation.
+
+UI 0.4.1 simplifies the main pattern editor into sixteen large pads and a single
+drum lane. Deep editing remains available. The next usability work remains
+project saving/browsing, mixer and automation, with musician feedback on the pads.
