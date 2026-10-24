@@ -672,6 +672,14 @@ static void grid_acc(track_t *t, uint32_t i, uint32_t l, uint32_t on)
 }
 
 /* SEQ cursor: wraps inside the pattern length, the bank follows, a step entry ends */
+/* Stopped melodic STEP owns EDIT/REC note gestures, not their quick layers. */
+static int reggae_step_gesture_page(void)
+{
+    return !ui.home && !ui.menu && !ui.confirm && !ui.lock && !ui.layer &&
+        !ui.ml.on && !song.playing && !chain_busy() && !seq_counting() &&
+        !transport_req && cur_page()->graph==GR_ROLL && !detail_on() && !drum_track(TSEL);
+}
+
 static void cursor_set(int32_t c)
 {
     int32_t len = TSEL->p[P_SLEN] > 0 ? TSEL->p[P_SLEN] : 1;

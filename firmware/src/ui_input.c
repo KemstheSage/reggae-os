@@ -1469,6 +1469,54 @@ static void ui_notices(void)
     }
 }
 
+/* One physical modifier gesture edits one fixed cursor step. Keep keys audible,
+ * consume the modifier release, and do not leak into REC arming or engine layers. */
+static int reggae_step_gesture(uint32_t notes)
+{
+    static uint8_t active,used,cleared,mode,part,step,rec_before;
+    static uint32_t started;
+    uint32_t buttons=fm1_in.buttons;
+    unsigned held=((buttons>>panel.btn[B_EDIT])&1u)|(((buttons>>panel.btn[B_REC])&1u)<<1);
+    if(!active) {
+        if(!held || !reggae_step_gesture_page() || ui.ly)return 0;
+        active=1;used=cleared=0;mode=held;part=song.sel;step=ui.cursor;rec_before=song.rec;started=fm1_ms;
+        song.rec &= ~(1u<<part);ui.entry_open=0;follow_hold();
+        ui_message(mode==2?"PLAY TO REPLACE / +EDIT CLEAR":"PLAY TO ADD / +REC CLEAR");
+    }
+    track_t *t=&trk[part];step_t *st=&t->step[step];
+    /* Hold the target until every played key is released, even if the modifier goes first. */
+    if(held==3 && !cleared) {
+        step_undo_take(t,0);step_clear(st);(void)motion_clear_locks(t,step);
+        motion_undo_done(t);cleared=used=1;ui_message("STEP CLEARED");
+    } else if(held && !cleared) {
+        for(unsigned k=0;k<27;k++)if((notes>>k)&1u) {
+            uint32_t note=kb_map(t,k);uint8_t chord[CHORD_MAX];int32_t root;uint16_t mask;
+            if(note==KB_SILENT)continue;
+            unsigned n=chord_make(t,note,chord,&root,&mask);
+            if(!n)continue;
+            if(!used) {
+                step_undo_take(t,0);
+                if(mode==2){st->n=0;st->hit=st->acc=0;}
+                st->time=ST_NOTE;if(!st->vel)st->vel=kb_vel;
+                used=1;
+            }
+            for(unsigned i=0;i<n;i++) {
+                unsigned j=0;while(j<st->n&&st->note[j]!=chord[i])j++;
+                if(j==st->n && st->n<4)st->note[st->n++]=chord[i];
+            }
+            motion_undo_done(t);last_note=note;
+            ui_message(mode==2?"STEP REPLACED":"NOTES ADDED");
+        }
+    }
+    ui.pg_down &= ~((1u<<panel.btn[B_EDIT])|(1u<<panel.btn[B_REC]));
+    ui.rec_t0=0;ui.entry_open=0;enc_drop();
+    if(!held && !fm1_in.notes) {
+        active=0;song.rec=rec_before;
+        if(!used) {if(mode==2 && fm1_ms-started<350u)rec_tap();else ui_message(mode==2?"HOLD REC + PLAY NOTES":"HOLD EDIT + PLAY NOTES");}
+    }
+    return 1;
+}
+
 static void ui_input(void)
 {
     uint32_t pressed = fm1_input_edges(0), notes = fm1_input_note_edges(), now = fm1_ticks(), id, b, k;
@@ -1505,6 +1553,7 @@ static void ui_input(void)
         pressed &= ~(1u << panel.btn[B_OCTUP]);
         ui_message("KEPT");
     }
+    if(reggae_step_gesture(notes))return;
     home = btn_hold(&ui.home_t0, B_HOME, now, 1);
     rec = btn_hold(&ui.rec_t0, B_REC, now, 0);          /* (a tap; held, the REC layer: ui_layer.c) */
     save = btn_hold(&ui.save_t0, B_SAVE, now, !ui.menu && !ui.confirm);   /* held: UNDO (ui.c undo_swap) */

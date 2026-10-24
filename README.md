@@ -22,9 +22,10 @@ See [SOUND_DESIGN.md](SOUND_DESIGN.md) for sources, exact changes and limitation
 
 ## Sequence and arrange
 
-UI 0.4.1 simplifies pattern editing into sixteen large step pads and one drum lane
-at a time, alongside the song-arrangement screen.
-Use SEQ for patterns and GLO for SONG. Four parts can play a sixteen-section
+UI 0.4.2 restores the piano roll and full drum grid. On the stopped note editor,
+hold EDIT and play keys to add notes, hold REC and play to replace, or hold
+EDIT + REC to clear the selected step.
+Use SEQ for patterns and GLO for ARRANGE. Four parts can play a sixteen-section
 song from four saved pattern sources, with per-track mutes and section repeats.
 See [the song-making guide](SEQUENCER.md) for controls, saving and limits.
 

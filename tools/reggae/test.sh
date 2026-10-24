@@ -36,3 +36,5 @@ build/reggae/siren-test
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/arranger tests/reggae_arranger.c -lm
 build/reggae/arranger
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/step-gestures tests/reggae_step_gestures.c -lm
+build/reggae/step-gestures

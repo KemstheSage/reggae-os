@@ -147,3 +147,12 @@ outlines mark editing; green underlines follow actual playback. Accent and lock
 markers remain. Steps beyond length are dim. Existing four knobs, keyboard,
 recording, transport and deeper DETAIL/AUTOMATION pages are unchanged. Titles
 and hints use task language: MAKE A PATTERN, MAKE A BEAT and SONG.
+
+## UI 0.4.2 — restored editor and held-button note entry
+
+Restores the UI 0.4.0 piano roll/full drum grid and ARRANGE naming. On the stopped
+melodic STEP page, EDIT+keys adds, REC+keys replaces and EDIT+REC clears. The
+cursor stays fixed; contextual hints appear while held. Key presses continue to
+audition the sound instead of selecting engines/recording settings. Modifier
+releases are consumed, including keys held after a modifier release. Quick REC
+taps retain arming. Drum and deeper editing controls are unchanged.

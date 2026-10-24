@@ -42,3 +42,6 @@ management visual/workflow pass; full device timing and usability validation.
 UI 0.4.1 simplifies the main pattern editor into sixteen large pads and a single
 drum lane. Deep editing remains available. The next usability work remains
 project saving/browsing, mixer and automation, with musician feedback on the pads.
+
+UI 0.4.2 restores the previous piano-roll/drum-grid view at the musician's request
+and introduces explicit add/replace/clear gestures for stopped note-step editing.

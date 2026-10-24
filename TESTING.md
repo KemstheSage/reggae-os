@@ -261,3 +261,26 @@ instrument/control renders match bank-0.5 native PCM byte-for-byte. Hardware
 build passes: app 557,280 / 581,564 B; data+BSS 61,032 / 73,728 B; pool
 328,896 / 368,640 B. WASM 847,651 B. No new DSP or audio buffers.
 Physical FM-1 and iPhone Safari remain untested.
+
+## UI 0.4.2 — add / replace / clear, 24 October 2026
+
+`tests/reggae_step_gestures.c` passes with AddressSanitizer: physical EDIT adds
+and deduplicates notes, REC replaces with a chord, EDIT+REC clears, SAVE-hold
+undo restores, cursor stays fixed, modifier-first release is safe, REC tap
+still arms/disarms, and held REC without notes leaves the step intact. No stuck
+voices or accidental engine changes were detected. The arranger regression also
+passes under AddressSanitizer. Restored note-editor screenshot checked at 240 × 240.
+
+`node tests/reggae_step_wasm.mjs` verifies audible added/replacement notes and
+silent cleared-pattern playback in actual WASM. Its audio window spans more than
+two complete default patterns so a short first-step note cannot fall outside the
+measurement. WASM navigation/framebuffer tests and existing emulator regression
+pass. All 75 instrument/control renders still match bank-0.5 native PCM exactly.
+
+The new gestures apply to the stopped melodic STEP editor using physical/emulated
+keys. MIDI entry, drum-grid controls and live recording retain existing behavior.
+Physical FM-1 and iPhone Safari remain untested.
+
+Final hardware build passes its guards: app 557,292 / 581,564 B;
+data+BSS 61,048 / 73,728 B; pool 328,896 / 368,640 B.
+WASM is 846,960 B. Hardware status: COMPILES, HARDWARE UNTESTED.
