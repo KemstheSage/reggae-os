@@ -412,7 +412,7 @@ static void ui_leds(void)
         led_put(nl, panel.btn[B_FX], 1);                /* FX LATCH: lit while an effect or a macro is on */
     if (ui.layer)                                       /* the layer's button breathes while its map is up */
         led_put(nb, panel.btn[layer_btn()], 1);
-    led_put(nl, panel.btn[B_REC], song.rec != 0u && ui.layer != LAYER_REC);   /* (its layer: it breathes) */
+    led_put(nl, panel.btn[B_REC], song.rec != 0u && (!rg_rec_wait || ((fm1_ms / 250u) & 1u)) && ui.layer != LAYER_REC);   /* (its layer: it breathes) */
     k = oct_leds();
     led_put(nl, panel.btn[B_OCTDN], (int)(k & 1u));
     led_put(nl, panel.btn[B_OCTUP], (int)((k >> 1) & 1u));
@@ -589,6 +589,20 @@ static int rec_tap(void)                                /* 1: the arming changed
     if (!ui.home && cur_page()->graph == GR_SONG && !(song.rec & bit)) {
         ui_message("[SEQ] TO RECORD");
         return 0;
+    }
+    /* HOME is a play-first recorder; STEP keeps its explicit edit gestures.
+     * One live track at a time. Selecting another track ends the overdub. */
+    if (ui.home || rg_live_rec) {
+        if (rg_live_rec && (song.rec & bit)) {
+            song.rec = 0; rg_rec_wait = rg_live_rec = 0;
+            ui_message("REC OFF / LOOP PLAYS");
+        } else {
+            song.rec = bit; rg_live_rec = 1;
+            rg_rec_wait = !song.playing && !seq_counting() && !song.g[G_CLOCK] ? bit : 0;
+            ui_message(rg_rec_wait ? "READY: PLAY FIRST NOTE" : "RECORDING / REC TO FINISH");
+        }
+        ui.force = 1;
+        return 1;
     }
     song.rec ^= bit;
     ui.force = 1;                                     /* also refresh the status on MENU / ABOUT */

@@ -284,3 +284,27 @@ Physical FM-1 and iPhone Safari remain untested.
 Final hardware build passes its guards: app 557,292 / 581,564 B;
 data+BSS 61,048 / 73,728 B; pool 328,896 / 368,640 B.
 WASM is 846,960 B. Hardware status: COMPILES, HARDWARE UNTESTED.
+
+## UI 0.5.0 — first live-recording integration
+
+`tests/reggae_live_record.c` passes under AddressSanitizer. It exercises physical
+panel input: startup instruments, arm/cancel/rapid re-arm, first-note capture on
+step zero, recording off while playback continues, bass overdub, track handoff,
+T4 drum entry and HOME preset protection, stop/disarm, saved-project recall,
+MIDI note-start, PLAY-start and waiting-arm cancellation on track change.
+All voices release after the tests. The existing step-gesture and arrangement
+regressions pass under AddressSanitizer. READY and RECORDING screenshots were
+inspected at native 240 × 240 resolution.
+
+Free-tempo capture and SLOOP's live song-section recording are not implemented.
+The recording workflow uses existing quantisation and note-length/tie behavior;
+it is not an audio looper. Physical FM-1 and iPhone Safari remain untested.
+
+`node tests/reggae_live_wasm.mjs` passes actual-WASM audible organ/bass/drum
+layering and clean-stop checks. Existing WASM step-entry and arrangement-screen
+checks pass. All 75 sound-bank/control renders match the prior native PCM exactly;
+`web/emu/emu_test.mjs` passes too.
+
+Hardware build guards pass: app 558,024 / 581,564 B; data+BSS 61,048 / 73,728 B;
+pool 328,896 / 368,640 B. WASM 846,993 B. This is COMPILES and EMULATOR TESTED,
+not physically verified hardware performance.

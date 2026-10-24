@@ -35,3 +35,10 @@ VSCO 2 Community Edition, CC0-1.0. Full source recordings, pinned URLs, SHA-256
 hashes and upstream license: [assets/samples-cc0/BRASS](assets/samples-cc0/BRASS/PROVENANCE.json).
 Converted to mono 22,050 Hz IMA ADPCM, trimmed, looped and pitch-corrected at playback.
 No recordings from the musical reference releases are included.
+
+REGGAE-OS UI 0.5.0 live-recording workflow is adapted from the arm/start/toggle
+approach in [SLOOP](https://github.com/isod89/sloop-fm1) by isod89 and contributors
+(GPL-3.0), inspected at commit `d89364253b79a5c6002c0d90c5f16b3c3c16ea9d`:
+`firmware/src/seq.c` (`arm_start`, `rec_begin`) and `ui_studio.c` (`rec_toggle`).
+REGGAE-OS retains Felucca's note/drum step representation, synthesis and transport;
+SLOOP's free-take buffer, drum engine, project format and arranger are not imported.

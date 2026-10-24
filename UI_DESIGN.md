@@ -156,3 +156,9 @@ cursor stays fixed; contextual hints appear while held. Key presses continue to
 audition the sound instead of selecting engines/recording settings. Modifier
 releases are consumed, including keys held after a modifier release. Quick REC
 taps retain arming. Drum and deeper editing controls are unchanged.
+
+UI 0.5.0 keeps the instrument animations and replaces HOME's decorative top-right
+marks with four track numbers. Gold identifies the selected track, red identifies
+recording, ready blinks at 2 Hz, and beat marks follow sequencer position. The
+bottom hint prioritises READY/RECORDING until the take is finished. Rendering
+remains limited to 10 Hz using the existing strips; no graphical work enters DSP.

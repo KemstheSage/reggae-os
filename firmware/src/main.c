@@ -100,7 +100,7 @@ static void fm1_fault(const fm1_crash_t *c)
 
 /* REGGAE-OS fresh power-on bank. TRK_DEF must remain unchanged: legacy project
  * migration uses it to reconstruct old parts, including the original drum kit. */
-static const uint8_t REGGAE_BOOT[NPART][2] = {{7, 5}, {7, 6}, {0, 12}, {0, 13}};
+static const uint8_t REGGAE_BOOT[NPART][2] = {{7, 5}, {0, 12}, {4, 6}, {10, 4}};
 static void felucca_init(void)
 {
     uint32_t i;

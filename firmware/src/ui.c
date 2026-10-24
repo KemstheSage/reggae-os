@@ -676,7 +676,7 @@ static void grid_acc(track_t *t, uint32_t i, uint32_t l, uint32_t on)
 static int reggae_step_gesture_page(void)
 {
     return !ui.home && !ui.menu && !ui.confirm && !ui.lock && !ui.layer &&
-        !ui.ml.on && !song.playing && !chain_busy() && !seq_counting() &&
+        !ui.ml.on && !rg_live_rec && !song.playing && !chain_busy() && !seq_counting() &&
         !transport_req && cur_page()->graph==GR_ROLL && !detail_on() && !drum_track(TSEL);
 }
 
@@ -1721,6 +1721,9 @@ static void preset_step(int32_t direction)
      * PRESETS browse and all other pages retain the complete upstream library. */
     int r = reggae_index(TSEL);
     if (ui.home && !home_levels() && r >= 0 && !list_mode()) {
+        /* Performance bank: track four stays the Roots drum kit; other tracks
+         * retain the complete bank. Full editor/user-preset compatibility stays intact. */
+        if (song.sel == 3) { ui_message("DRUM TRACK / EDIT KIT"); return; }
         r = (r + (direction > 0 ? 1 : NELEM(REGGAE_BANK)-1)) % NELEM(REGGAE_BANK);
         if (TSEL->eng_req != REGGAE_BANK[r].engine) select_engine(REGGAE_BANK[r].engine);
         apply_preset(REGGAE_BANK[r].preset);
@@ -1766,6 +1769,10 @@ static void track_select(uint32_t i)
 {
     if (i >= NTRK || i == song.sel)
         return;
+    if (rg_live_rec) {
+        song.rec = 0; rg_rec_wait = rg_live_rec = 0;
+        ui_message("TRACK READY / REC TO LAYER");
+    }
     song.sel = (uint8_t)i;
     ui.entry_open = 0;
     ui.hot_t = 0;

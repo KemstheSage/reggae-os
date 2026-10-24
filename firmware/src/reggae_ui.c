@@ -388,7 +388,13 @@ static void reggae_draw(void)
     cv_begin(240,56,RG_BG);
     cv_rect(10,8,4,14,RG_RED);
     cv_text(21,7,&AF_M,fx?"DUB EFFECTS":REGGAE_BANK[idx].category,RG_INK);
-    cv_rect(207,12,5,5,RG_GOLD);cv_rect(216,12,5,5,RG_GREEN);cv_rect(225,12,5,5,RG_PANEL);
+    for(unsigned part=0;part<4;part++) {
+        char digit[2]={(char)('1'+part),0}; int x=184+part*14;
+        uint16_t color=part==song.sel?RG_GOLD:RG_EDGE;
+        if ((song.rec>>part)&1u) color=rg_rec_wait && (now/250u)&1u?RG_EDGE:RG_RED;
+        cv_text(x,8,&AF_S,digit,color);
+        if(song.playing && trk[part].seq_idx%4u==0)cv_rect(x,22,7,2,color);
+    }
     if(fx)str_cpy(name,cur_page()->title,sizeof name);
     else str_cpy(name,ENGINES[t->eng_req]->presets[t->preset].name,sizeof name);
     cv_text(12,31,&AF_M,name,RG_INK);cv_blit(0,0);
@@ -410,7 +416,9 @@ static void reggae_draw(void)
         if(hot)cv_rect(x+4,1,3,3,RG_CONTROL_COLOR[k]);
         cv_text_in(x+1,36,58,&AF_S,val,RG_INK,RG_BG);
     }
-    cv_text_in(0,48,240,&AF_S,ui.msg_t?ui.msg:fx?"FX: PAGE / HOME: PLAY":"PRESETS: SOUND / EDIT",RG_INK,RG_BG);
+    cv_text_in(0,48,240,&AF_S,rg_rec_wait?"READY: PLAY NOTE / PLAY TO START":
+        rg_live_rec && song.rec?"RECORDING / REC: FINISH":
+        ui.msg_t?ui.msg:fx?"FX: PAGE / HOME: PLAY":song.playing?"LOOP PLAYING / REC: LAYER":"REC: RECORD / ALGORITHM: TRACK",RG_INK,RG_BG);
     cv_blit(0,180);
     if(ui.hot_t)ui.hot_t--;if(ui.msg_t)ui.msg_t--;
     ux.mono=old_mono;ux.light=old_light;ux.gen++;ui.force=0;

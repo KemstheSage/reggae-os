@@ -4,12 +4,30 @@ UI 0.4.2 restores the piano-roll/drum-grid layout from UI 0.4.0. It restyles the
 STEP drum grid and SONG arrangement. DETAIL, automation, mixer, saving and the
 held-button tool layers retain their existing layouts for now.
 
-## Start with four parts
+## Play and layer four parts
 
-Use **ALGORITHM** to select track 1–4. On HOME, choose each sound with PRESETS.
-A useful starting allocation is drums, bass, organ and trumpet/melodica/siren.
-All tracks share eight sounding voices: keep chords compact, especially with long
-releases. There are four instrument tracks, not unlimited audio tracks.
+UI 0.5.0 starts a fresh session with T1 Roots Organ, T2 Deep Roots Bass,
+T3 Roots Trumpet and T4 Roots Kit. Previously saved projects retain their sounds.
+Use **ALGORITHM** to select a track. On HOME, **PRESETS** chooses the sound;
+T4 stays on the Roots Kit in this performance browser.
+
+1. Press **HOME**, choose your track and sound.
+2. Tap **REC**. The screen says READY and waits for your first note.
+3. Play: your first note starts the loop at the current tempo and is recorded.
+4. Tap **REC** to finish recording; your loop keeps playing.
+5. Choose another track with **ALGORITHM**, tap **REC**, and play the next part.
+6. Press **PLAY** to stop. Live recording is disarmed too.
+
+REC again cancels a waiting arm. Changing tracks ends the current overdub, so
+press REC on the new track before playing its part. PLAY can start a waiting
+recording without a note (and uses any configured count-in). External MIDI clock
+still controls transport when selected; local notes cannot start it.
+
+This first integration uses the existing tempo and pattern length; it does not
+yet infer them from a free performance. Change length/rate with the existing SEQ
+tools. All four tracks share eight sounding voices: keep chords compact,
+especially with long releases. T4 remains editable through advanced pages; the
+new drum role is enforced in HOME's curated sound browser, not on project loading.
 
 Tap **SEQ** for NOTE PATTERN or RIDDIM GRID. The instrument name and track number
 appear above the editor. The four knobs are labelled below it:
@@ -34,7 +52,7 @@ incoming MIDI notes. They apply to the stopped melodic STEP page; the drum grid,
 DETAIL page, playing/live-recording behavior and other pages retain existing
 controls. EDIT/REC quick-setting layers remain available outside this context.
 
-Tap **REC** to arm the selected part. With transport stopped, play notes/chords
+On the melodic STEP page, tap **REC** to arm step entry. With transport stopped, play notes/chords
 into the step-entry cursor; with transport running, record live. Tap REC again
 to disarm. PLAY starts/stops patterns. Hold SEQ for existing pattern tools,
 including length/rate settings. Patterns support up to 64 steps; the editor

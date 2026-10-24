@@ -45,3 +45,8 @@ project saving/browsing, mixer and automation, with musician feedback on the pad
 
 UI 0.4.2 restores the previous piano-roll/drum-grid view at the musician's request
 and introduces explicit add/replace/clear gestures for stopped note-step editing.
+
+- UI 0.5.0: first SLOOP-style integration — HOME arm/first-note start, selected-track
+  overdub, safe track handoff, T4 Roots Kit startup and performance-browser role,
+  native recording/track indicators. Next: free-tempo take capture and live
+  section-change recording; neither is implemented in this slice.

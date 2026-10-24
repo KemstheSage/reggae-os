@@ -49,6 +49,12 @@ static volatile uint8_t kb_asleep;       /* MENU > SCREEN OFF (ui.c): the screen
                                           * wakes it (silent, no layer, its release nothing) */
 static uint8_t last_note = 60;
 static volatile uint8_t transport_req;   /* 1 start, 2 stop, 3 restart (from the UI) */
+/* SLOOP-style note-start recording, adapted to Felucca's existing step storage.
+ * Workflow reference: isod89/sloop-fm1 seq.c arm_start / ui_studio.c rec_toggle,
+ * GPL-3.0. No free-take event buffer or SLOOP project format is imported. */
+static volatile uint8_t rg_rec_wait;  /* armed track bit; first input starts internal clock */
+static volatile uint8_t rg_live_rec;  /* HOME live workflow owns the recording arm */
+static void seq_start(void);
 static volatile uint8_t panic_req;       /* bit per track: release every sounding note (preset / engine change) */
 static volatile uint8_t midi_hint;       /* MIDI IN played track n - 1, which is not the selected one (the UI says so) */
 static volatile uint8_t midi_seen;       /* 1.5.5 (#208): bit per track, a MIDI IN note-on played it since the UI last
@@ -621,6 +627,11 @@ static __attribute__((noinline)) void cin_keep(track_t *t, uint32_t note, uint32
 
 static void input_on(track_t *t, uint32_t note, uint32_t vel)
 {
+    if ((rg_rec_wait & (1u << trk_index(t))) && !song.playing && !cin_left &&
+        !song.g[G_CLOCK] && !chain.running && !chain.armed) {
+        rg_rec_wait = 0;
+        seq_start(); /* rec_note sees the initial sentinel and writes step zero */
+    }
     last_note = (uint8_t)note;
     if (cin_left)
         cin_keep(t, note, vel);
@@ -821,6 +832,7 @@ static void keyboard_block(void)
 static void seq_start(void)
 {
     uint32_t i;
+    rg_rec_wait = 0;
     motion_begin();
     chain_start();
     for (i = 0; i < NTRK; i++) {                   /* every track from its step 0, together */
@@ -856,6 +868,9 @@ static void seq_release(track_t *t)
 static void seq_stop(void)
 {
     uint32_t i;
+    rg_rec_wait = 0;
+    if (rg_live_rec) song.rec = 0;
+    rg_live_rec = 0;
     song.playing = 0;
     cin_left = 0;                                  /* (a count-in: cancelled, nothing recorded) */
     cin_flush = 0;
