@@ -109,3 +109,14 @@ fixed per track across sections. No new effects, audio engines or preset changes
 are included in UI 0.4.0. Recording/mixing/automation screens and a more guided
 project workflow remain the next design work. Physical FM-1 and iPhone Safari
 interaction have not been tested on devices.
+
+### Clear the whole piano roll
+
+With playback stopped on the melodic STEP page, **hold EDIT, then hold SEQ for
+one second**. The screen says `HOLD 1 SEC: CLEAR ROLL`; releasing early cancels.
+It clears all 64 note steps and their parameter locks on the selected track,
+including steps outside the current pattern length. It keeps the sound, tempo,
+pattern length and other tracks. **Hold SAVE to undo.**
+
+EDIT + REC still clears only the selected step. The whole-roll shortcut is not
+active in the drum grid, DETAIL, arrangement or during playback.

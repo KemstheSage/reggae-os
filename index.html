@@ -97,7 +97,7 @@ footer small { font-size: 11px; opacity: .8; }
 </p>
 
 <footer>
-  <small class="version">REGGAE-OS 0.1 · sound bank 0.5 / UI 0.5.0 · Felucca v1.6.1 (preview)</small><br>
+  <small class="version">REGGAE-OS 0.1 · sound bank 0.5 / UI 0.5.1 · Felucca v1.6.1 (preview)</small><br>
   Felucca by Leo Kuroshita, Hügelton Instruments · <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a> · browser build after charlesvestal's <a href="https://github.com/charlesvestal/fm1-x0x">X0X</a> · DotGothic16 font, <a href="fonts/OFL.txt">SIL OFL 1.1</a><br>
   <nav><a href="SEQUENCER.md">Song-making guide</a> · <a href="reggae-os-source.tar.gz">REGGAE-OS source</a> · <a href="LICENSING.md">Licences</a> · <a href="https://github.com/hugelton/Felucca">Felucca upstream</a> · REGGAE-OS development build — hardware untested</nav>
   <small>M-VAVE and FM-1 are trademarks of their respective owners. Felucca is not affiliated with or endorsed by them.</small>
@@ -495,8 +495,8 @@ async function switchOn() {
     const resumed = ac.resume(); // start in the physical Switch on gesture, before network awaits
     if (ac.sampleRate !== 44100) throw new Error("This emulator requires a 44.1 kHz audio context");
     const [wasm] = await Promise.all([
-      fetch("felucca.wasm?v=ui-0.5.0").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
-      ac.audioWorklet.addModule("worklet.js?v=ui-0.5.0")]);
+      fetch("felucca.wasm?v=ui-0.5.1").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
+      ac.audioWorklet.addModule("worklet.js?v=ui-0.5.1")]);
     node = new AudioWorkletNode(ac, "felucca", { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] });
     node.connect(ac.destination);
     let warned = false;
