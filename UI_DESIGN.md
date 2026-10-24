@@ -122,3 +122,18 @@ level scale movement and spring damping changes its width.
 All rendering remains integer geometry at 240 × 240, capped at 10 Hz, using the
 existing strip buffer. ANIM OFF freezes time-based motion; control changes and
 static status indicators still update. No DSP, control mapping or presets changed.
+
+## UI 0.4.0 — pattern and arrangement workspace
+
+STEP and SONG now share the instrument pages' charcoal/cream/gold/green/red
+palette, top identity, central working area and four colour-coded bottom controls.
+The established piano roll and eight-lane drum grid retain their notes, locks,
+ties and transport playhead. The arrangement replaces compressed blocks with
+four readable section rows showing T1–T4, A–D or mute, selected cell and loop count.
+A green marker follows actual song-section playback, including scroll to later
+sections. These are state indicators, not free-running decorative animation.
+ANIM OFF does not suppress essential transport position. Three existing scratch
+strip renders at 10 Hz; no full framebuffer or audio-callback drawing.
+
+DETAIL, automation, mixer, project browser and held-button tools retain their
+upstream layouts. See SEQUENCER.md for the actual hardware workflow and limits.

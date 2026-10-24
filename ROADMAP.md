@@ -33,3 +33,8 @@ refinements are recorded in `docs/research/te-interface-study.md`.
 Bank 0.5 adds a compact sampled roots trumpet and separate dub wail, jungle signal
 and fast alarm candidates. Horn section layering remains future work. See
 [bank 0.5](docs/reports/bank-0.5.md) for validation and limitations.
+
+UI 0.4.0 begins the expanded workstation request: native note/drum editing and
+song arrangement now share the REGGAE-OS layout. Existing four-part, four-source,
+sixteen-section song playback is retained. Next: mixer, automation and project
+management visual/workflow pass; full device timing and usability validation.

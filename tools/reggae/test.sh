@@ -33,3 +33,6 @@ for preset in 4 7 8 9 12; do
 done > build/reggae/style-report.txt
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/siren-test tests/reggae_siren.c -lm
 build/reggae/siren-test
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/arranger tests/reggae_arranger.c -lm
+build/reggae/arranger

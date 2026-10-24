@@ -20,6 +20,13 @@ envelopes following musician feedback. The listening brief is Big Ship, Faded Aw
 and Soldiers; these patches are audition candidates, not verified recreations.
 See [SOUND_DESIGN.md](SOUND_DESIGN.md) for sources, exact changes and limitations.
 
+## Sequence and arrange
+
+UI 0.4.0 adds REGGAE-OS note-pattern, drum-grid and song-arrangement screens.
+Use SEQ for patterns and GLO for ARRANGE. Four parts can play a sixteen-section
+song from four saved pattern sources, with per-track mutes and section repeats.
+See [the song-making guide](SEQUENCER.md) for controls, saving and limits.
+
 ## Play on iPhone or desktop
 
 Open **https://kemsthesage.github.io/reggae-os/** in Safari and tap **Switch on**.

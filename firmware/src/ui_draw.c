@@ -1561,6 +1561,7 @@ static void style_apply(void)
 }
 
 #include "reggae_ui.c"
+#include "reggae_seq_ui.c"
 
 static void ui_draw_page(uint32_t counting);
 static void ui_draw(void)
@@ -1628,6 +1629,7 @@ static void ui_draw_page(uint32_t counting)
         ui.page = (uint8_t)page_first(FAM_EDIT);
         page_entered();
     }
+    if (reggae_seq_screen()) { reggae_seq_draw(); return; }
     if (reggae_screen()) { reggae_draw(); return; }
     cursor_fix();
     if (ui.force)

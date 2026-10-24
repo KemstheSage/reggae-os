@@ -231,3 +231,20 @@ executing the actual WASM exports; iPhone Safari interaction remains untested.
 The final test runs were individual commands as well as the main script; the
 held-key siren check was added to the script after its successful standalone run.
 No subjective listening comparison or physical CPU-headroom measurement is claimed.
+
+## UI 0.4.0 — 24 October 2026
+
+`tests/reggae_arranger.c` passes compiled with `-O0 -ffp-contract=off
+-fsanitize=address`: native panel navigation, section creation/repeats, audible
+multi-section playback, automatic stop, saved arrangement recall, last-row view
+and drum hit editing. Test fixtures use the existing project writer; this is not
+a claim that every SAVE gesture has been retested. Native screenshots inspected.
+
+`node tests/reggae_seq_wasm.mjs` passes the corresponding WASM screen/navigation
+smoke test. `node tests/reggae_wasm.mjs` confirms all 75 instrument/control PCM
+renders unchanged from bank 0.5. Existing `web/emu/emu_test.mjs` passes.
+
+Hardware app: 556,380 B; data+BSS 61,032 B; pool 328,896 B. Same memory limits;
+25,184 B application space remains. WASM 844,855 B. Build guards pass. No physical
+FM-1 or iPhone Safari test and no hardware CPU-budget measurement. Scope and
+remaining screens are recorded in docs/reports/ui-0.4.0.md.
