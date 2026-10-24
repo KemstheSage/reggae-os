@@ -1488,18 +1488,27 @@ static void ui_notices(void)
 static int reggae_step_gesture(uint32_t notes)
 {
     static uint8_t active,used,cleared,mode,part,step,rec_before;
-    static uint32_t started;
+    static uint32_t started, clear_started;
     uint32_t buttons=fm1_in.buttons;
+    unsigned seq_held=(buttons>>panel.btn[B_SEQ])&1u;
     unsigned held=((buttons>>panel.btn[B_EDIT])&1u)|(((buttons>>panel.btn[B_REC])&1u)<<1);
     if(!active) {
         if(!held || !reggae_step_gesture_page() || ui.ly)return 0;
-        active=1;used=cleared=0;mode=held;part=song.sel;step=ui.cursor;rec_before=song.rec;started=fm1_ms;
+        active=1;used=cleared=0;clear_started=0;mode=held;part=song.sel;step=ui.cursor;rec_before=song.rec;started=fm1_ms;
         song.rec &= ~(1u<<part);ui.entry_open=0;follow_hold();
         ui_message(mode==2?"PLAY TO REPLACE / +EDIT CLEAR":"PLAY TO ADD / +REC CLEAR");
     }
     track_t *t=&trk[part];step_t *st=&t->step[step];
     /* Hold the target until every played key is released, even if the modifier goes first. */
-    if(held==3 && !cleared) {
+    if ((held&1u) && seq_held && held!=3) {
+        if (!clear_started) { clear_started=fm1_ms; ui_message("HOLD 1 SEC: CLEAR ROLL"); }
+        if (cleared!=2 && fm1_ms-clear_started>=1000u) {
+            if (!used) step_undo_take(t,0);
+            for(unsigned i=0;i<NSTEP;i++) { step_clear(&t->step[i]); (void)motion_clear_locks(t,i); }
+            motion_undo_done(t);cleared=2;used=1;
+            ui_message("ROLL CLEARED / SAVE: UNDO");
+        }
+    } else if(held==3 && !cleared) {
         step_undo_take(t,0);step_clear(st);(void)motion_clear_locks(t,step);
         motion_undo_done(t);cleared=used=1;ui_message("STEP CLEARED");
     } else if(held && !cleared) {
@@ -1522,9 +1531,10 @@ static int reggae_step_gesture(uint32_t notes)
             ui_message(mode==2?"STEP REPLACED":"NOTES ADDED");
         }
     }
-    ui.pg_down &= ~((1u<<panel.btn[B_EDIT])|(1u<<panel.btn[B_REC]));
+    if (!seq_held || !(held&1u)) clear_started=0;
+    ui.pg_down &= ~((1u<<panel.btn[B_EDIT])|(1u<<panel.btn[B_REC])|(1u<<panel.btn[B_SEQ]));
     ui.rec_t0=0;ui.entry_open=0;enc_drop();
-    if(!held && !fm1_in.notes) {
+    if(!held && !seq_held && !fm1_in.notes) {
         active=0;song.rec=rec_before;
         if(!used) {if(mode==2 && fm1_ms-started<350u)rec_tap();else ui_message(mode==2?"HOLD REC + PLAY NOTES":"HOLD EDIT + PLAY NOTES");}
     }

@@ -308,3 +308,21 @@ checks pass. All 75 sound-bank/control renders match the prior native PCM exactl
 Hardware build guards pass: app 558,024 / 581,564 B; data+BSS 61,048 / 73,728 B;
 pool 328,896 / 368,640 B. WASM 846,993 B. This is COMPILES and EMULATOR TESTED,
 not physically verified hardware performance.
+
+## UI 0.5.1 — thematic SEQ and clear roll
+
+The expanded `reggae_step_gestures.c` passes under AddressSanitizer: early release
+cancels EDIT+SEQ, a one-second hold clears all 64 steps (including hidden step 64),
+button releases keep the STEP page open, SAVE restores the whole roll, and sound
+parameters/other tracks remain unchanged. Existing add/replace/single-step clear,
+fixed cursor and released-voice checks pass. The native arrangement regression
+also passes under AddressSanitizer. Piano-roll, drum-grid and arrangement graphics
+were inspected together at 240 × 240 each; no labels or grid marks are obscured.
+
+WASM tests pass for whole-roll clear/silence and audible undo, existing step
+entry, arrangement navigation and live organ/bass/drum recording. All 75 sound
+and knob renders remain byte-identical to bank-0.5 native PCM. The existing
+emulator regression passes. Physical hardware and iPhone Safari remain untested.
+
+Hardware build guards pass: app 559,180 / 581,564 B; data+BSS 61,064 / 73,728 B;
+pool 328,896 / 368,640 B. WASM is 848,542 B. Status: COMPILES and EMULATOR TESTED.

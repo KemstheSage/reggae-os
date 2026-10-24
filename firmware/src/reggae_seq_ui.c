@@ -6,12 +6,23 @@ static int reggae_seq_screen(void)
     return !ui.home && (cur_page()->graph == GR_SONG ||
         (cur_page()->graph == GR_ROLL && !detail_on()));
 }
+/* A small original 45 label: its spindle follows the loop position, not audio samples. */
+static void reggae_seq_record(void)
+{
+    int ph=!(ui_prefs&PREF_ANIM_OFF)&&song.playing?(TSEL->seq_idx%16u)*64:128;
+    reggae_disc(26,26,23,RG_WOOD);reggae_disc(26,26,21,RG_INK);
+    reggae_ring(26,26,18,RG_EDGE,RG_INK);reggae_disc(26,26,13,RG_GREEN);
+    reggae_line(26,26,26+SINE[ph]*11/32768,26-SINE[(ph+256)&1023]*11/32768,RG_GOLD);
+    reggae_disc(26,26,3,RG_BG);
+    cv_rect(10,46,11,2,RG_GREEN);cv_rect(21,46,10,2,RG_GOLD);cv_rect(31,46,11,2,RG_RED);
+}
 static void reggae_seq_card(unsigned k,const char *label,const char *value)
 {
     int x=(int)k*60;
+    cv_rrect(x+3,3,54,40,3,RG_PANEL,RG_BG);
     cv_rect(x+5,3,50,2,RG_CONTROL_COLOR[k]);
-    cv_text_in(x+2,10,56,&AF_S,label,RG_CONTROL_COLOR[k],RG_BG);
-    cv_text_in(x+2,25,56,&AF_M,value,RG_INK,RG_BG);
+    cv_text_in(x+2,10,56,&AF_S,label,RG_CONTROL_COLOR[k],RG_PANEL);
+    cv_text_in(x+2,25,56,&AF_M,value,RG_INK,RG_PANEL);
 }
 static void reggae_arrangement(void)
 {
@@ -45,26 +56,37 @@ static void reggae_seq_draw(void)
 {
     static uint32_t last;
     int arrange=cur_page()->graph==GR_SONG;
-    uint8_t mono=ux.mono,light=ux.light;
+    __typeof__(ux) saved=ux;
     char b[32],v[4][16];const char *label[4];
     if(!ui.force && (uint32_t)(fm1_ms-last)<100u)return;
     last=fm1_ms;cursor_fix();ux.mono=ux.light=0;ux.gen++;
+    ux.bg=ux.surf=RG_BG;ux.text=RG_INK;ux.accent=RG_RED;
+    ux.mid=RG_GREEN;ux.dim=RG_EDGE;ux.raise=RG_WOOD;
+    ux.lane=RG_PANEL;ux.grid=RGB(39,48,39);
     cv_begin(240,56,RG_BG);
-    cv_rect(8,8,4,15,song.rec?RG_RED:song.playing?RG_GREEN:RG_GOLD);
-    cv_text(19,7,&AF_M,arrange?"ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"NOTE PATTERN",RG_INK);
-    fmt_int(b,song.g[G_BPM]);cv_text_in(184,9,48,&AF_S,b,RG_GOLD,RG_BG);
+    if(!arrange)reggae_seq_record();
+    else { reggae_disc(26,18,15,RG_WOOD);reggae_disc(26,18,12,RG_GREEN);reggae_disc(26,18,3,RG_GOLD); }
+    cv_text(55,5,&AF_M,arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
+    fmt_int(b,song.g[G_BPM]);cv_text(55,22,&AF_S,b,RG_GOLD);
+    cv_text(82,22,&AF_S,"BPM",RG_WOOD);
+    cv_text(116,22,&AF_S,song.rec?"REC":song.playing?"PLAY":"STOP",song.rec?RG_RED:RG_GREEN);
+    for(unsigned beat=0;beat<4;beat++) {
+        int active=song.playing && (TSEL->seq_idx/4u)%4u==beat;
+        cv_rect(178+beat*14,24,10,3,active?RG_GOLD:RG_EDGE);
+    }
     if(arrange) {
         for(unsigned k=0;k<NTRK;k++) { b[0]='T';b[1]='1'+k;b[2]=0;
             cv_text_in(37+k*37,35,31,&AF_S,b,RG_CONTROL_COLOR[k],RG_BG); }
         cv_text(191,35,&AF_S,"LOOPS",RG_WOOD);
         if(chain.running){fmt_int(b,chain.row+1);cv_text_in(7,35,25,&AF_S,b,RG_GREEN,RG_BG);}
     } else {
-        b[0]='T';b[1]='1'+song.sel;b[2]=0;cv_text(9,34,&AF_S,b,RG_GOLD);
+        b[0]='T';b[1]='1'+song.sel;b[2]=0;cv_text(55,37,&AF_S,b,RG_GOLD);
         int idx=reggae_index(TSEL);
-        cv_text_in(36,34,195,&AF_S,idx>=0?ENGINES[TSEL->eng_req]->presets[TSEL->preset].name:ENGINES[TSEL->eng_req]->name,RG_INK,RG_BG);
+        cv_text_in(78,37,157,&AF_S,idx>=0?ENGINES[TSEL->eng_req]->presets[TSEL->preset].name:ENGINES[TSEL->eng_req]->name,RG_INK,RG_BG);
     }
     cv_blit(0,0);
     cv_begin(240,124,RG_BG);cv_oy=0;
+    cv_rect(4,0,232,1,RG_WOOD);cv_rect(4,123,232,1,RG_WOOD);
     if(arrange)reggae_arrangement();
     else { /* Reuse the established editable roll/grid, including ties, locks and playhead. */
         if(drum_track(TSEL))graph_grid(TSEL,RG_GOLD);else {pr_follow(TSEL);graph_roll(TSEL,RG_GOLD);}
@@ -95,7 +117,7 @@ static void reggae_seq_draw(void)
         }
     }
     for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
-    const char *hint=drum_track(TSEL)?"SEQ: DETAIL / GLO: ARRANGE":"EDIT+KEY ADD / REC+KEY REPLACE";
+    const char *hint=drum_track(TSEL)?"SEQ: DETAIL / GLO: ARRANGE":"EDIT+SEQ HOLD: CLEAR ROLL";
     if(arrange) {
         hint=chain.running?"PLAY: STOP / SONG RUNNING":"PLAY: SONG / SAVE: PROJECT";
         if(ui.song_row>=chain_config.count)hint="KNOB 3: ADD / SAVE: PATTERNS";
@@ -105,5 +127,5 @@ static void reggae_seq_draw(void)
     cv_text_in(2,47,236,&AF_S,ui.msg_t?ui.msg:hint,RG_INK,RG_BG);
     cv_blit(0,180);
     if(ui.msg_t)ui.msg_t--;if(ui.hot_t)ui.hot_t--;
-    ux.mono=mono;ux.light=light;ux.gen++;ui.force=0;
+    saved.gen+=2;ux=saved;ui.force=0;
 }

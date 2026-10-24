@@ -50,3 +50,7 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
   overdub, safe track handoff, T4 Roots Kit startup and performance-browser role,
   native recording/track indicators. Next: free-tempo take capture and live
   section-change recording; neither is implemented in this slice.
+
+- UI 0.5.1: SEQ visual refinement and selected-track whole-piano-roll clear with
+  a one-second EDIT+SEQ hold and SAVE undo. Further SLOOP integration is deferred
+  while the current editing workflow is refined.

@@ -125,3 +125,7 @@ siren/drum personalities, a clearer guitar, and characterful effects pages.
 Sound bank 0.4 refines only melodica, brass, guitar, dub siren and drums.
 The approved organ, piano and bass patches are protected by forty PCM hashes.
 The changes are audition candidates; see [SOUND_DESIGN.md](SOUND_DESIGN.md).
+
+UI 0.5.1 refines SEQ with an animated 45-label header and a reggae-themed palette.
+On the stopped piano roll, hold EDIT then SEQ for one second to clear the track;
+hold SAVE to undo. [Details](docs/reports/ui-0.5.1.md).

@@ -35,6 +35,19 @@ int main(void) {
     /* Keys released: no stuck live voices. Sound/engine never changed. */
     advance(2000);for(unsigned v=0;v<NVOICE;v++)assert(!TSEL->v[v].active);
     assert(TSEL->eng_req==engine);
+    /* Whole roll: EDIT then SEQ, one-second hold, including hidden step 64. */
+    TSEL->step[1]=*s;TSEL->step[63]=*s;
+    step_t before[NSTEP];memcpy(before,TSEL->step,sizeof before);
+    int16_t params[P_COUNT];memcpy(params,TSEL->p,sizeof params);
+    step_t other[NSTEP];memcpy(other,trk[1].step,sizeof other);
+    buttons(1u<<4);buttons((1u<<4)|(1u<<9));advance(400);buttons(0);
+    assert(!memcmp(before,TSEL->step,sizeof before));assert(cur_page()->graph==GR_ROLL&&!detail_on());
+    buttons(1u<<4);buttons((1u<<4)|(1u<<9));advance(1100);
+    for(unsigned i=0;i<NSTEP;i++)assert(!TSEL->step[i].n&&!TSEL->step[i].hit&&TSEL->step[i].time==ST_REST);
+    buttons(1u<<9);buttons(0);assert(cur_page()->graph==GR_ROLL&&!detail_on());
+    assert(!memcmp(params,TSEL->p,sizeof params)&&!memcmp(other,trk[1].step,sizeof other));
+    buttons(1u<<7);advance(800);buttons(0);assert(!memcmp(before,TSEL->step,sizeof before));
+    TSEL->p[P_SLEN]=16;ui.force=1;advance(150);
     picture("build/reggae/step-gestures.ppm");
-    puts("PASS: EDIT adds/deduplicates, REC replaces chords, combined clear, fixed cursor, tap REC, no stuck notes");
+    puts("PASS: EDIT adds/deduplicates, REC replaces chords, combined clear, fixed cursor, tap REC, whole-roll clear/cancel/undo, no stuck notes");
 }

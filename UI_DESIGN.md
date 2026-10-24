@@ -162,3 +162,11 @@ marks with four track numbers. Gold identifies the selected track, red identifie
 recording, ready blinks at 2 Hz, and beat marks follow sequencer position. The
 bottom hint prioritises READY/RECORDING until the take is finished. Rendering
 remains limited to 10 Hz using the existing strips; no graphical work enters DSP.
+
+UI 0.5.1 gives SEQ an original miniature 45 label, green/gold/red print marks,
+warm notes against dark green lanes, red selection/playhead accents, four beat
+lights and cabinet-style parameter wells. The record spindle advances with the
+selected track's sequencer position; it stops when transport stops and respects
+reduced-animation settings. The established roll/grid renderer, note ties,
+ratchets, parameter-lock marks and editing geometry are retained. A local palette
+is restored after drawing, so other pages keep their own colours. No DSP changes.
