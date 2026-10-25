@@ -208,3 +208,9 @@ UI 0.5.6 applies the smaller AF_S font specifically to GROOVE ROLL, RIDDIM GRID
 and DUB ARRANGE. Capital ink ends at header row 27, leaving three clear rows
 before the tempo/status text starts at row 31. Preset labels and controls retain
 their current sizes. This corrects the sequencer heading identified in feedback.
+
+UI 0.5.7 introduces a compact Inter Tight XS face for the sequencer's four
+parameter labels and values. It is rasterised offline at 10 px, with native
+antialiasing and one stored horizontal phase, rather than rescaling a screen.
+Labels and values remain centred in their existing control panels. The font
+comes from the existing OFL-licensed source; other UI text sizes are unchanged.

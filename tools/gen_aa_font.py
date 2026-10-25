@@ -53,7 +53,8 @@ L_CHARS = " #+-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXY"
 def preset(name):
     if name == "inter-tight":
         v = str(FONTS.parent / "assets" / "fonts" / "InterTight[wght].ttf")   # SIL OFL 1.1, Google Fonts
-        return [("S", v + "@400", 12, (32, 126), EXTRAS, 0.0, PHASES),
+        return [("XS", v + "@500", 10, (32, 95), EXTRAS, 0.0, 1),
+                ("S", v + "@400", 12, (32, 126), EXTRAS, 0.0, PHASES),
                 ("M", v + "@500", 15, (32, 126), EXTRAS, 0.0, PHASES),
                 ("L", v + "@600", 28, (32, 32), [ord(c) for c in L_CHARS[1:]], 0.0, PHASES_L)]
     if name == "standin":
@@ -62,7 +63,8 @@ def preset(name):
         else:                                  # the repo's Inter 3.019 (only Regular + Light)
             reg = med = semi = str(FONTS / "Inter-Regular.ttf")
         t = -0.025                             # Inter Tight is Inter with tighter spacing
-        return [("S", reg, 12, (32, 126), EXTRAS, t, PHASES), ("M", med, 15, (32, 126), EXTRAS, t, PHASES),
+        return [("XS", med, 10, (32, 95), EXTRAS, t, 1),
+                ("S", reg, 12, (32, 126), EXTRAS, t, PHASES), ("M", med, 15, (32, 126), EXTRAS, t, PHASES),
                 ("L", semi, 28, (32, 32), [ord(c) for c in L_CHARS[1:]], t, PHASES_L)]
     raise SystemExit(f"unknown preset {name}")
 

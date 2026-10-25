@@ -100,10 +100,10 @@ static void reggae_seq_card(unsigned k,const char *label,const char *value)
     int ratio=reggae_seq_knob(k);
     int ph=(640+ratio*6)&1023;
     cv_line(x+26,9,x+26+SINE[ph]*5/32768,9-SINE[(ph+256)&1023]*5/32768,RG_INK);
-    cv_text_in(x,17,52,&AF_S,label,RG_INK,RG_CASE);
+    cv_text_in(x,19+CAP_IN(XS,9),52,&AF_XS,label,RG_INK,RG_CASE);
     cv_rrect(x+2,29,48,14,2,RG_BG,RG_CASE);
-    char fitted[24];text_fit(fitted,sizeof fitted,value,&AF_S,44);
-    cv_text_in(x+3,29,46,&AF_S,fitted,RG_CONTROL_COLOR[k],RG_BG);
+    char fitted[24];text_fit(fitted,sizeof fitted,value,&AF_XS,44);
+    cv_text_in(x+3,29+CAP_IN(XS,14),46,&AF_XS,fitted,RG_CONTROL_COLOR[k],RG_BG);
 }
 static void reggae_arrangement(void)
 {

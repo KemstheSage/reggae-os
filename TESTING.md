@@ -388,3 +388,16 @@ Only the sequencer title font changes: AF_M to AF_S, leaving a clear gap above
 tempo/status. WASM is 856,102 B. Physical FM-1 and iPhone Safari remain untested.
 Hardware guards pass: app 560,632 / 581,564 B; data+BSS 61,064 / 73,728 B;
 pool 328,896 / 368,640 B. No audio or input changes.
+
+## UI 0.5.7 — compact parameter typography
+
+Rendered and inspected the native roll, drum grid and arrangement at 240×240.
+All four labels and values use the new XS face (10 px raster size, 8 px capital
+band), centred within the existing panels. Native sequencer regression passes.
+Font generation uses the existing Inter Tight OFL source and documented Debian
+libraqm toolchain. No audio or input changes. Physical hardware and iPhone Safari
+remain untested.
+
+WASM SEQ/GLO/navigation/control regression passes. Hardware size guards pass:
+app 564,388 / 581,564 B; data+BSS 61,064 / 73,728 B; pool 328,896 / 368,640 B.
+WASM is 859,790 B. Font tables add flash data; RAM allocations are unchanged.
