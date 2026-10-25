@@ -387,7 +387,7 @@ static void reggae_draw(void)
     {int pk=clamp(t->peak,0,32767);t->peak=0;envelope=pk>envelope?pk:envelope*3/4;}
     cv_begin(240,56,RG_BG);
     cv_rect(10,8,4,14,RG_RED);
-    cv_text(21,7,&AF_M,fx?"DUB EFFECTS":REGGAE_BANK[idx].category,RG_INK);
+    cv_text(21,fx?7:9,fx?&AF_M:&AF_S,fx?"DUB EFFECTS":REGGAE_BANK[idx].category,RG_INK);
     for(unsigned part=0;part<4;part++) {
         char digit[2]={(char)('1'+part),0}; int x=184+part*14;
         uint16_t color=part==song.sel?RG_GOLD:RG_EDGE;
@@ -397,7 +397,8 @@ static void reggae_draw(void)
     }
     if(fx)str_cpy(name,cur_page()->title,sizeof name);
     else str_cpy(name,ENGINES[t->eng_req]->presets[t->preset].name,sizeof name);
-    cv_text(12,31,&AF_M,name,RG_INK);cv_blit(0,0);
+    text_fit(val,sizeof val,name,fx?&AF_M:&AF_S,216);
+    cv_text(12,fx?31:33,fx?&AF_M:&AF_S,val,RG_INK);cv_blit(0,0);
     cv_begin(240,124,RG_BG);
     if(focus)reggae_focus_art(idx);
     else if(fx){mode=str_eq(name,"DLY")?1:str_eq(name,"REVERB")?2:0;reggae_effect_art(mode,motion,envelope);}

@@ -62,3 +62,5 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
 
 - UI 0.5.4: correct character/header spacing and keep help text inside the case;
   fit long labels within their allocated panels.
+
+- UI 0.5.5: smaller performance-screen instrument/category names.

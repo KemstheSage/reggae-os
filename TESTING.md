@@ -371,3 +371,11 @@ remain untested. No sound or input behaviour changes.
 Final WASM step entry/clear/undo, arrangement and layered live-recording tests
 pass. Hardware build guards pass: app 560,576 / 581,564 B; data+BSS 61,064 /
 73,728 B; pool 328,896 / 368,640 B. WASM: 856,028 B.
+
+## UI 0.5.5 — smaller instrument names
+
+Rendered and visually inspected all 15 native performance screens at 240×240.
+Category/preset names use AF_S (9-pixel capitals); no DSP or input changes.
+The existing WASM emulator regression passes. Hardware guards pass: app 560,632 /
+581,564 B; data+BSS 61,064 / 73,728 B; pool 328,896 / 368,640 B. WASM: 856,102 B.
+Physical FM-1 and iPhone Safari remain untested.

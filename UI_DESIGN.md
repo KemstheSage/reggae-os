@@ -198,3 +198,8 @@ its own header bay, title/status/preset lines have separate vertical bands, and
 the help strip sits inside the extended case. Values have taller inset wells.
 Long values, preset names and help messages are fitted with ellipses at the native
 font size rather than overflowing adjacent controls or the case.
+
+UI 0.5.5 uses the existing small font for instrument category and preset names on
+the performance screen (9-pixel capital height instead of 11). Baselines remain
+optically centred in the header bands, with long preset names bounded to 216 px.
+Effects headings and the already-small sequencer preset labels are unchanged.
