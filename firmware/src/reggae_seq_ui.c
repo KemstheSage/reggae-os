@@ -6,15 +6,42 @@ static int reggae_seq_screen(void)
     return !ui.home && (cur_page()->graph == GR_SONG ||
         (cur_page()->graph == GR_ROLL && !detail_on()));
 }
-/* A small original 45 label: its spindle follows the loop position, not audio samples. */
-static void reggae_seq_record(void)
+/* An original record creature. Voice activity opens its mouth; the outer groove
+ * marker follows the sequence while its face stays readable. UI-rate work only. */
+static int reggae_seq_singing(int arrange)
 {
-    int ph=!(ui_prefs&PREF_ANIM_OFF)&&song.playing?(TSEL->seq_idx%16u)*64:128;
-    reggae_disc(26,26,23,RG_WOOD);reggae_disc(26,26,21,RG_INK);
-    reggae_ring(26,26,18,RG_EDGE,RG_INK);reggae_disc(26,26,13,RG_GREEN);
-    reggae_line(26,26,26+SINE[ph]*11/32768,26-SINE[(ph+256)&1023]*11/32768,RG_GOLD);
-    reggae_disc(26,26,3,RG_BG);
-    cv_rect(10,46,11,2,RG_GREEN);cv_rect(21,46,10,2,RG_GOLD);cv_rect(31,46,11,2,RG_RED);
+    for(unsigned t=0;t<NTRK;t++)if(arrange || t==song.sel)
+        for(unsigned v=0;v<NVOICE;v++)if(trk[t].v[v].active)return 1;
+    return 0;
+}
+static void reggae_seq_record(int small)
+{
+    int motion=!(ui_prefs&PREF_ANIM_OFF),sing=reggae_seq_singing(small);
+    int ph=motion&&song.playing?(TSEL->seq_idx%16u)*64:128;
+    int cy=(small?18:25)-(motion&&sing?1:0),r=small?15:22;
+    int eye=small?4:6,ey=cy-(small?2:3),blink=motion&&!sing&&fm1_ms%4200u<160u;
+    int gaze=motion&&song.playing?(int)((TSEL->seq_idx/4u)%3u)-1:0;
+    reggae_disc(26,cy,r,RG_WOOD);reggae_disc(26,cy,r-2,RG_BG);
+    reggae_ring(26,cy,r-4,RG_EDGE,RG_BG);reggae_disc(26,cy,small?10:15,RG_GREEN);
+    int x=26+SINE[ph]*(r-3)/32768,y=cy-SINE[(ph+256)&1023]*(r-3)/32768;
+    reggae_disc(x,y,1,RG_GOLD);
+    for(int side=-1;side<=1;side+=2) {
+        int ex=26+side*eye;
+        if(blink)cv_rect(ex-2,ey,5,1,RG_INK);
+        else {reggae_disc(ex,ey,small?3:4,RG_INK);reggae_disc(ex+gaze,ey,1,RG_BG);}
+    }
+    /* Held notes and release tails keep the mouth open; silence closes it. */
+    if(sing) {
+        cv_rrect(small?23:21,cy+3,small?7:11,small?5:8,2,RG_BG,RG_GREEN);
+        cv_rect(small?25:24,cy+(small?6:8),small?3:5,2,RG_RED);
+    } else {
+        cv_line(22,cy+4,24,cy+6,RG_BG);cv_line(24,cy+6,29,cy+6,RG_BG);cv_line(29,cy+6,31,cy+4,RG_BG);
+    }
+    if(!small) {
+        /* Tiny hands lift on sounding notes; feet anchor it above the editor. */
+        cv_rect(1,sing&&motion?26:34,4,3,RG_INK);cv_rect(48,sing&&motion?26:34,4,3,RG_INK);
+        cv_rect(15,48,8,2,RG_GOLD);cv_rect(31,48,8,2,RG_RED);
+    }
 }
 static void reggae_seq_card(unsigned k,const char *label,const char *value)
 {
@@ -64,8 +91,7 @@ static void reggae_seq_draw(void)
     ux.mid=RG_GREEN;ux.dim=RG_EDGE;ux.raise=RG_WOOD;
     ux.lane=RG_PANEL;ux.grid=RGB(39,48,39);
     cv_begin(240,56,RG_BG);
-    if(!arrange)reggae_seq_record();
-    else { reggae_disc(26,18,15,RG_WOOD);reggae_disc(26,18,12,RG_GREEN);reggae_disc(26,18,3,RG_GOLD); }
+    reggae_seq_record(arrange);
     cv_text(55,5,&AF_M,arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
     fmt_int(b,song.g[G_BPM]);cv_text(55,22,&AF_S,b,RG_GOLD);
     cv_text(82,22,&AF_S,"BPM",RG_WOOD);

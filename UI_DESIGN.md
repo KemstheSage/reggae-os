@@ -170,3 +170,11 @@ selected track's sequencer position; it stops when transport stops and respects
 reduced-animation settings. The established roll/grid renderer, note ties,
 ratchets, parameter-lock marks and editing geometry are retained. A local palette
 is restored after drawing, so other pages keep their own colours. No DSP changes.
+
+UI 0.5.2 turns the SEQ record into an original instrument character: eyes, a
+smiling/open mouth, tiny hands and feet. The selected track's active firmware
+voices open its mouth, including release tails; silence closes it. The arrangement
+version responds to voices across the four tracks. Outer-groove rotation follows
+sequence position while its face stays upright; it blinks when idle and looks
+across the beats. Animations-off removes blinking, looking and bobbing while
+keeping the mouth as a useful voice-activity indicator. No audio callback changes.

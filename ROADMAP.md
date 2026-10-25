@@ -54,3 +54,5 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
 - UI 0.5.1: SEQ visual refinement and selected-track whole-piano-roll clear with
   a one-second EDIT+SEQ hold and SAVE undo. Further SLOOP integration is deferred
   while the current editing workflow is refined.
+- UI 0.5.2: animated record character on SEQ/arrangement, driven by actual voice
+  activity and sequencer position; clear-roll shortcut retained.

@@ -326,3 +326,20 @@ emulator regression passes. Physical hardware and iPhone Safari remain untested.
 
 Hardware build guards pass: app 559,180 / 581,564 B; data+BSS 61,064 / 73,728 B;
 pool 328,896 / 368,640 B. WASM is 848,542 B. Status: COMPILES and EMULATOR TESTED.
+
+## UI 0.5.2 — record character
+
+`tests/reggae_seq_character.c` passes under AddressSanitizer: physical organ keys
+change the character's pixels, release returns it to the same resting face,
+physical drum keys trigger the same voice-activity response, and reduced-animation
+mode retains mouth feedback. Idle and playing screenshots were inspected at the
+native 240×240 resolution. Voice activity includes release tails and is measured
+before the mixer, not as final output amplitude.
+
+Hardware build guards pass: app 559,392 / 581,564 B; data+BSS 61,064 / 73,728 B;
+pool 328,896 / 368,640 B. No added audio buffers. Physical FM-1 and iPhone Safari
+remain untested.
+
+WASM step/whole-roll clear+undo, arrangement and live-recording tests pass.
+All 75 preset/control renders match bank-0.5 native PCM. Existing emulator
+regression passes. WASM is 849,889 B, compiled with restored Emscripten 4.0.15.

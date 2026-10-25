@@ -40,3 +40,5 @@ ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware
 build/reggae/step-gestures
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/live-record tests/reggae_live_record.c -lm
 build/reggae/live-record
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/seq-character tests/reggae_seq_character.c -lm
+build/reggae/seq-character
