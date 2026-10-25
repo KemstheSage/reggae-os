@@ -178,3 +178,17 @@ version responds to voices across the four tracks. Outer-groove rotation follows
 sequence position while its face stays upright; it blinks when idle and looks
 across the beats. Animations-off removes blinking, looking and bobbing while
 keeping the mouth as a useful voice-activity indicator. No audio callback changes.
+
+## UI 0.5.3 — tabletop sequencer
+
+The piano roll, drum grid and arranger now sit inside a shallow metal machine on
+an illustrated wooden desk. A bevel, cast shadow, cable, rubber feet and screws
+establish the physical object. Four rotary indicators follow the displayed step,
+note/drum, length/hit and feel/accent values (or arrangement controls). The record
+character retains its voice-driven mouth and beat-driven motion.
+
+Rendering remains shared native C at 240×240 and up to 10 Hz. The grid removes
+one blank column per step to fit the case, retaining native font and note pixels;
+the drum selection outline is redrawn at the new spacing. One temporary 480-byte
+row buffer replaces neither the existing strip buffer nor any audio buffer.
+Editing gestures, sounds, sequencing and storage are unchanged.

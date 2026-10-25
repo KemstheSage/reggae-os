@@ -343,3 +343,17 @@ remain untested.
 WASM step/whole-roll clear+undo, arrangement and live-recording tests pass.
 All 75 preset/control renders match bank-0.5 native PCM. Existing emulator
 regression passes. WASM is 849,889 B, compiled with restored Emscripten 4.0.15.
+
+## UI 0.5.3 — tabletop sequencer
+
+Native arrangement/navigation/editing/audio/flash recall and record-character
+regressions pass under AddressSanitizer. Piano-roll, drum-grid and arrangement
+screens were inspected at their native 240×240 resolution. WASM step entry,
+whole-roll clear and audible undo, arrangement controls and live layered recording
+pass. All 75 preset/control PCM renders remain identical to bank 0.5. The upstream
+emulator regression passes. No DSP or input mapping changes.
+
+Hardware guards pass: app 560,696 / 581,564 B; data+BSS 61,064 / 73,728 B;
+pool 328,896 / 368,640 B. WASM: 856,325 B. Grid inset uses a temporary 480-byte
+stack row, no added framebuffer. COMPILES and EMULATOR TESTED; physical FM-1
+and iPhone Safari remain untested.

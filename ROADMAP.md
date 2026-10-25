@@ -56,3 +56,6 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
   while the current editing workflow is refined.
 - UI 0.5.2: animated record character on SEQ/arrangement, driven by actual voice
   activity and sequencer position; clear-roll shortcut retained.
+
+- UI 0.5.3: tabletop machine styling for the roll, drum grid and arranger; native
+  pixel glyphs, responsive rotary indicators and existing character animation.
