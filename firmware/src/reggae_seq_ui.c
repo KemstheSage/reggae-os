@@ -1,10 +1,13 @@
+static void reggae_seq_tools(void);
+static int reggae_seq_euclid(void);
+static void layer_cards(uint32_t l);
 /* SPDX-License-Identifier: GPL-3.0-only
  * REGGAE-OS pattern / arrangement workspace. Existing sequencer, project sources,
  * input mappings and persistence; 240x124 scratch strip, no new audio state. */
 static int reggae_seq_screen(void)
 {
-    return !ui.home && (cur_page()->graph == GR_SONG ||
-        (cur_page()->graph == GR_ROLL && !detail_on()));
+    return ui.layer==LAYER_SEQ || (!ui.home && (cur_page()->graph == GR_SONG ||
+        cur_page()->graph == GR_ROLL || cur_page()->graph == GR_EVENTS || cur_page()->graph == GR_TOOLS));
 }
 /* An original record creature. Voice activity opens its mouth; the outer groove
  * marker follows the sequence while its face stays readable. UI-rate work only. */
@@ -91,19 +94,34 @@ static int reggae_seq_knob(unsigned k)
     if(k==2)return step_on(st)?clamp(note_len(TSEL,ui.cursor)*127/64,0,127):st->time==ST_TIE?64:0;
     return ((st->flags&SF_ACCENT)?42:0)+((st->flags&SF_SLIDE)?85:0);
 }
-static void reggae_seq_card(unsigned k,const char *label,const char *value)
+static void reggae_seq_card_value(unsigned k,const char *label,const char *value,int ratio,uint16_t ink)
 {
     int x=16+(int)k*52,hot=ui.hot_t&&ui.hot_col==k;
     /* Shadow, cap and pointer make the four existing hardware knobs tangible. */
     reggae_disc(x+27,11,9,RG_EDGE);reggae_disc(x+26,9,8,RG_BG);
     reggae_ring(x+26,9,7,hot?RG_INK:RG_CONTROL_COLOR[k],RG_BG);
-    int ratio=reggae_seq_knob(k);
     int ph=(640+ratio*6)&1023;
     cv_line(x+26,9,x+26+SINE[ph]*5/32768,9-SINE[(ph+256)&1023]*5/32768,RG_INK);
     cv_text_in(x,19+CAP_IN(XS,9),52,&AF_XS,label,RG_INK,RG_CASE);
     cv_rrect(x+2,29,48,14,2,RG_BG,RG_CASE);
     char fitted[24];text_fit(fitted,sizeof fitted,value,&AF_XS,44);
-    cv_text_in(x+3,29+CAP_IN(XS,14),46,&AF_XS,fitted,RG_CONTROL_COLOR[k],RG_BG);
+    cv_text_in(x+3,29+CAP_IN(XS,14),46,&AF_XS,fitted,ink,RG_BG);
+}
+static void reggae_seq_card(unsigned k,const char *label,const char *value)
+{
+    reggae_seq_card_value(k,label,value,reggae_seq_knob(k),RG_CONTROL_COLOR[k]);
+}
+static void reggae_seq_formatted_card(uint32_t k,const char *label,const char *value,
+                                      const char *unit,uint16_t color,int32_t ratio)
+{
+    char b[32];str_cpy(b,value,sizeof b);
+    unsigned n=str_len(b);
+    if(unit && unit[0] && !str_eq(unit,label) && n+2<sizeof b) {
+        str_cpy(b+n," ",sizeof b-n);n++;
+        str_cpy(b+n,unit,sizeof b-n);
+    }
+    reggae_seq_card_value(k,label,b,ratio<0?0:clamp(ratio*127/1000,0,127),
+                         color==T_DIM?RG_EDGE:RG_CONTROL_COLOR[k]);
 }
 static void reggae_arrangement(void)
 {
@@ -135,7 +153,7 @@ static void reggae_arrangement(void)
 }
 /* Drop one blank column per step, not font/note pixels. Retain the original
  * 21 note rows / eight drum lanes. One 480-byte row scratch; no new framebuffer. */
-static void reggae_seq_inset_grid(int drums)
+static void reggae_seq_inset_grid(int drums,int detail)
 {
     uint16_t row[240];
     for(int y=0;y<124;y++) {
@@ -143,21 +161,24 @@ static void reggae_seq_inset_grid(int drums)
         cv_rect(0,y,240,1,(y+56)%12==0?RGB(82,51,32):RG_DESK);
         cv_rect(13,y,219,1,RGB(42,32,23));cv_rect(9,y,218,1,RG_CASE);
         uint16_t *dst=cv_px+y*240;
-        int prefix=drums?36:35,src=drums?4:0;
+        int prefix=detail?36:drums?36:35,src=drums&&!detail?4:0;
         memcpy(dst+12,row+src,(unsigned)prefix*2);
         for(int step=0;step<16;step++)
-            memcpy(dst+12+prefix+step*11,row+(drums?40:35)+step*12,22);
-        if(!drums)dst[223]=row[227];
+            memcpy(dst+12+prefix+step*11,row+(detail?36:drums?40:35)+step*12,22);
+        if(!drums&&!detail)dst[223]=row[227];
     }
     cv_frame(11,0,214,124,RG_EDGE);
     /* The original left cursor edge occupied the inter-step gap we removed. */
-    if(drums && ui.cursor/16u==ui.bank)
+    if(drums && !detail && ui.cursor/16u==ui.bank)
         cv_frame(47+(ui.cursor%16u)*11,11+ui.lane*14,12,12,RG_INK);
 }
 static void reggae_seq_draw(void)
 {
     static uint32_t last;
-    int arrange=cur_page()->graph==GR_SONG;
+    int tools=ui.layer==LAYER_SEQ,detail=!tools&&detail_on();
+    int events=!tools&&cur_page()->graph==GR_EVENTS,cleanup=!tools&&cur_page()->graph==GR_TOOLS;
+    int arrange=!tools&&cur_page()->graph==GR_SONG;
+    int advanced=tools||detail||events||cleanup;
     __typeof__(ux) saved=ux;
     char b[32],v[4][16];const char *label[4];
     if(!ui.force && (uint32_t)(fm1_ms-last)<100u)return;
@@ -168,7 +189,7 @@ static void reggae_seq_draw(void)
     reggae_seq_machine(0,56);
     cv_rrect(53,17,169,36,3,RG_BG,RG_CASE);
     reggae_seq_record(arrange);
-    cv_text(57,16,&AF_S,arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
+    cv_text(57,16,&AF_S,tools?(reggae_seq_euclid()?"EUCLID":"PATTERN TOOLS"):detail?"STEP DETAIL":events?"AUTOMATION":cleanup?"CLEANUP":arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
     fmt_int(b,song.g[G_BPM]);cv_text(57,28,&AF_S,b,RG_GOLD);
     cv_text(83,28,&AF_S,"BPM",RG_WOOD);
     cv_text(117,28,&AF_S,song.rec?"REC":song.playing?"PLAY":"STOP",song.rec?RG_RED:RG_GREEN);
@@ -187,12 +208,25 @@ static void reggae_seq_draw(void)
         cv_text_in(78,40,140,&AF_S,b,RG_INK,RG_BG);
     }
     cv_blit(0,0);
-    if(arrange) {reggae_seq_machine(56,124);cv_rect(12,0,212,124,RG_BG);reggae_arrangement();}
-    else cv_begin(240,124,RG_BG);
-    cv_oy=0;
-    if(!arrange) { /* Reuse the established editable roll/grid, including ties, locks and playhead. */
-        if(drum_track(TSEL))graph_grid(TSEL,RG_GOLD);else {pr_follow(TSEL);graph_roll(TSEL,RG_GOLD);}
-        reggae_seq_inset_grid(drum_track(TSEL));
+    if(arrange||events||tools||cleanup) {
+        reggae_seq_machine(56,124);cv_rect(12,0,212,124,RG_BG);cv_oy=0;
+        if(arrange)reggae_arrangement();
+        else if(events)graph_events(1);
+        else if(tools)reggae_seq_tools();
+        else {
+            static const char *const action[]={"CLEAR PATTERN","RESET SOUND","DELETE SECTION","CLEAR SONG"};
+            for(unsigned k=0;k<4;k++) {
+                int y=8+k*27,sel=act_col()==k+1;uint16_t bg=sel?RG_PANEL:RG_BG;
+                cv_rrect(16,y,204,24,2,bg,RG_BG);
+                cv_text_in(18,y+CAP_IN(S,24),200,&AF_S,k==1&&ui.tl_clean?"CLEAN SOUND":action[k],sel?RG_GOLD:RG_INK,bg);
+            }
+        }
+    } else {
+        cv_begin(240,124,RG_BG);cv_oy=0;
+        if(detail)graph_detail(TSEL,RG_GOLD);
+        else if(drum_track(TSEL))graph_grid(TSEL,RG_GOLD);
+        else {pr_follow(TSEL);graph_roll(TSEL,RG_GOLD);}
+        reggae_seq_inset_grid(drum_track(TSEL),detail);
     }
     cv_blit(0,56);
     reggae_seq_machine(180,60);
@@ -219,17 +253,25 @@ static void reggae_seq_draw(void)
             str_cpy(v[3],st->flags&SF_ACCENT?st->flags&SF_SLIDE?"A+SL":"ACC":st->flags&SF_SLIDE?"SLIDE":"NORM",16);
         }
     }
-    for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
-    const char *hint=drum_track(TSEL)?"SEQ: DETAIL / GLO: ARRANGE":"EDIT+SEQ HOLD: CLEAR ROLL";
+    if(advanced) {
+        seq_card_draw=reggae_seq_formatted_card;
+        if(tools)layer_cards(LAYER_SEQ);else draw_columns();
+        seq_card_draw=0;
+    } else for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
+    const char *hint=drum_track(TSEL)?"SEQ: DETAIL  GLO: SONG":"HOLD EDIT+SEQ: CLEAR";
     if(arrange) {
         hint=chain.running?"PLAY: STOP / SONG RUNNING":"PLAY: SONG / SAVE: PROJECT";
         if(ui.song_row>=chain_config.count)hint="KNOB 3: ADD / SAVE: PATTERNS";
         else {unsigned sl=chain_config.row[ui.song_row].slot[ui.song_trk%NTRK];
             if(sl<4&&!graph_project_used(sl))hint="PATTERN NOT SAVED: USE SAVE";}
     }
+    if(detail)hint="PRESETS: STEP  SEQ: AUTO";
+    if(events) {str_cpy(b,"OCT+: ",sizeof b);str_cpy(b+6,ev_act_name(),sizeof b-6);hint=b;}
+    if(tools)hint=reggae_seq_euclid()?"OCT+: APPLY  OCT-: CANCEL":"KEYS: TOOLS  OCT-: UNDO";
+    if(cleanup)hint="TURN TO PICK  OCT+: CONFIRM";
     cv_rect(14,45,208,13,RG_BG);
-    text_fit(b,sizeof b,ui.msg_t?ui.msg:hint,&AF_S,202);
-    cv_text_in(16,45,204,&AF_S,b,RG_INK,RG_BG);
+    char foot[64];text_fit(foot,sizeof foot,ui.msg_t?ui.msg:hint,&AF_XS,202);
+    cv_text_in(16,45+CAP_IN(XS,13),204,&AF_XS,foot,RG_INK,RG_BG);
     cv_blit(0,180);
     if(ui.msg_t)ui.msg_t--;if(ui.hot_t)ui.hot_t--;
     saved.gen+=2;ux=saved;ui.force=0;

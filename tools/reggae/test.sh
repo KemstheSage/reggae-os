@@ -42,3 +42,6 @@ ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware
 build/reggae/live-record
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/seq-character tests/reggae_seq_character.c -lm
 build/reggae/seq-character
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/seq-menus tests/reggae_seq_menus.c -lm
+build/reggae/seq-menus

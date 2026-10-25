@@ -1439,9 +1439,13 @@ static void graph_pats(void)
 #define EV_SX 60
 #define EV_NX 92
 /* a row's value (M) and its unit (S, on the value's baseline, as a card's) ending at x 226; the value's left x */
-static int32_t ev_value(int32_t y, const char *v, const char *unit, uint16_t fg, uint16_t bg)
+static int32_t ev_value(int32_t y, const char *v, const char *unit, uint16_t fg, uint16_t bg, int compact)
 {
-    int32_t x = 226;
+    int32_t x = compact?218:226;
+    if(compact) {
+        if(unit && unit[0])x=cv_text_r(x,y+CAP_IN(S,16),&AF_S,unit,fg,bg)-2;
+        return cv_text_r(x,y+CAP_IN(S,16),&AF_S,v,fg,bg);
+    }
     GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
     if (unit && unit[0]) {
         GFX_HOOK_ALIGN(0, 0, 0, y + LIST_TY + AF_M.asc, AL_B, "list row unit on its value's baseline");
@@ -1453,8 +1457,10 @@ static int32_t ev_value(int32_t y, const char *v, const char *unit, uint16_t fg,
  * QUANTIZE (ON / OFF and the steps nudged), then a row each: the kind (LOCK in the accent, AUTO; STEP: a step's CHANCE,
  * RATCH, NUDGE or VEL, a NUDGE or VEL that does not play DIM), the step, the name, the value at the right; the last row
  * + ADD (LOCK, CHANCE, RATCH, NUDGE or VEL: what OCT+ adds) */
-static void graph_events(void)
+static void graph_events(int compact)
 {
+    const aafont_t *font=compact?&AF_S:&AF_M;
+    int ty=compact?CAP_IN(S,16):LIST_TY;
     const track_t *t = TSEL;
     uint16_t rw[EV_ROWS];
     uint32_t n = ev_list(rw), cur = ev_row(n), k;
@@ -1468,11 +1474,11 @@ static void graph_events(void)
         sel = k == cur;
         bg = sel ? T_THEME : T_SURF;
         if (sel)
-            cv_rrect(6, y, 228, 16, 4, T_THEME, T_SURF);
+            cv_rrect(compact?14:6, y, compact?208:228, 16, 4, T_THEME, T_SURF);
         if (c >> 8 == EVK_ADD) {
             ev_fix();
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(14, y + LIST_TY, &AF_M, ui.ev_id == EV_CHANCE ? "+ ADD CHANCE" : ui.ev_id == EV_RATCH ?
+            cv_text_on(14, y + ty, font, ui.ev_id == EV_CHANCE ? "+ ADD CHANCE" : ui.ev_id == EV_RATCH ?
                        "+ ADD RATCH" : ui.ev_id == EV_NUDGE ? "+ ADD NUDGE" : ui.ev_id == EV_VEL ?
                        (ui.ev_vel ? "+ HIDE VEL" : "+ SHOW VEL") : "+ ADD LOCK", sel ? T_INK : T_DIM, bg);
             break;
@@ -1484,12 +1490,12 @@ static void graph_events(void)
             str_cpy(b + str_len(b), "  LOCK ", sizeof b - str_len(b));
             fmt_int(b + str_len(b), (int32_t)motion_lock_count(t));
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(14, y + LIST_TY, &AF_M, "PLAY", sel ? T_INK : T_MID, bg);
+            cv_text_on(14, y + ty, font, "PLAY", sel ? T_INK : T_MID, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(EV_SX, y + LIST_TY, &AF_M, motion_enabled(t) ? "ON" : "OFF",
+            cv_text_on(EV_SX, y + ty, font, motion_enabled(t) ? "ON" : "OFF",
                        sel ? T_INK : motion_enabled(t) ? T_TEXT : T_DIM, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_r(226, y + LIST_TY, &AF_M, b, sel ? T_INK : T_MID, bg);
+            cv_text_r(compact?218:226, y + ty, font, b, sel ? T_INK : T_MID, bg);
             continue;
         }
         if (c >> 8 == EVK_QNT) {                     /* QUANTIZE ON / OFF (1.2), the steps nudged: "NUDGED 3" */
@@ -1497,11 +1503,11 @@ static void graph_events(void)
             str_cpy(b, "NUDGED ", sizeof b);
             fmt_int(b + str_len(b), (int32_t)ev_nudged(t));
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(14, y + LIST_TY, &AF_M, "QUANTIZE", sel ? T_INK : T_MID, bg);
+            cv_text_on(14, y + ty, font, "QUANTIZE", sel ? T_INK : T_MID, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(EV_NX, y + LIST_TY, &AF_M, t->p[P_SQNT] ? "ON" : "OFF", sel ? T_INK : T_TEXT, bg);
+            cv_text_on(EV_NX, y + ty, font, t->p[P_SQNT] ? "ON" : "OFF", sel ? T_INK : T_TEXT, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_r(226, y + LIST_TY, &AF_M, b, sel ? T_INK : T_MID, bg);
+            cv_text_r(compact?218:226, y + ty, font, b, sel ? T_INK : T_MID, bg);
             continue;
         }
         if (c >> 8 != EVK_REC) {                     /* a step's CHANCE / RATCH / NUDGE: "STEP 05 CHANCE  50%" */
@@ -1514,14 +1520,14 @@ static void graph_events(void)
             b[1] = (char)('0' + (s + 1u) % 10u);
             b[2] = 0;
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(14, y + LIST_TY, &AF_M, "STEP", sel ? T_INK : T_MID, bg);
+            cv_text_on(14, y + ty, font, "STEP", sel ? T_INK : T_MID, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(EV_SX, y + LIST_TY, &AF_M, b, sel ? T_INK : T_MID, bg);
+            cv_text_on(EV_SX, y + ty, font, b, sel ? T_INK : T_MID, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(EV_NX, y + LIST_TY, &AF_M, kd == EVK_CHANCE ? (v > 100 ? "COND" : "CHANCE") : kd == EVK_RATCH ? "RATCH" :
+            cv_text_on(EV_NX, y + ty, font, kd == EVK_CHANCE ? (v > 100 ? "COND" : "CHANCE") : kd == EVK_RATCH ? "RATCH" :
                        kd == EVK_VEL ? "VEL" : "NUDGE", sel ? T_INK : vc, bg);
             if (kd == EVK_CHANCE) {                  /* (1.5.5: "STEP 05 COND  1:4") */
-                ev_value(y, b, ev_chance_fmt(b, v), sel ? T_INK : vc, bg);
+                ev_value(y, b, ev_chance_fmt(b, v), sel ? T_INK : vc, bg, compact);
                 continue;
             } else if (kd == EVK_VEL) {
                 fmt_int(b, v);
@@ -1532,7 +1538,7 @@ static void graph_events(void)
             } else {                                 /* "+3" "/16" */
                 ev_nudge_fmt(b, v);
             }
-            ev_value(y, b, kd == EVK_CHANCE ? "%" : kd == EVK_NUDGE ? "/16" : "", sel ? T_INK : vc, bg);
+            ev_value(y, b, kd == EVK_CHANCE ? "%" : kd == EVK_NUDGE ? "/16" : "", sel ? T_INK : vc, bg, compact);
             continue;
         }
         {
@@ -1546,14 +1552,14 @@ static void graph_events(void)
             b[1] = (char)('0' + ((e->place & 63u) + 1u) % 10u);
             b[2] = 0;
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(14, y + LIST_TY, &AF_M, lock ? "LOCK" : "AUTO", sel ? T_INK : lock ? T_ACCENT : T_MID, bg);
+            cv_text_on(14, y + ty, font, lock ? "LOCK" : "AUTO", sel ? T_INK : lock ? T_ACCENT : T_MID, bg);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_text_on(EV_SX, y + LIST_TY, &AF_M, b, sel ? T_INK : T_MID, bg);
+            cv_text_on(EV_SX, y + ty, font, b, sel ? T_INK : T_MID, bg);
             param_format(d, e->value, b, &unit);
             ev_name(t, id, nm);
-            x = ev_value(y, b, unit, sel ? T_INK : T_TEXT, bg);
+            x = ev_value(y, b, unit, sel ? T_INK : T_TEXT, bg, compact);
             GFX_HOOK_ALIGN(0, y, 0, y + 16, AL_V, "list row text centred up/down");
-            cv_free_text(EV_NX, y + LIST_TY, &AF_M, nm, sel ? T_INK : T_TEXT, bg, x - 8 - EV_NX);
+            cv_free_text(EV_NX, y + ty, font, nm, sel ? T_INK : T_TEXT, bg, x - 8 - EV_NX);
         }
     }
 }
@@ -2323,7 +2329,7 @@ static void draw_graph(void)
             break;
         case GR_EVENTS:
             cv_oy = 0;
-            graph_events();
+            graph_events(0);
             break;
         case GR_TOOLS:
             cv_oy = 0;

@@ -68,3 +68,6 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
 - UI 0.5.6: smaller sequencer headings and clear separation from tempo/status.
 
 - UI 0.5.7: compact font for all four sequencer parameter labels and values.
+
+- UI 0.5.8: compact shortcut hints; unified detail, automation, pattern tools,
+  Euclid preview and cleanup screens. Project/mixer screens remain future work.

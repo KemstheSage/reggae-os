@@ -1286,3 +1286,5 @@ static void draw_layer(void)
         ui.foot_sig = 0;
     }
 }
+
+#include "reggae_seq_tools.c"

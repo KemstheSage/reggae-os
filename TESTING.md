@@ -401,3 +401,22 @@ remain untested.
 WASM SEQ/GLO/navigation/control regression passes. Hardware size guards pass:
 app 564,388 / 581,564 B; data+BSS 61,064 / 73,728 B; pool 328,896 / 368,640 B.
 WASM is 859,790 B. Font tables add flash data; RAM allocations are unchanged.
+
+## UI 0.5.8 — sequencer menus and compact footer
+
+Native menu and arrangement regressions pass under AddressSanitizer. The new
+menu test checks physical SEQ navigation, detail chance editing, automation
+playback toggle and OCT+ lock creation, held-SEQ length editing, Euclid hit
+editing/cancel, cleanup selection and drum tool rendering. Native screenshots
+cover roll, detail, automation/list/add/lock, melodic/drum tools, Euclid and cleanup.
+The menu regression is included in the native test runner and WASM CI.
+
+WASM menu navigation/knob responses, arrangement, step entry/clear/undo and live
+layered recording pass. The existing emulator regression passes. Shared parameter
+formatting is retained through a scoped card-render callback; editing/DSP code
+is unchanged. Compact automation rendering retains units and inactive states.
+
+Hardware guards pass: app 565,752 / 581,564 B; data+BSS 61,064 / 73,728 B;
+pool 328,896 / 368,640 B. WASM: 862,403 B. Physical hardware and iPhone Safari
+remain untested. Project/mixer/record settings and confirmation dialogs retain
+their existing layout.

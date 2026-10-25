@@ -214,3 +214,10 @@ parameter labels and values. It is rasterised offline at 10 px, with native
 antialiasing and one stored horizontal phase, rather than rescaling a screen.
 Labels and values remain centred in their existing control panels. The font
 comes from the existing OFL-licensed source; other UI text sizes are unchanged.
+
+UI 0.5.8 uses the compact XS font for sequencer help/status lines and shortens the
+idle clear hint to HOLD EDIT+SEQ: CLEAR. STEP DETAIL, AUTOMATION, held-SEQ pattern
+tools, Euclid preview and SAVE > TOOLS now use the same tabletop case, animated
+record companion, small headings and compact rotary cards. Existing parameter
+formatting and action handlers are reused; dimmed detail/automation values remain
+dimmed. Confirmation dialogs retain their established controls and layout.

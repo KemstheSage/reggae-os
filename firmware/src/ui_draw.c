@@ -645,9 +645,17 @@ static void draw_column_tall(uint32_t c, const char *label, const char *val, con
  * the motion icon in place of its own, in the theme colour; a long label moves it left, up to the card's edge;
  * a label with no room for it at all (or FELUCCA_ICONS=0): the label in the theme colour.
  * vc: the value's colour (T_THEME, T_DIM inactive, T_ACCENT the knob just turned) */
+/* Optional shared card renderer for REGGAE-OS sequencer pages. Formatting and
+ * parameter semantics stay in draw_columns/layer_cards. */
+static void (*seq_card_draw)(uint32_t,const char *,const char *,const char *,uint16_t,int32_t);
 static void draw_column(uint32_t c, const char *label, const char *val, const char *unit, uint16_t vc,
                         int32_t ratio, uint32_t icon)
 {
+    if(seq_card_draw) {
+        seq_card_draw(c,label,val,unit,vc,ratio);
+        card_span.fn=0;fmt_named=0;card_mot_next=0;
+        return;
+    }
     char key[48];
     int hot = c == ui.hot_col && ui.hot_t, named = fmt_named, mot = card_mot_next && label[0], strip, snap;
     uint32_t kind = large_kind();                       /* MENU > LARGE: tall (draw_column_tall), or the label in M */
@@ -1607,6 +1615,7 @@ static void ui_draw_page(uint32_t counting)
         name_draw();
         return;
     }
+    if (ui.layer == LAYER_SEQ) { reggae_seq_draw(); return; }
     if (ui.layer) {                                     /* a layer's map over the page (ui_layer.c) */
         if (ui.force)
             draw_frame();
