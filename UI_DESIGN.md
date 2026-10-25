@@ -203,3 +203,8 @@ UI 0.5.5 uses the existing small font for instrument category and preset names o
 the performance screen (9-pixel capital height instead of 11). Baselines remain
 optically centred in the header bands, with long preset names bounded to 216 px.
 Effects headings and the already-small sequencer preset labels are unchanged.
+
+UI 0.5.6 applies the smaller AF_S font specifically to GROOVE ROLL, RIDDIM GRID
+and DUB ARRANGE. Capital ink ends at header row 27, leaving three clear rows
+before the tempo/status text starts at row 31. Preset labels and controls retain
+their current sizes. This corrects the sequencer heading identified in feedback.

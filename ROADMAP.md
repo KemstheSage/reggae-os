@@ -64,3 +64,5 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
   fit long labels within their allocated panels.
 
 - UI 0.5.5: smaller performance-screen instrument/category names.
+
+- UI 0.5.6: smaller sequencer headings and clear separation from tempo/status.

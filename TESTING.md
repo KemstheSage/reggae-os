@@ -379,3 +379,12 @@ Category/preset names use AF_S (9-pixel capitals); no DSP or input changes.
 The existing WASM emulator regression passes. Hardware guards pass: app 560,632 /
 581,564 B; data+BSS 61,064 / 73,728 B; pool 328,896 / 368,640 B. WASM: 856,102 B.
 Physical FM-1 and iPhone Safari remain untested.
+
+## UI 0.5.6 — sequencer heading size
+
+Rendered and inspected the native roll, drum grid and arrangement screens.
+The native sequencer regression and WASM SEQ/GLO/navigation/control test pass.
+Only the sequencer title font changes: AF_M to AF_S, leaving a clear gap above
+tempo/status. WASM is 856,102 B. Physical FM-1 and iPhone Safari remain untested.
+Hardware guards pass: app 560,632 / 581,564 B; data+BSS 61,064 / 73,728 B;
+pool 328,896 / 368,640 B. No audio or input changes.
