@@ -1,8 +1,9 @@
 # Making a song in REGGAE-OS
 
-UI 0.4.2 restores the piano-roll/drum-grid layout from UI 0.4.0. It restyles the STEP piano roll,
-STEP drum grid and SONG arrangement. DETAIL, automation, mixer, saving and the
-held-button tool layers retain their existing layouts for now.
+UI 0.5.8 gives STEP, DETAIL, AUTOMATION, ARRANGE, held-SEQ tools and the
+Euclid preview a shared tabletop-machine layout. SAVE > TOOLS uses it too.
+Compact footer hints fit inside the case. Mixer, project browser, recording
+settings and confirmation dialogs retain their existing layouts.
 
 ## Play and layer four parts
 
