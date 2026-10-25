@@ -59,3 +59,6 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
 
 - UI 0.5.3: tabletop machine styling for the roll, drum grid and arranger; native
   pixel glyphs, responsive rotary indicators and existing character animation.
+
+- UI 0.5.4: correct character/header spacing and keep help text inside the case;
+  fit long labels within their allocated panels.

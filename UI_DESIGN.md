@@ -192,3 +192,9 @@ one blank column per step to fit the case, retaining native font and note pixels
 the drum selection outline is redrawn at the new spacing. One temporary 480-byte
 row buffer replaces neither the existing strip buffer nor any audio buffer.
 Editing gestures, sounds, sequencing and storage are unchanged.
+
+UI 0.5.4 corrects the tabletop layout: the complete record character stays within
+its own header bay, title/status/preset lines have separate vertical bands, and
+the help strip sits inside the extended case. Values have taller inset wells.
+Long values, preset names and help messages are fitted with ellipses at the native
+font size rather than overflowing adjacent controls or the case.

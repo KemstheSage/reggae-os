@@ -357,3 +357,17 @@ Hardware guards pass: app 560,696 / 581,564 B; data+BSS 61,064 / 73,728 B;
 pool 328,896 / 368,640 B. WASM: 856,325 B. Grid inset uses a temporary 480-byte
 stack row, no added framebuffer. COMPILES and EMULATOR TESTED; physical FM-1
 and iPhone Safari remain untested.
+
+## UI 0.5.4 — layout correction
+
+The native character regression passes under AddressSanitizer, including a new
+32-state check that every drawn character pixel stays within its header bay.
+The native arrangement regression passes. Roll, drum-grid and arrangement
+screens were inspected at 240×240: the character and text remain inside the case.
+Long preset names, control values and messages use bounded text fitting; common
+feel values use short labels (NORM, ACC, A+SL). Physical hardware and iPhone Safari
+remain untested. No sound or input behaviour changes.
+
+Final WASM step entry/clear/undo, arrangement and layered live-recording tests
+pass. Hardware build guards pass: app 560,576 / 581,564 B; data+BSS 61,064 /
+73,728 B; pool 328,896 / 368,640 B. WASM: 856,028 B.
