@@ -49,3 +49,6 @@ build/reggae/seq-menus
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/performance tests/reggae_performance.c -lm
 build/reggae/performance
 python3 tools/reggae/percussion-pack.py
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/mixer-audio tests/reggae_mixer_audio.c -lm
+build/reggae/mixer-audio

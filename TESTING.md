@@ -455,3 +455,10 @@ solo clearance when leaving with a solo key held, selected-track pan on the
 following page, and restored note keys after leaving. WASM sequencer-menu and
 emulator regression pass. Hardware build and memory guards pass: 568,316-byte
 image, 61,064-byte static RAM, 328,896-byte pool. Physical hardware untested.
+
+UI 0.6.2: native ASAN panel regression adjusts pan/reverb on each of four tracks
+using ALGORITHM and the physical knob paths. `tests/reggae_mixer_audio.c` checks
+left/right channel energy after pan changes and a nonzero reverb tail versus a
+silent dry tail. Both pass. WASM menu and emulator regressions pass. FM-1 image
+568,720 bytes, static RAM 61,064 and pool 328,896; memory guards pass. Hardware
+and iPhone Safari remain untested. See `docs/reports/ui-0.6.2.md`.

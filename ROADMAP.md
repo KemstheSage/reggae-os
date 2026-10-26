@@ -89,3 +89,7 @@ levels and keyboard mute/solo without holding a page button. Selected-track
 pan/reverb controls remain on the following TRACK MIX page. Jiant influence
 remains limited to original state-responsive mixer/chord characters; the
 existing instrument illustrations have not undergone a further redesign.
+
+UI 0.6.2: pan and reverb-send controls integrated into the themed mixer, with
+four-track overview, selected-track outline and actual parameter indicators.
+The old grey TRACK MIX view is no longer shown in the HOME cycle.

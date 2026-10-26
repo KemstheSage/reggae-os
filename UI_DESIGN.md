@@ -238,3 +238,10 @@ and mute/solo keyboard mapping are used. The next HOME page, TRACK MIX, preserve
 selected-track level/pan/reverb/mute; then CLOCK and the instrument. Temporary
 solo clears when leaving the mixer, even if its key is still down. Shared key
 ownership prevents that held key from becoming an unintended note on exit.
+
+UI 0.6.2 replaces the remaining grey TRACK MIX screen with MIX PAN / REVERB,
+a second page of the themed mixer. All four speaker faces remain visible;
+a gold outline marks the selected track. Horizontal pan markers and reverb-send
+bars show the actual stored values. ALGORITHM selects the track; the compact
+bottom controls show its LEVEL, PAN, REV and MUTE. The existing parameter edit,
+automation and save paths are reused. The first mixer page retains four levels.
