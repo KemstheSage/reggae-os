@@ -420,3 +420,12 @@ Hardware guards pass: app 565,752 / 581,564 B; data+BSS 61,064 / 73,728 B;
 pool 328,896 / 368,640 B. WASM: 862,403 B. Physical hardware and iPhone Safari
 remain untested. Project/mixer/record settings and confirmation dialogs retain
 their existing layout.
+
+## UI 0.5.9 — remove hint bar
+
+Native sequencer-menu and WASM menu/physical-knob regressions pass. Inspected
+native 240×240 rendering: the compact hint sits directly on the case above its
+bottom bevel, with no black background strip. No DSP or input changes.
+Hardware guards pass: app 565,788 / 581,564 B; data+BSS 61,064 / 73,728 B;
+pool 328,896 / 368,640 B. WASM: 862,134 B. Physical FM-1 and iPhone Safari
+remain untested.

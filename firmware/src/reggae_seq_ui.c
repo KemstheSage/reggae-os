@@ -269,9 +269,8 @@ static void reggae_seq_draw(void)
     if(events) {str_cpy(b,"OCT+: ",sizeof b);str_cpy(b+6,ev_act_name(),sizeof b-6);hint=b;}
     if(tools)hint=reggae_seq_euclid()?"OCT+: APPLY  OCT-: CANCEL":"KEYS: TOOLS  OCT-: UNDO";
     if(cleanup)hint="TURN TO PICK  OCT+: CONFIRM";
-    cv_rect(14,45,208,13,RG_BG);
     char foot[64];text_fit(foot,sizeof foot,ui.msg_t?ui.msg:hint,&AF_XS,202);
-    cv_text_in(16,45+CAP_IN(XS,13),204,&AF_XS,foot,RG_INK,RG_BG);
+    cv_text_in(16,45+CAP_IN(XS,9),204,&AF_XS,foot,RG_INK,RG_CASE);
     cv_blit(0,180);
     if(ui.msg_t)ui.msg_t--;if(ui.hot_t)ui.hot_t--;
     saved.gen+=2;ux=saved;ui.force=0;

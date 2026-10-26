@@ -221,3 +221,6 @@ tools, Euclid preview and SAVE > TOOLS now use the same tabletop case, animated
 record companion, small headings and compact rotary cards. Existing parameter
 formatting and action handlers are reused; dimmed detail/automation values remain
 dimmed. Confirmation dialogs retain their established controls and layout.
+
+UI 0.5.9 removes the black footer strip. Compact hints sit directly on the case,
+raised slightly to keep the text above the lower bevel.
