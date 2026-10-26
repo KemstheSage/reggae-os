@@ -9,9 +9,9 @@ new Uint8Array(e.memory.buffer,e.web_nor()+0xA0000,pack.length).set(pack);
 assert.equal(e.web_percussion_select(0),1);advance(300);
 let pcm=[];
 for(const note of [53,55,57,59,60,54]) {
- let energy=0,tail=0,peak=0;e.web_midi(0x90,note,100);
+ let energy=0,tail=0,peak=0;e.web_keys(1<<(note-53));
  for(let b=0;b<1034;b++) {
-  if(b===700)e.web_midi(0x80,note,0);
+  if(b===700)e.web_keys(0);
   e.web_render(128);const l=new Float32Array(e.memory.buffer,e.web_out_l(),128),r=new Float32Array(e.memory.buffer,e.web_out_r(),128);
   for(let i=0;i<128;i++){assert(Number.isFinite(l[i])&&Number.isFinite(r[i]));energy+=l[i]**2+r[i]**2;peak=Math.max(peak,Math.abs(l[i]),Math.abs(r[i]));if(b>1000)tail+=l[i]**2+r[i]**2;pcm.push(Math.trunc(l[i]*32768),Math.trunc(r[i]*32768));}
  }

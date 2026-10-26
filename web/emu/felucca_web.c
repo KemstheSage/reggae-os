@@ -509,6 +509,7 @@ EXPORT uint32_t web_percussion_select(uint32_t slot)
     TSEL->p[P_E0]=SMP_NSETS+slot;
     TSEL->p[P_ATK]=0;TSEL->p[P_DEC]=127;TSEL->p[P_SUS]=127;TSEL->p[P_REL]=30;
     TSEL->p[P_LEVEL]=90;TSEL->p[P_CHRD]=0;
+    TSEL->p[P_QUANT]=0;TSEL->p[P_TRANS]=0;song.octave=0;
     TSEL->p[P_DIST]=TSEL->p[P_CHOR]=TSEL->p[P_DLY]=TSEL->p[P_REV]=0;
     ui.home=1;ui.force=1;web_flash_writes++;
     return 1;

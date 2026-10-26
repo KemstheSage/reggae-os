@@ -1,7 +1,7 @@
 name: REGGAE-OS emulator
 on:
   push:
-    branches: [reggae-os]
+    branches: [main, reggae-os]
   pull_request:
   workflow_dispatch:
 permissions:
