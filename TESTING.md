@@ -448,3 +448,10 @@ pack reuse, invalid CRC rejection and persistence after flash reload.
 Local browser testing confirms audio initialization, the upload success message
 and the four-track mixer display. This is not a physical iPhone Safari test.
 See `docs/reports/ui-0.6.0.md` for native screenshots and firmware-size results.
+
+UI 0.6.1: native ASAN performance test verifies a normal HOME tap opens the
+mixer, it stays open without any held button, four independent levels, mute,
+solo clearance when leaving with a solo key held, selected-track pan on the
+following page, and restored note keys after leaving. WASM sequencer-menu and
+emulator regression pass. Hardware build and memory guards pass: 568,316-byte
+image, 61,064-byte static RAM, 328,896-byte pool. Physical hardware untested.

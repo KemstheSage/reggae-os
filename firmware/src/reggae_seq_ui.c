@@ -8,7 +8,7 @@ static void layer_cards(uint32_t l);
 static int reggae_seq_screen(void)
 {
     return ui.layer==LAYER_SEQ || ui.layer==LAYER_GLO || ui.layer==LAYER_FX || (!ui.home && (cur_page()->graph == GR_SONG ||
-        cur_page()->graph == GR_ROLL || cur_page()->graph == GR_EVENTS || cur_page()->graph == GR_TOOLS || cur_page()->graph == GR_CHORD));
+        cur_page()->graph == GR_ROLL || cur_page()->graph == GR_EVENTS || cur_page()->graph == GR_TOOLS || cur_page()->graph == GR_CHORD || cur_page()->graph == GR_MIX4));
 }
 /* An original record creature. Voice activity opens its mouth; the outer groove
  * marker follows the sequence while its face stays readable. UI-rate work only. */
@@ -197,7 +197,7 @@ static void reggae_chord_panel(void)
 static void reggae_seq_draw(void)
 {
     static uint32_t last;
-    int tools=ui.layer==LAYER_SEQ,mixer=ui.layer==LAYER_GLO,punch=ui.layer==LAYER_FX;
+    int tools=ui.layer==LAYER_SEQ,mixer=ui.layer==LAYER_GLO||(!ui.layer&&!ui.home&&cur_page()->graph==GR_MIX4),punch=ui.layer==LAYER_FX;
     int live=mixer||punch,chords=!ui.layer&&cur_page()->graph==GR_CHORD;
     int detail=!ui.layer&&detail_on();
     int events=!ui.layer&&cur_page()->graph==GR_EVENTS,cleanup=!ui.layer&&cur_page()->graph==GR_TOOLS;
@@ -281,7 +281,7 @@ static void reggae_seq_draw(void)
     }
     if(advanced) {
         seq_card_draw=reggae_seq_formatted_card;
-        if(tools||live)layer_cards(ui.layer);else draw_columns();
+        if(tools||live)layer_cards(mixer?LAYER_GLO:ui.layer);else draw_columns();
         seq_card_draw=0;
     } else for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
     const char *hint=drum_track(TSEL)?"SEQ: DETAIL  GLO: SONG":"HOLD EDIT+SEQ: CLEAR";

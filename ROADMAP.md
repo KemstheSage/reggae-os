@@ -83,3 +83,9 @@ CC0 percussion pack through existing sample slots and the actual firmware
 sampler. Jiant/Orchid/HiChord research and scope are documented. Not a wholesale
 SLOOP port, not Orchid's proprietary engine, and not a new per-lane sampled
 DRUM engine. Hardware and iPhone verification remain outstanding.
+
+UI 0.6.1: persistent four-track MIXER page in the HOME cycle, four simultaneous
+levels and keyboard mute/solo without holding a page button. Selected-track
+pan/reverb controls remain on the following TRACK MIX page. Jiant influence
+remains limited to original state-responsive mixer/chord characters; the
+existing instrument illustrations have not undergone a further redesign.

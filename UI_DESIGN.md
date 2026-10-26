@@ -231,3 +231,10 @@ characters). Mixer faces sleep when muted/unsoloed and open their mouths with
 voice activity; faders reflect P_LEVEL. Chord faces show the last actual chord
 notes. No black hint bar was reintroduced. Jiant's visual principle was studied,
 but these are original drawings. See `docs/research/performance-0.6.md`.
+
+UI 0.6.1 promotes FOUR TRACK MIX to HOME's first normal menu page. It stays
+visible after the button is released. The same four speaker characters, faders
+and mute/solo keyboard mapping are used. The next HOME page, TRACK MIX, preserves
+selected-track level/pan/reverb/mute; then CLOCK and the instrument. Temporary
+solo clears when leaving the mixer, even if its key is still down. Shared key
+ownership prevents that held key from becoming an unintended note on exit.

@@ -77,8 +77,8 @@ static int mom_turn(uint32_t k, int32_t s)
         d = home_param(k, &vp);
     } else if (pg->scope == SC_TRK && !lock_held()) {  /* MIXER (#195): the selected track's LEVEL PAN REV MUTE */
         static const uint8_t MIX_ID[4] = {P_LEVEL, P_PAN, P_REV, P_MUTE};   /* (tracks_edit's knobs) */
-        vp = &TSEL->p[MIX_ID[k & 3u]];
-        d = &TP[MIX_ID[k & 3u]];
+        if(pg->graph==GR_MIX4) {t=&trk[k&3u];vp=&trk[k&3u].p[P_LEVEL];d=&TP[P_LEVEL];}
+        else {vp = &TSEL->p[MIX_ID[k & 3u]];d = &TP[MIX_ID[k & 3u]];}
     } else {
         if (act_cols() || lock_held() || !(pg->scope == SC_TRACK || pg->scope == SC_ENGINE || pg->scope == SC_GLOBAL) ||
             pg->graph == GR_EVENTS || pg->graph == GR_SONG || pg->graph == GR_BROWSE || pg->graph == GR_USER ||
@@ -502,6 +502,11 @@ static void tracks_edit(uint32_t slot, int32_t steps)
     track_t *t = TSEL;
     int16_t *vp;
     const param_desc_t *d;
+    if(cur_page()->graph==GR_MIX4) {
+        t=&trk[slot&3u];d=&TP[P_LEVEL];vp=&t->p[P_LEVEL];
+        *vp=(int16_t)clamp(*vp+accel(EN_K1+slot,steps,d->max-d->min),d->min,d->max);
+        motion_capture(t,P_LEVEL,*vp);ml_knob(t,P_LEVEL);return;
+    }
     switch (slot) {
     case 3:
         t->p[P_MUTE] = (int16_t)(steps > 0);

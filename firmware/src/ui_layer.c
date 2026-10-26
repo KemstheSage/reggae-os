@@ -134,6 +134,10 @@ static uint32_t layer_held(void) { return ui.ly && ly_down(ui.ly) && layer_allow
  * armed: any layer button not already down (one pressed meanwhile is armed below; one held over from before
  * is ignored, its keys stay notes); armed but dead (pressed under a dialog, a menu or NAME that has closed
  * since): nothing, its keys stay notes and FX starts no effect with no map shown; FX's effects only with FX */
+static int mixer_page_keys(void)
+{
+    return !ui.home && cur_page()->graph==GR_MIX4 && layer_allowed() && !ui.ly && !ui.lock;
+}
 static void layer_masks(void)
 {
     uint32_t m = !layer_allowed() || (ui.ly && (ui.ly_t0 & LY_DEAD)) ? 0u
@@ -142,7 +146,7 @@ static void layer_masks(void)
         m &= ~(ly_bit(LAYER_EDIT)|ly_bit(LAYER_REC));
     kb_mask = m;
     perf_mask = m & ly_bit(LAYER_FX);
-    kb_lock = (uint8_t)(m && ui.lock ? 1u | (ui.lock == LAYER_FX ? 2u : 0u) : 0u);   /* (no button held: the ISR's) */
+    kb_lock = (uint8_t)(m && ui.lock ? 1u | (ui.lock == LAYER_FX ? 2u : 0u) : mixer_page_keys()?1u:0u);   /* (no button held: the ISR's) */
 }
 
 /* a layer button pressed (its edge) while none is armed: it is now, a dead one where no layer opens */
@@ -682,7 +686,8 @@ static void layer_key(uint32_t l, uint32_t k)
 /* each pass: the keys the layer got now; then GLO's solo: the tracks of its keys still held (perform.c) */
 static void layer_keys(uint32_t keys)
 {
-    uint32_t k, l = layer_open() ? layer_open() : ui.layer, s = 0;
+    uint32_t k, l = layer_open() ? layer_open() : mixer_page_keys()?LAYER_GLO:ui.layer, s = 0;
+    if(l!=LAYER_GLO)lys.solo=0;
     for (k = 0; keys && k < 27u; k++)
         if ((keys >> k) & 1u)
             layer_key(l, k);

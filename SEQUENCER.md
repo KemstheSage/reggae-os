@@ -122,11 +122,14 @@ pattern length and other tracks. **Hold SAVE to undo.**
 EDIT + REC still clears only the selected step. The whole-roll shortcut is not
 active in the drum grid, DETAIL, arrangement or during playback.
 
-## Live controls (UI 0.6.0)
+## Live controls (UI 0.6.1)
 
-- **Hold GLO:** four-track mixer; knobs 1–4 control levels T1–T4. First four
-  black keys toggle mute. White F3/G3/A3/B3 solo while held. Double-tap GLO to
-  keep the mixer open; tap GLO to close it.
+- **Tap HOME from the instrument screen:** opens the persistent four-track
+  MIXER page. Knobs 1–4 control levels T1–T4. First four black keys toggle mute;
+  white F3/G3/A3/B3 solo tracks while those keys are held. No button needs to be
+  held to keep the page open. HOME cycles MIXER → TRACK MIX → CLOCK → instrument.
+  TRACK MIX retains selected-track level, pan, reverb send and mute. Hold-GLO
+  remains an optional quick-access shortcut.
 - **Hold FX:** punch-in pads. White F3/G3/A3 repeat 1/8, 1/16, 1/32; B3 reverse;
   C4/D4 low/high-pass; E4 tape stop; F4 freeze; G4/A4 octave up/down; B4 flanger;
   C5 phaser; D5 reverb throw; E5 echo throw; F5 gate 1/16; G5 mono. Release to

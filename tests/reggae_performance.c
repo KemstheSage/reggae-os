@@ -5,11 +5,20 @@ static void tap(unsigned k){web_buttons(1u<<k);advance(70);web_buttons(0);advanc
 static void shot(const char *p){ui.msg_t=0;ui.force=1;advance(150);picture(p);assert(!seq_card_draw);}
 int main(void){
  web_nor_erase();web_boot();advance(1000);
- web_buttons(1u<<B_GLO);advance(650);assert(ui.layer==LAYER_GLO&&reggae_seq_screen());
+ tap(B_HOME);assert(!ui.home&&!ui.layer&&cur_page()->graph==GR_MIX4&&reggae_seq_screen());
+ advance(2000);assert(!ui.layer&&cur_page()->graph==GR_MIX4);
+
  for(unsigned k=0;k<4;k++){int level=trk[k].p[P_LEVEL];web_enc(EN_K1+k,-10);advance(150);assert(trk[k].p[P_LEVEL]<level);}
  web_keys(1u<<1);advance(150);assert(trk[0].p[P_MUTE]);web_keys(0);advance(150);
  web_keys(1u<<2);advance(150);assert(perf_solo==2);shot("build/reggae/live-mixer.ppm");
- web_keys(0);web_buttons(0);advance(300);assert(!perf_solo&&!ui.layer);
+ web_keys(0);advance(300);assert(!perf_solo&&!ui.layer);
+ web_keys(1u<<2);advance(150);assert(perf_solo==2);
+ tap(B_HOME);assert(!perf_solo);web_keys(0);advance(150);
+ assert(cur_page()->graph==GR_TRK);int pan=TSEL->p[P_PAN];
+ web_enc(EN_K2,1);advance(200);assert(TSEL->p[P_PAN]!=pan);
+ tap(B_HOME);assert(cur_page()->fam==FAM_TRK);tap(B_HOME);assert(ui.home);
+ web_keys(1u<<7);advance(150);assert(!kb_layer);web_keys(0);advance(150);
+
  web_buttons(1u<<B_FX);advance(650);assert(ui.layer==LAYER_FX&&reggae_seq_screen());
  web_keys((1u<<24)|(1u<<26));advance(150);assert((perf_act&PF_BIT(PF_GATE))&&(perf_act&PF_BIT(PF_MONO)));
  shot("build/reggae/live-punch.ppm");web_keys(0);web_buttons(0);advance(300);assert(!perf_held&&!perf_act);
