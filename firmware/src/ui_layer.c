@@ -641,6 +641,9 @@ static void layer_key(uint32_t l, uint32_t k)
         if (!key_black(k) && p < PF_KEYS)
             lys.fxk = (uint8_t)(k + 1u);                /* (PRESETS assigns it while held) */
     } else if (l == LAYER_GLO) {
+        if(mixer_page_keys() && !key_black(k) && p>=11u && p<=13u) {
+            reggae_mix_mode=(uint8_t)(p-11u);ui.force=1;return;
+        }
         if (key_black(k)) {
             if (p < NTRK)
                 trk[p].p[P_MUTE] = (int16_t)!trk[p].p[P_MUTE];
@@ -1194,8 +1197,9 @@ static void layer_cards(uint32_t l)
         }
     } else if (l == LAYER_GLO) {                        /* T1..T4 LEVEL (the track's icon; muted: dim) */
         for (c = 0; c < NTRK; c++) {
-            param_format(&TP[P_LEVEL], trk[c].p[P_LEVEL], val, &unit);
-            draw_column(c, "LEVEL", val, unit, glo_sounding(c) ? VAL(c) : T_DIM, RATIO(&TP[P_LEVEL], trk[c].p[P_LEVEL]),
+            uint32_t id=mixer_page_keys()?reggae_mix_param():P_LEVEL;
+            param_format(&TP[id], trk[c].p[id], val, &unit);
+            draw_column(c, id==P_LEVEL?"LEVEL":id==P_PAN?"PAN":"REVERB", val, unit, glo_sounding(c) ? VAL(c) : T_DIM, RATIO(&TP[id], trk[c].p[id]),
                         trk_icon(c, 1));
         }
     } else if (l == LAYER_EDIT) {

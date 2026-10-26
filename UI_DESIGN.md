@@ -245,3 +245,10 @@ a gold outline marks the selected track. Horizontal pan markers and reverb-send
 bars show the actual stored values. ALGORITHM selects the track; the compact
 bottom controls show its LEVEL, PAN, REV and MUTE. The existing parameter edit,
 automation and save paths are reused. The first mixer page retains four levels.
+
+UI 0.6.3 removes the second mixer page. The single FOUR TRACK MIX keeps its
+vertical volume faders visible in every mode. C5/D5/E5 choose LEVEL/PAN/REVERB
+for the four track knobs; labels/values update in place, with no page change.
+Pan positions appear on short horizontal rails above the faders; slim reverb
+send bars sit beside them. These are parameter indicators, not peak meters.
+The assignment is transient UI state; project/sound formats are unchanged.

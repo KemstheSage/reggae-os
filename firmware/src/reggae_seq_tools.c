@@ -43,20 +43,16 @@ static void reggae_live_panel(int mixer)
             else cv_rect(x+22+side*7,26,5,1,RG_EDGE);
         }
         cv_rect(x+20,35,9,on&&active?5:1,on?RG_GOLD:RG_EDGE);
-        if(mixer==2) {
-            if(k==song.sel)cv_frame(x,0,48,121,RG_GOLD);
-            cv_text_in(x,48,48,&AF_XS,"PAN",RG_INK,RG_BG);
-            cv_rect(x+7,64,34,1,RG_EDGE);cv_rect(x+23,61,1,7,RG_EDGE);
-            int pan=clamp(t->p[P_PAN],-64,63);
-            reggae_disc(x+7+(pan+64)*33/127,64,3,on?RG_CONTROL_COLOR[k]:RG_EDGE);
-            cv_text_in(x,74,48,&AF_XS,"VERB",RG_INK,RG_BG);
-            cv_frame(x+7,89,34,7,RG_EDGE);
-            cv_rect(x+8,90,clamp(t->p[P_REV],0,127)*32/127,5,on?RG_GREEN:RG_EDGE);
-        } else {
-        cv_rect(x+23,52,3,47,RG_EDGE);
-        int h=clamp(t->p[P_LEVEL],0,127)*43/127;
-        cv_rect(x+18,96-h,14,5,on?RG_CONTROL_COLOR[k]:RG_EDGE);
-        }
+        /* Volume faders stay visible in every knob mode. Above: pan position;
+         * beside each fader: the reverb send, distinct from audio metering. */
+        cv_rect(x+8,51,32,1,RG_EDGE);cv_rect(x+23,48,1,7,RG_EDGE);
+        reggae_disc(x+8+(clamp(t->p[P_PAN],-64,63)+64)*31/127,51,2,on?RG_INK:RG_EDGE);
+        cv_rect(x+23,60,3,38,RG_EDGE);
+        int h=clamp(t->p[P_LEVEL],0,127)*34/127;
+        cv_rect(x+18,95-h,14,5,on?RG_CONTROL_COLOR[k]:RG_EDGE);
+        cv_rect(x+38,60,3,40,RG_EDGE);
+        int wet=clamp(t->p[P_REV],0,127)*40/127;
+        cv_rect(x+38,100-wet,3,wet,on?RG_GREEN:RG_EDGE);
         char label[8]={'T',(char)('1'+k),0};
         cv_text_in(x,104,48,&AF_XS,!on?"MUTED":perf_solo?"SOLO":label,on?RG_INK:RG_RED,RG_BG);
     } else {

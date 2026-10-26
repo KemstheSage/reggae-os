@@ -496,10 +496,15 @@ static const page_t PAGES[] = {
     /* HOME's pages (1.2): HOME tapped on HOME the MIXER (up to 1.1.5 GLO's; LEVEL PAN REV MUTE), again CLOCK (up to 1.1.5
      * GLO > GLOBAL; its TUNE is MENU > AUDIO's now), again HOME (ui.c home_tap) */
     {"MIXER", FAM_TRK, SC_TRK, GR_MIX4, {0, 1, 2, 3}},
-    {"PAN / REVERB", FAM_TRK, SC_TRK, GR_TRK, {0, 1, 2, 3}},
     {"CLOCK", FAM_TRK, SC_GLOBAL, GR_NONE, {G_BPM, G_SWING, G_CLOCK, 0xFF}},
 };
 #define NPAGES (sizeof(PAGES) / sizeof(PAGES[0]))
+/* Mixer knob assignment is UI state, never part of a sound or project. */
+static uint8_t reggae_mix_mode;
+static uint32_t reggae_mix_param(void) {
+    static const uint8_t id[3]={P_LEVEL,P_PAN,P_REV};
+    return id[reggae_mix_mode%3u];
+}
 static uint8_t mod_ui_slot;      /* the MOD page: the matrix slot (0..3) KNOB 2..4 edit */
 
 static const param_desc_t *page_desc(const page_t *pg, uint32_t slot, int16_t **valp)

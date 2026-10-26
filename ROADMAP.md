@@ -93,3 +93,7 @@ existing instrument illustrations have not undergone a further redesign.
 UI 0.6.2: pan and reverb-send controls integrated into the themed mixer, with
 four-track overview, selected-track outline and actual parameter indicators.
 The old grey TRACK MIX view is no longer shown in the HOME cycle.
+
+UI 0.6.3: unified mixer, permanent vertical volume faders, in-place four-track
+LEVEL/PAN/REVERB knob assignments on C5/D5/E5. Second mixer page removed; normal
+HOME cycle is MIXER → CLOCK → instrument. Mute/solo remain available throughout.

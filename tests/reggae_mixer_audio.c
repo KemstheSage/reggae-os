@@ -8,17 +8,19 @@ static double energy(double *left,double *right,unsigned blocks){
  return *left+*right;
 }
 int main(void){
- web_nor_erase();web_boot();advance(1000);tap(B_HOME);tap(B_HOME);
- assert(cur_page()->graph==GR_TRK&&reggae_seq_screen());double l,r;
- web_enc(EN_K2,-1000);advance(200);assert(TSEL->p[P_PAN]==-64);
+ web_nor_erase();web_boot();advance(1000);tap(B_HOME);
+ web_keys(1u<<21);advance(100);web_keys(0);advance(200);
+ assert(cur_page()->graph==GR_MIX4&&reggae_seq_screen());double l,r;
+ web_enc(EN_K1,-1000);advance(200);assert(TSEL->p[P_PAN]==-64);
  web_midi(0x90,60,100);advance(200);energy(&l,&r,100);assert(l>.01&&l>r*10);
  web_midi(0x80,60,0);advance(3000);
- web_enc(EN_K2,1000);advance(200);assert(TSEL->p[P_PAN]==63);
+ web_enc(EN_K1,1000);advance(200);assert(TSEL->p[P_PAN]==63);
  web_midi(0x90,60,100);advance(200);energy(&l,&r,100);assert(r>.01&&r>l*10);
  web_midi(0x80,60,0);advance(3000);TSEL->p[P_PAN]=0;
+ web_keys(1u<<23);advance(100);web_keys(0);advance(200);
  double tails[2];
  for(unsigned wet=0;wet<2;wet++){
-  web_enc(EN_K3,wet?1000:-1000);advance(200);assert(TSEL->p[P_REV]==(wet?127:0));
+  web_enc(EN_K1,wet?1000:-1000);advance(200);assert(TSEL->p[P_REV]==(wet?127:0));
   web_midi(0x90,60,100);advance(500);web_midi(0x80,60,0);advance(700);
   tails[wet]=energy(&l,&r,300);advance(10000);
  }

@@ -462,3 +462,10 @@ left/right channel energy after pan changes and a nonzero reverb tail versus a
 silent dry tail. Both pass. WASM menu and emulator regressions pass. FM-1 image
 568,720 bytes, static RAM 61,064 and pool 328,896; memory guards pass. Hardware
 and iPhone Safari remain untested. See `docs/reports/ui-0.6.2.md`.
+
+UI 0.6.3: native ASAN tests verify in-place C5/D5/E5 assignments on the one mixer
+page, four independent track controls, unchanged volumes during pan/reverb
+editing, mixer→clock navigation and release of solo/note ownership. Actual
+stereo pan and reverb-tail audio checks pass (dry 0, wet 2.66167600 energy).
+WASM menu/emulator checks pass. Hardware image 568,656 bytes, static RAM 61,064,
+pool 328,896; guards pass. See `docs/reports/ui-0.6.3.md` for screenshots.

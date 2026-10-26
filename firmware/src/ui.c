@@ -809,6 +809,7 @@ static void home_tap(void)
 {
     uint32_t i = ui.page + 1u;
     if (ui.home) {
+        reggae_mix_mode=0;
         ui.fam_last[FAM_TRK] = 0;                     /* (open_family: the family's first, the MIXER) */
         open_family(FAM_TRK);
     } else if (cur_page()->fam == FAM_TRK && i < NPAGES && PAGES[i].fam == FAM_TRK) {

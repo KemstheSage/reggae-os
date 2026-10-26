@@ -12,18 +12,19 @@ int main(void){
  web_keys(1u<<1);advance(150);assert(trk[0].p[P_MUTE]);web_keys(0);advance(150);
  web_keys(1u<<2);advance(150);assert(perf_solo==2);shot("build/reggae/live-mixer.ppm");
  web_keys(0);advance(300);assert(!perf_solo&&!ui.layer);
- web_keys(1u<<2);advance(150);assert(perf_solo==2);
- tap(B_HOME);assert(!perf_solo);web_keys(0);advance(150);
- assert(cur_page()->graph==GR_TRK&&reggae_seq_screen());
- for(unsigned k=0;k<4;k++) {
-  assert(song.sel==k);int pan=TSEL->p[P_PAN],rev=TSEL->p[P_REV];
-  web_enc(EN_K2,k%2?-20:20);web_enc(EN_K3,20);advance(200);
-  assert(TSEL->p[P_PAN]!=pan&&TSEL->p[P_REV]>rev);
-  if(k<3){web_enc(EN_ALGO,1);advance(200);}
+ int16_t levels[4];for(unsigned k=0;k<4;k++)levels[k]=trk[k].p[P_LEVEL];
+ unsigned page=ui.page;
+ for(unsigned mode=1;mode<3;mode++) {
+  web_keys(1u<<(mode==1?21:23));advance(100);web_keys(0);advance(150);
+  assert(reggae_mix_mode==mode&&ui.page==page&&!ui.layer);
+  unsigned id=mode==1?P_PAN:P_REV;
+  for(unsigned k=0;k<4;k++){int before=trk[k].p[id];web_enc(EN_K1+k,20);advance(150);assert(trk[k].p[id]!=before&&trk[k].p[P_LEVEL]==levels[k]);}
+  shot(mode==1?"build/reggae/mixer-pan.ppm":"build/reggae/mixer-reverb.ppm");
  }
- shot("build/reggae/mixer-pan-reverb.ppm");
- for(unsigned k=0;k<3;k++){web_enc(EN_ALGO,-1);advance(200);}assert(song.sel==0);
- tap(B_HOME);assert(cur_page()->fam==FAM_TRK);tap(B_HOME);assert(ui.home);
+ web_keys(1u<<19);advance(100);web_keys(0);advance(150);assert(reggae_mix_mode==0&&ui.page==page);
+ web_keys(1u<<2);advance(150);assert(perf_solo==2);
+ tap(B_HOME);assert(!perf_solo&&cur_page()->fam==FAM_TRK&&cur_page()->graph==GR_NONE);web_keys(0);advance(150);
+ tap(B_HOME);assert(ui.home);
  web_keys(1u<<7);advance(150);assert(!kb_layer);web_keys(0);advance(150);
 
  web_buttons(1u<<B_FX);advance(650);assert(ui.layer==LAYER_FX&&reggae_seq_screen());
