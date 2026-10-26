@@ -204,3 +204,10 @@ build/gen/felucca_samples.h` before compiling. Existing built-in sample IDs 0–
 and user slots 5–7 remain unchanged; trumpet is public sample ID 8. Its ROM data
 is appended after existing sample/slice data. Do not increase `SMP_NSETS` to add
 this set: that constant marks the historical user-slot boundary.
+
+UI 0.6 optional percussion: `python3 tools/reggae/percussion-pack.py` builds
+ROOTPERC.hdr/.bin/.slot and a source-audio tour in `build/reggae/percussion`.
+After the emulator build, `node tests/reggae_performance_wasm.mjs` verifies its
+actual SAMPLE playback and writes `firmware-tour.wav`.
+`node tests/reggae_percussion_upload.mjs` checks non-destructive slot selection,
+CRC rejection and persistent flash reload. Packaging includes the pack/credits.

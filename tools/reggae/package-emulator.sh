@@ -38,3 +38,8 @@ done
 
 # Clear name for the sampled replacement; retain brass-stabs.wav for existing bookmarks.
 cp build/emu/auditions/brass-stabs.wav build/emu/auditions/roots-trumpet.wav
+
+python3 tools/reggae/percussion-pack.py
+mkdir -p build/emu/percussion
+cp build/reggae/percussion/* build/emu/percussion/
+cp assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md build/emu/percussion/

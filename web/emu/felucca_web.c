@@ -497,3 +497,19 @@ EXPORT uint32_t web_screen_draws(void) { return web_draws; }
 EXPORT uint32_t web_now_ms(void) { return fm1_ms; }
 EXPORT uint32_t web_playing(void) { return song.playing; }
 EXPORT uint32_t web_sample_rate(void) { return FS; }
+
+/* Development sample upload shortcut: same NOR slot and SAMPLE renderer as USB
+ * uploads on hardware. The caller only installs into an erased slot. */
+EXPORT uint32_t web_percussion_select(uint32_t slot)
+{
+    if(slot>=SMP_USER_SLOTS)return 0;
+    smp_user_scan(slot);
+    if(usr_nz[slot]!=5)return 0;
+    set_engine(ENGI_SAMPLE);
+    TSEL->p[P_E0]=SMP_NSETS+slot;
+    TSEL->p[P_ATK]=0;TSEL->p[P_DEC]=127;TSEL->p[P_SUS]=127;TSEL->p[P_REL]=30;
+    TSEL->p[P_LEVEL]=90;TSEL->p[P_CHRD]=0;
+    TSEL->p[P_DIST]=TSEL->p[P_CHOR]=TSEL->p[P_DLY]=TSEL->p[P_REV]=0;
+    ui.home=1;ui.force=1;web_flash_writes++;
+    return 1;
+}

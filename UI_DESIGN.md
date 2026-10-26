@@ -224,3 +224,10 @@ dimmed. Confirmation dialogs retain their established controls and layout.
 
 UI 0.5.9 removes the black footer strip. Compact hints sit directly on the case,
 raised slightly to keep the text above the lower bevel.
+
+UI 0.6.0 extends the shared tabletop renderer to held/locked GLO (four-track
+levels), held FX (sixteen punch-in pads), and SCL > CHORD (four singing note
+characters). Mixer faces sleep when muted/unsoloed and open their mouths with
+voice activity; faders reflect P_LEVEL. Chord faces show the last actual chord
+notes. No black hint bar was reintroduced. Jiant's visual principle was studied,
+but these are original drawings. See `docs/research/performance-0.6.md`.

@@ -96,8 +96,9 @@ footer small { font-size: 11px; opacity: .8; }
   </select></span>
 </p>
 
+<p class="keys"><button id="percussion" disabled>Load CC0 percussion on selected track</button><br><small id="percussion-status" role="status"></small></p>
 <footer>
-  <small class="version">REGGAE-OS 0.1 · sound bank 0.5 / UI 0.5.9 · Felucca @VERSION@@PREVIEW@</small><br>
+  <small class="version">REGGAE-OS 0.1 · sound bank 0.5 / UI 0.6.0 · Felucca @VERSION@@PREVIEW@</small><br>
   Felucca by Leo Kuroshita, Hügelton Instruments · <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a> · browser build after charlesvestal's <a href="https://github.com/charlesvestal/fm1-x0x">X0X</a> · DotGothic16 font, <a href="fonts/OFL.txt">SIL OFL 1.1</a><br>
   <nav><a href="SEQUENCER.md">Song-making guide</a> · <a href="reggae-os-source.tar.gz">REGGAE-OS source</a> · <a href="LICENSING.md">Licences</a> · <a href="https://github.com/hugelton/Felucca">Felucca upstream</a> · REGGAE-OS development build — hardware untested</nav>
   <small>M-VAVE and FM-1 are trademarks of their respective owners. Felucca is not affiliated with or endorsed by them.</small>
@@ -495,8 +496,8 @@ async function switchOn() {
     const resumed = ac.resume(); // start in the physical Switch on gesture, before network awaits
     if (ac.sampleRate !== 44100) throw new Error("This emulator requires a 44.1 kHz audio context");
     const [wasm] = await Promise.all([
-      fetch("felucca.wasm?v=ui-0.5.9").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
-      ac.audioWorklet.addModule("worklet.js?v=ui-0.5.9")]);
+      fetch("felucca.wasm?v=ui-0.6.0").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
+      ac.audioWorklet.addModule("worklet.js?v=ui-0.6.0")]);
     node = new AudioWorkletNode(ac, "felucca", { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] });
     node.connect(ac.destination);
     let warned = false;
@@ -505,6 +506,10 @@ async function switchOn() {
         const m = e.data;
         if (m.type === "ready") res();
         else if (m.type === "error") rej(new Error(m.message));
+        else if (m.type === "percussion-result") {
+          document.getElementById("percussion-status").textContent = m.message;
+          document.getElementById("percussion").disabled = false;
+        }
         else if (m.type === "frame") {
           if (m.fb) drawScreen(m.fb);
           if (m.leds) drawLights(lastLeds = m.leds, m.anim);
@@ -519,6 +524,7 @@ async function switchOn() {
     await resumed;
     document.getElementById("start").hidden = true;
     go.textContent = "On";
+    document.getElementById("percussion").disabled = false;
     if (ac.sampleRate !== 44100) console.warn(`Felucca: the browser plays at ${ac.sampleRate} Hz, the pitch is off by ${(1200 * Math.log2(ac.sampleRate / 44100)).toFixed(0)} cents.`);
     syncButtons();
     syncKeys();
@@ -532,6 +538,13 @@ async function switchOn() {
     say("Could not start: " + (err && err.message || err) + ". A current Chrome, Edge, Firefox or Safari should work.");
   }
 }
+document.getElementById("percussion").addEventListener("click", async () => {
+  const button = document.getElementById("percussion");button.disabled = true;
+  try {
+    const r = await fetch("percussion/ROOTPERC.slot");if(!r.ok)throw new Error("Pack unavailable");
+    const data = await r.arrayBuffer();send({type:"percussion",data});
+  } catch(e) {document.getElementById("percussion-status").textContent=String(e);button.disabled=false;}
+});
 document.getElementById("go").addEventListener("click", switchOn);
 document.addEventListener("visibilitychange", () => send({ type: "visible", on: !document.hidden }));
 </script>

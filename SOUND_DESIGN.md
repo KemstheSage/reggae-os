@@ -235,3 +235,12 @@ The expanded [reference brief](docs/reports/roots-horns-and-sirens.md) distingui
 research from verified listening. Musical approval still requires auditioning;
 automated checks establish technical behavior, not authenticity. All approved
 organ/piano/bass patch definitions remain unchanged.
+
+UI 0.6.0 keeps all fifteen curated sounds unchanged. Optional ROOTPERC adds
+five VCSL CC0 acoustic attacks obtained from SLOOP's separately attributed
+collection: side-stick, conga, claves, shaker and tambourine. They use the
+existing SAMPLE user-slot decoder (44,637 bytes ADPCM), not a new drum engine.
+The exact-key map, source chain and hardware upload procedure are in
+`assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md`. GATE 1/16 and MONO are live
+master-bus effects; they do not rewrite patches. A gate can give hats/percussion
+rhythmic cuts; mono collapses stereo ambience for a contrasting throw/release.

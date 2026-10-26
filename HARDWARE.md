@@ -73,3 +73,9 @@ Bank 0.5 target build: application 553,340 bytes (28,224 bytes remain in the
 unchanged. Three trumpet zones occupy 31,422 encoded bytes plus alignment and
 metadata in flash. Existing built-in sample IDs 0–4 and user slots 5–7 retain
 their meanings; trumpet is ID 8. No partitions or bootloader behavior changed.
+
+UI 0.6.0 hardware build: app 568,100 / 581,564 bytes, static RAM 61,064 / 73,728,
+shared pool 328,896 / 368,640. The new gate/mono stages add no audio ring buffer.
+Optional ROOTPERC uses 44,637 bytes ADPCM in one existing 80 KiB user flash slot,
+not extra application flash. Actual hardware playback/upload and CPU headroom
+remain untested; successful packaging alone is not a physical performance test.

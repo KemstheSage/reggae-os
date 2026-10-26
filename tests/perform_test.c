@@ -424,8 +424,8 @@ static int test_keys(void)
             ok &= !kb_layer && !perf_held && mo_w == mo0;
         }
         fm1_in.buttons = 0;
-        bad += check("the keys without an effect (F5 G5, 8 black from D#4): silent, nothing held",
-                     ok && assigned == 0xAD5BFFu);  /* F3 .. C5 but D#4 F#4 G#4 A#4, D5, E5 (1.5.1's throws) */
+        bad += check("unassigned black keys: silent, nothing held",
+                     ok && assigned == (0xAD5BFFu | (1u<<24) | (1u<<26)));  /* F3 .. C5 but D#4 F#4 G#4 A#4, D5, E5 (1.5.1's throws) */
         kb_mask = perf_mask = 0;
     }
     usb.config = 0;
@@ -916,7 +916,7 @@ static int test_map(void)
         ok &= perf_map_of(b, p) == PF_DEF[p];
     bad += check("map: settings of 0 (before 1.2) read as the default (1.1.5's ten, FLANGER, PHASER, the throws, 2 none)",
                  ok && PF_DEF[10] == PF_FLG && PF_DEF[11] == PF_PHS && PF_DEF[12] == PF_RTHR && PF_DEF[13] == PF_ETHR &&
-                 PF_DEF[14] == PF_N && PF_DEF[0] == PF_R8);
+                 PF_DEF[14] == PF_GATE && PF_DEF[15] == PF_MONO && PF_DEF[0] == PF_R8);
     ok = 1;
     for (p = 0; p < PF_KEYS; p++)                       /* any effect (or none) on any key, the others untouched */
         for (e = 0; e <= PF_NFX; e++) {
@@ -1022,7 +1022,7 @@ static int test_map(void)
             if (!key_black(k))
                 ok &= perf_key(k) == (key_place(k) < PF_KEYS ? PF_DEF[key_place(k)] : PF_N);
         ok &= perf_key(18) == PF_FLG && perf_key(19) == PF_PHS && perf_key(16) == PF_ODN && perf_key(21) == PF_RTHR &&
-              perf_key(23) == PF_ETHR && perf_key(24) == PF_N;
+              perf_key(23) == PF_ETHR && perf_key(24) == PF_GATE && perf_key(26) == PF_MONO;
     }
     bad += check(what, ok);
     return bad;
@@ -1357,8 +1357,8 @@ static int test_throw(void)
         perf_map_put(m, 0, PF_RTHR);
         perf_map_put(m, 1, PF_ETHR);
         ok = (m[0] & 31u) == 14u && ((m[0] >> 5 | m[1] << 3) & 31u) == 15u && perf_map_of(m, 0) == PF_RTHR &&
-             perf_map_of(m, 1) == PF_ETHR && PF_NFX == 14 && PF_DEF[12] == PF_RTHR && PF_DEF[13] == PF_ETHR;
-        m[0] = (uint8_t)((m[0] & ~31u) | 16u);         /* code 16: a later firmware's effect -> the key's default */
+             perf_map_of(m, 1) == PF_ETHR && PF_NFX == 16 && PF_DEF[12] == PF_RTHR && PF_DEF[13] == PF_ETHR;
+        m[0] = (uint8_t)((m[0] & ~31u) | 31u);         /* code 31: a later firmware's effect -> the key's default */
         ok &= perf_map_of(m, 0) == PF_DEF[0];
         perf_map_put(m, 12, PF_RTHR);                   /* D5's default: code 0 */
         ok &= perf_map_of(m, 12) == PF_RTHR && !(m[7] & 0xF0u) && !(m[8] & 1u);
@@ -1598,9 +1598,29 @@ static void throw_demos(const char *dir)
     printf("perform: demo %s/throw_tour.wav (the three in a row)\n", dir);
 }
 
+
+static int test_reggae_punch(void)
+{
+    int bad=0,ok; uint32_t t,zeros;
+    const ev_t gate[]={{0,PF_GATE+1},{44160,-(PF_GATE+1)}};
+    const ev_t mono[]={{0,PF_MONO+1},{44160,-(PF_MONO+1)}};
+    for(t=0;t<NT;t++){in_l[t]=12000;in_r[t]=6000;}
+    run(120,1,gate,2,50048); zeros=0;ok=1;
+    for(t=1024;t<43000;t++){zeros+=out_l[t]==0;ok &= out_l[t]>=0&&out_l[t]<=12000&&abs(out_l[t]-2*out_r[t])<=2;}
+    bad+=check("REGGAE gate: bounded stereo rhythm and dry release",ok&&zeros>15000&&zeros<24000&&same(45000,50000));
+    run(90,1,mono,2,50048);ok=1;
+    for(t=1024;t<43000;t++)ok &= out_l[t]==9000&&out_r[t]==9000;
+    bad+=check("REGGAE mono: channel average and dry release",ok&&same(45000,50000));
+    memset(in_l,0,sizeof in_l);memset(in_r,0,sizeof in_r);
+    run(120,1,gate,2,50048);bad+=check("REGGAE gate preserves silence",same(0,50000));
+    run(120,1,mono,2,50048);bad+=check("REGGAE mono preserves silence",same(0,50000));
+    return bad;
+}
+
 int main(int argc, char **argv)
 {
     int bad = 0;
+    bad += test_reggae_punch();
     bad += test_timing();
     bad += test_stereo();
     bad += test_too_long();

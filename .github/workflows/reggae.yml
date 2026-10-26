@@ -26,6 +26,10 @@ jobs:
         run: sh web/emu/build.sh
       - name: REGGAE-OS native/WebAssembly audio parity
         run: node tests/reggae_wasm.mjs
+      - name: Live performance and sample upload
+        run: |
+          node tests/reggae_performance_wasm.mjs
+          node tests/reggae_percussion_upload.mjs
       - name: Sequencer menu regression
         run: node tests/reggae_seq_menus_wasm.mjs
       - name: Emulator regression

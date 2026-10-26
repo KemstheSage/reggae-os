@@ -45,3 +45,7 @@ build/reggae/seq-character
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/seq-menus tests/reggae_seq_menus.c -lm
 build/reggae/seq-menus
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/performance tests/reggae_performance.c -lm
+build/reggae/performance
+python3 tools/reggae/percussion-pack.py

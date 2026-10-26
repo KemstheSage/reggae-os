@@ -1615,7 +1615,7 @@ static void ui_draw_page(uint32_t counting)
         name_draw();
         return;
     }
-    if (ui.layer == LAYER_SEQ) { reggae_seq_draw(); return; }
+    if (ui.layer == LAYER_SEQ || ui.layer == LAYER_GLO || ui.layer == LAYER_FX) { reggae_seq_draw(); return; }
     if (ui.layer) {                                     /* a layer's map over the page (ui_layer.c) */
         if (ui.force)
             draw_frame();

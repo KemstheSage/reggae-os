@@ -1,4 +1,5 @@
 static void reggae_seq_tools(void);
+static void reggae_live_panel(int mixer);
 static int reggae_seq_euclid(void);
 static void layer_cards(uint32_t l);
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -6,8 +7,8 @@ static void layer_cards(uint32_t l);
  * input mappings and persistence; 240x124 scratch strip, no new audio state. */
 static int reggae_seq_screen(void)
 {
-    return ui.layer==LAYER_SEQ || (!ui.home && (cur_page()->graph == GR_SONG ||
-        cur_page()->graph == GR_ROLL || cur_page()->graph == GR_EVENTS || cur_page()->graph == GR_TOOLS));
+    return ui.layer==LAYER_SEQ || ui.layer==LAYER_GLO || ui.layer==LAYER_FX || (!ui.home && (cur_page()->graph == GR_SONG ||
+        cur_page()->graph == GR_ROLL || cur_page()->graph == GR_EVENTS || cur_page()->graph == GR_TOOLS || cur_page()->graph == GR_CHORD));
 }
 /* An original record creature. Voice activity opens its mouth; the outer groove
  * marker follows the sequence while its face stays readable. UI-rate work only. */
@@ -172,13 +173,36 @@ static void reggae_seq_inset_grid(int drums,int detail)
     if(drums && !detail && ui.cursor/16u==ui.bank)
         cv_frame(47+(ui.cursor%16u)*11,11+ui.lane*14,12,12,RG_INK);
 }
+static void reggae_chord_panel(void)
+{
+    const track_t *t=TSEL;uint8_t notes[CHORD_MAX];int32_t root;uint16_t mask;
+    if(chord_kit(t)) {cv_text_in(16,40,204,&AF_S,"CHORDS ARE FOR MELODIC TRACKS",RG_INK,RG_BG);return;}
+    if(!t->p[P_CHRD]) {cv_text_in(16,36,204,&AF_S,"ONE KEY / ONE CHORD",RG_INK,RG_BG);
+        cv_text_in(16,60,204,&AF_XS,"TURN K3 TO DIA3 OR DIA7",RG_GOLD,RG_BG);return;}
+    unsigned n=chord_make(t,60+t->p[P_ROOT],notes,&root,&mask);
+    if(chord_last[song.sel].n) {n=chord_last[song.sel].n;root=chord_last[song.sel].root;mask=chord_last[song.sel].mask;
+        memcpy(notes,chord_last[song.sel].note,n);}
+    char name[24];chord_name(name,root,mask);
+    cv_text_in(16,7,204,&AF_S,name,RG_GOLD,RG_BG);
+    for(unsigned i=0;i<n;i++) {
+        int x=40+i*50,y=65-(notes[i]%12);int active=0;
+        for(unsigned v=0;v<NVOICE;v++)active|=t->v[v].active;
+        cv_rect(x-1,y+12,2,34,RG_GREEN);reggae_disc(x,y,12,RG_CONTROL_COLOR[i]);
+        reggae_disc(x-4,y-2,2,RG_BG);reggae_disc(x+4,y-2,2,RG_BG);
+        cv_rect(x-3,y+4,7,active?4:1,RG_BG);
+        note_name(name,notes[i]);cv_text_in(x-20,103,40,&AF_XS,name,RG_INK,RG_BG);
+    }
+    if(trk_vmode(t)!=V_POLY)cv_text_in(16,24,204,&AF_XS,"MONO VOICE: ROOT ONLY",RG_RED,RG_BG);
+}
 static void reggae_seq_draw(void)
 {
     static uint32_t last;
-    int tools=ui.layer==LAYER_SEQ,detail=!tools&&detail_on();
-    int events=!tools&&cur_page()->graph==GR_EVENTS,cleanup=!tools&&cur_page()->graph==GR_TOOLS;
-    int arrange=!tools&&cur_page()->graph==GR_SONG;
-    int advanced=tools||detail||events||cleanup;
+    int tools=ui.layer==LAYER_SEQ,mixer=ui.layer==LAYER_GLO,punch=ui.layer==LAYER_FX;
+    int live=mixer||punch,chords=!ui.layer&&cur_page()->graph==GR_CHORD;
+    int detail=!ui.layer&&detail_on();
+    int events=!ui.layer&&cur_page()->graph==GR_EVENTS,cleanup=!ui.layer&&cur_page()->graph==GR_TOOLS;
+    int arrange=!ui.layer&&cur_page()->graph==GR_SONG;
+    int advanced=tools||detail||events||cleanup||live||chords;
     __typeof__(ux) saved=ux;
     char b[32],v[4][16];const char *label[4];
     if(!ui.force && (uint32_t)(fm1_ms-last)<100u)return;
@@ -189,7 +213,7 @@ static void reggae_seq_draw(void)
     reggae_seq_machine(0,56);
     cv_rrect(53,17,169,36,3,RG_BG,RG_CASE);
     reggae_seq_record(arrange);
-    cv_text(57,16,&AF_S,tools?(reggae_seq_euclid()?"EUCLID":"PATTERN TOOLS"):detail?"STEP DETAIL":events?"AUTOMATION":cleanup?"CLEANUP":arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
+    cv_text(57,16,&AF_S,mixer?"FOUR TRACK MIX":punch?"DUB PUNCH-IN":chords?"CHORD GARDEN":tools?(reggae_seq_euclid()?"EUCLID":"PATTERN TOOLS"):detail?"STEP DETAIL":events?"AUTOMATION":cleanup?"CLEANUP":arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
     fmt_int(b,song.g[G_BPM]);cv_text(57,28,&AF_S,b,RG_GOLD);
     cv_text(83,28,&AF_S,"BPM",RG_WOOD);
     cv_text(117,28,&AF_S,song.rec?"REC":song.playing?"PLAY":"STOP",song.rec?RG_RED:RG_GREEN);
@@ -208,9 +232,11 @@ static void reggae_seq_draw(void)
         cv_text_in(78,40,140,&AF_S,b,RG_INK,RG_BG);
     }
     cv_blit(0,0);
-    if(arrange||events||tools||cleanup) {
+    if(arrange||events||tools||cleanup||live||chords) {
         reggae_seq_machine(56,124);cv_rect(12,0,212,124,RG_BG);cv_oy=0;
-        if(arrange)reggae_arrangement();
+        if(live)reggae_live_panel(mixer);
+        else if(chords)reggae_chord_panel();
+        else if(arrange)reggae_arrangement();
         else if(events)graph_events(1);
         else if(tools)reggae_seq_tools();
         else {
@@ -255,7 +281,7 @@ static void reggae_seq_draw(void)
     }
     if(advanced) {
         seq_card_draw=reggae_seq_formatted_card;
-        if(tools)layer_cards(LAYER_SEQ);else draw_columns();
+        if(tools||live)layer_cards(ui.layer);else draw_columns();
         seq_card_draw=0;
     } else for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
     const char *hint=drum_track(TSEL)?"SEQ: DETAIL  GLO: SONG":"HOLD EDIT+SEQ: CLEAR";
@@ -269,6 +295,9 @@ static void reggae_seq_draw(void)
     if(events) {str_cpy(b,"OCT+: ",sizeof b);str_cpy(b+6,ev_act_name(),sizeof b-6);hint=b;}
     if(tools)hint=reggae_seq_euclid()?"OCT+: APPLY  OCT-: CANCEL":"KEYS: TOOLS  OCT-: UNDO";
     if(cleanup)hint="TURN TO PICK  OCT+: CONFIRM";
+    if(mixer)hint="WHITE F-B: SOLO  BLACK: MUTE";
+    if(punch)hint="WHITE: FX  BLACK: MUTE";
+    if(chords)hint="K3: CHORD  K4: VOICING";
     char foot[64];text_fit(foot,sizeof foot,ui.msg_t?ui.msg:hint,&AF_XS,202);
     cv_text_in(16,45+CAP_IN(XS,9),204,&AF_XS,foot,RG_INK,RG_CASE);
     cv_blit(0,180);

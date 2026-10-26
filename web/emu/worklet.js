@@ -92,6 +92,33 @@ if (typeof registerProcessor === "function") {
       else if (m.type === "enc") ex.web_enc(m.role, m.n | 0);
       else if (m.type === "master") ex.web_master(m.value | 0);
       else if (m.type === "midi") ex.web_midi(m.data[0] | 0, m.data[1] | 0, m.data[2] | 0);
+      else if (m.type === "percussion") {
+        const data = new Uint8Array(m.data);
+        const flash = new Uint8Array(ex.memory.buffer, ex.web_nor(), ex.web_nor_size());
+        let slot = -1;
+        const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+        let crc = 0xFFFFFFFF;
+        for (let i=512; i<data.length; i++) {crc ^= data[i];for(let b=0;b<8;b++)crc=(crc>>>1)^((crc&1)?0xEDB88320:0);}
+        const valid = data.length >= 512 && data.length <= 0x14000 &&
+          view.getUint32(0,true) === 0x504D5346 && view.getUint16(4,true) === 1 && data[6] === 5 &&
+          view.getUint32(16,true) === data.length-512 && view.getUint32(20,true) === ((crc^0xFFFFFFFF)>>>0);
+        if (valid) {
+          for (let k = 0; k < 3; k++) {
+            const base = 0xA0000 + k * 0x14000;
+            if (data.every((v,i) => flash[base+i] === v)) {slot=k; break;}
+          }
+          for (let k = 0; slot < 0 && k < 3; k++) {
+            const base = 0xA0000 + k * 0x14000;
+            if (flash.subarray(base, base + 0x14000).every(v => v === 255)) {slot = k; break;}
+          }
+        }
+        if (slot < 0) this.port.postMessage({type: "percussion-result", message: valid ? "No empty sample slot. Existing samples were kept." : "Invalid percussion pack. Existing samples were kept."});
+        else {
+          flash.set(data, 0xA0000 + slot * 0x14000);
+          const ok = ex.web_percussion_select(slot);
+          this.port.postMessage({type: "percussion-result", message: ok ? `Loaded USR${slot+1} on the selected track. Play F3 rim, G3 conga, A3 claves, B3 shaker, C4 tambourine. Hold notes for their tails.` : "Sample pack could not be loaded."});
+        }
+      }
       else if (m.type === "visible") this.period = m.on ? 1 / 30 : 1 / 4;
     }
 

@@ -73,3 +73,13 @@ and introduces explicit add/replace/clear gestures for stopped note-step editing
   Euclid preview and cleanup screens. Project/mixer screens remain future work.
 
 - UI 0.5.9: remove the sequencer hint background strip.
+
+### UI 0.6.0 — live performance request
+
+Implemented: four simultaneous level controls with mute/solo speaker characters;
+sixteen punch-in pads including new SLOOP-derived gate and mono; direct
+root/scale/chord/voicing controls with singing chord notes; optional credited
+CC0 percussion pack through existing sample slots and the actual firmware
+sampler. Jiant/Orchid/HiChord research and scope are documented. Not a wholesale
+SLOOP port, not Orchid's proprietary engine, and not a new per-lane sampled
+DRUM engine. Hardware and iPhone verification remain outstanding.

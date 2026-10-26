@@ -16,8 +16,9 @@ Fresh sessions start with organ, bass, trumpet and drums. Free-tempo capture and
 live section recording remain planned. See [the song-making guide](SEQUENCER.md)
 and [integration scope](docs/reports/ui-0.5.0.md).
 
-UI 0.5.9 retains the sequencer a tabletop-machine case, inset grid, responsive rotary
-indicators and animated record companion. [See the native-screen preview](docs/reports/ui-0.5.9.md).
+UI 0.6.0 adds a four-track mixer, sixteen punch-in pads, a one-key chord garden
+and an optional CC0 percussion pack. The shared hardware screen uses the tabletop
+case and animated companions. [Controls and verification](docs/reports/ui-0.6.0.md).
 
 **Early development build. Physical hardware and iPhone Safari are untested.**
 The expanded sounds are audition candidates; musical refinement is ongoing.

@@ -47,6 +47,7 @@
  * PF_M1), then the mutes of the black keys */
 enum { PF_R8, PF_R16, PF_R32, PF_REV, PF_LPF, PF_HPF, PF_TAPE, PF_FRZ, PF_OUP, PF_ODN, PF_FLG, PF_PHS,
        PF_RTHR, PF_ETHR,                      /* 1.5.1: REV THROW, ECHO THROW */
+       PF_GATE, PF_MONO,                         /* REGGAE-OS: SLOOP-inspired live gate / mono */
        PF_M1, PF_N = PF_M1 + NTRK };
 #define PF_NFX PF_M1                          /* the effects a white key can hold */
 #define PF_KEYS 16u                           /* the white keys F3 .. G5 */
@@ -80,9 +81,9 @@ enum { BM_NONE, BM_LOOP, BM_TAPE, BM_FRZ, BM_HARM };
 /* the white keys' effects by default (1.1.5's ten, then FLANGER and PHASER, 1.5.1's REV THROW and ECHO THROW on D5
  * and E5; PF_N: none) */
 static const uint8_t PF_DEF[PF_KEYS] = {PF_R8, PF_R16, PF_R32, PF_REV, PF_LPF, PF_HPF, PF_TAPE, PF_FRZ, PF_OUP, PF_ODN,
-                                        PF_FLG, PF_PHS, PF_RTHR, PF_ETHR, PF_N, PF_N};
+                                        PF_FLG, PF_PHS, PF_RTHR, PF_ETHR, PF_GATE, PF_MONO};
 static volatile uint8_t perf_map[PF_KEYS] = {PF_R8, PF_R16, PF_R32, PF_REV, PF_LPF, PF_HPF, PF_TAPE, PF_FRZ, PF_OUP,
-                                             PF_ODN, PF_FLG, PF_PHS, PF_RTHR, PF_ETHR, PF_N, PF_N};
+                                             PF_ODN, PF_FLG, PF_PHS, PF_RTHR, PF_ETHR, PF_GATE, PF_MONO};
                                       /* main: white key p's effect (PF_N none), from the settings (ui_layer.c) */
 static volatile uint8_t perf_remap;   /* main: perf_map changed (seq.c: a key held takes its new effect) */
 
@@ -118,6 +119,7 @@ static const int16_t PF_SVF[64][3] = {
 };
 
 static struct {
+    int32_t gate_w, mono_w;             /* wet ramps: release returns to untouched stereo */
     uint32_t ph, P, split;             /* samples since play; the 1/16; this block: where a 1/16 starts */
     uint32_t act, act0;                /* running after / before split */
     uint8_t busy, sync, mute;          /* sync: a 1/16 starts with the next block; mute: tracks to ramp */
@@ -742,6 +744,7 @@ static __attribute__((noinline)) void perf_phaser(int32_t *bl, int32_t *br, uint
 static __attribute__((noinline)) void perf_block(int32_t *bl, int32_t *br, uint32_t n)
 {
     uint32_t i, a = pf.act0, sh, hold;
+    uint32_t gate_step=pf.P?pf.P:1,gate_pos=(pf.ph-n)%gate_step;
     int32_t c = perf_k[1], lt, ht, ct;
     if (c)
         pf.cc = c;
@@ -791,6 +794,26 @@ static __attribute__((noinline)) void perf_block(int32_t *bl, int32_t *br, uint3
                 r = pf_mix(r, pf.chr, pf.cw);
             }
         }
+        /* Adapted from SLOOP punch.c PX_GATE (GPL-3.0-only), pinned source and
+         * provenance in docs/research/performance-0.6.md. Keep stereo and use
+         * this firmware's clock/mix ramps; no additional audio ring buffer. */
+        if((a&PF_BIT(PF_GATE)) || pf.gate_w) {
+        pf.gate_w+=clamp(((a&PF_BIT(PF_GATE))?32768:0)-pf.gate_w,-512,512);
+        if(pf.gate_w) {
+            int32_t gain=gate_pos<gate_step/2?32768:0;
+            if(gate_pos<64)gain=(int32_t)gate_pos*512;
+            else if(gate_pos>=gate_step/2 && gate_pos<gate_step/2+64)
+                gain=32768-(int32_t)(gate_pos-gate_step/2)*512;
+            l=pf_mix(l,mulq16(l,(uint32_t)gain*2),pf.gate_w);
+            r=pf_mix(r,mulq16(r,(uint32_t)gain*2),pf.gate_w);
+        }
+        }
+        if(++gate_pos>=gate_step)gate_pos=0;
+        /* Mono sum, as in SLOOP's PX_MONO, with an independent release ramp. */
+        if((a&PF_BIT(PF_MONO)) || pf.mono_w) {
+        pf.mono_w+=clamp(((a&PF_BIT(PF_MONO))?32768:0)-pf.mono_w,-512,512);
+        if(pf.mono_w) {int32_t mono=(l>>1)+(r>>1);l=pf_mix(l,mono,pf.mono_w);r=pf_mix(r,mono,pf.mono_w);}
+        }
         bl[i] = l;
         br[i] = r;
     }
@@ -799,5 +822,5 @@ static __attribute__((noinline)) void perf_block(int32_t *bl, int32_t *br, uint3
     if ((pf.act & PF_BIT(PF_PHS)) || pf.pw)
         perf_phaser(bl, br, n);
     pf.busy = pf.act || pf.mode != BM_NONE || pf.w || pf.la || pf.ha || pf.cw || pf.td || pf.mute || pf.fw || pf.pw || pf.thr ||
-              pf.fn || perf_k[0] || perf_k[1] || perf_k[2];
+              pf.fn || pf.gate_w || pf.mono_w || perf_k[0] || perf_k[1] || perf_k[2];
 }

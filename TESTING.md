@@ -429,3 +429,22 @@ bottom bevel, with no black background strip. No DSP or input changes.
 Hardware guards pass: app 565,788 / 581,564 B; data+BSS 61,064 / 73,728 B;
 pool 328,896 / 368,640 B. WASM: 862,134 B. Physical FM-1 and iPhone Safari
 remain untested.
+
+## UI 0.6.0 live performance
+
+`tests/reggae_performance.c` (native ASAN) verifies four GLO level knobs, mute,
+solo, FX gate/mono keys, root/voicing changes, audible chord and complete release.
+`tests/chord_test.c` passes. `tests/perform_test.c` at -O2 passes functional
+checks including added stereo gate, mono sum, silence and dry release. Its
+harmonizer and flanger/phaser Mac instruction thresholds fail in both the
+previous committed release and this revision; physical CPU load is unverified.
+All 75 native/WASM PCM comparisons pass and 40 protected renders are unchanged.
+
+`tests/reggae_performance_wasm.mjs` loads the optional pack into emulated NOR
+and renders each sample through the actual SAMPLE engine. Five pieces have
+nonzero energy, peaks 0.064–0.075 and silent tails; an unmapped note is silent.
+`tests/reggae_percussion_upload.mjs` checks occupied-slot preservation, identical
+pack reuse, invalid CRC rejection and persistence after flash reload.
+Local browser testing confirms audio initialization, the upload success message
+and the four-track mixer display. This is not a physical iPhone Safari test.
+See `docs/reports/ui-0.6.0.md` for native screenshots and firmware-size results.

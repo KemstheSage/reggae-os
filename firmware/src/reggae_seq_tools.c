@@ -24,3 +24,42 @@ static void reggae_seq_tools(void)
         cv_text_in(x,102+CAP_IN(XS,17),24,&AF_XS,drum_lane_abbr(TSEL,p),p==ui.lane?RG_BG:RG_INK,bg);
     }
 }
+
+/* Four original speaker/fader companions: activity is pre-mixer voice activity,
+ * and each fader is the actual track level. Mute/solo keeps existing key mapping. */
+static void reggae_live_panel(int mixer)
+{
+    if(mixer)for(unsigned k=0;k<NTRK;k++) {
+        track_t *t=&trk[k];int x=16+k*52,on=glo_sounding(k),active=0;
+        for(unsigned v=0;v<NVOICE;v++)active|=t->v[v].active;
+        int idx=reggae_index(t);char name[12];
+        const char *cat=idx>=0?REGGAE_BANK[idx].category:ENGINES[t->eng_req]->name;
+        text_fit(name,sizeof name,cat,&AF_XS,46);
+        cv_text_in(x,1,48,&AF_XS,name,on?RG_CONTROL_COLOR[k]:RG_EDGE,RG_BG);
+        cv_rrect(x+8,17,32,28,4,on?RG_PANEL:RG_BG,RG_BG);
+        cv_frame(x+8,17,32,28,on?RG_CONTROL_COLOR[k]:RG_EDGE);
+        for(int side=-1;side<=1;side+=2) {
+            if(on)reggae_disc(x+24+side*7,26,3,RG_INK);
+            else cv_rect(x+22+side*7,26,5,1,RG_EDGE);
+        }
+        cv_rect(x+20,35,9,on&&active?5:1,on?RG_GOLD:RG_EDGE);
+        cv_rect(x+23,52,3,47,RG_EDGE);
+        int h=clamp(t->p[P_LEVEL],0,127)*43/127;
+        cv_rect(x+18,96-h,14,5,on?RG_CONTROL_COLOR[k]:RG_EDGE);
+        char label[8]={'T',(char)('1'+k),0};
+        cv_text_in(x,104,48,&AF_XS,!on?"MUTED":perf_solo?"SOLO":label,on?RG_INK:RG_RED,RG_BG);
+    } else {
+        uint32_t held=perf_act,available=perf_avail();
+        for(unsigned p=0;p<PF_KEYS;p++) {
+            unsigned fx=perf_map[p];int x=16+(p%4)*52,y=3+(p/4)*23;
+            int on=fx<PF_NFX&&((held>>fx)&1u),ok=fx<PF_NFX&&((available>>fx)&1u);
+            uint16_t bg=on?RG_GOLD:RG_PANEL;char key[4]={W_NOTE[p],(char)('3'+(p>=4)+(p>=11)),0};
+            cv_rrect(x,y,48,21,2,bg,RG_BG);cv_text(x+3,y,&AF_XS,key,on?RG_BG:RG_GOLD);
+            cv_text_in(x+1,y+10,46,&AF_XS,fx<PF_NFX?PF_CELL[fx]:"--",!ok?RG_EDGE:on?RG_BG:RG_INK,bg);
+        }
+        for(unsigned k=0;k<NTRK;k++) {
+            char label[8]={'M','U','T','E',' ','1'+k,0};int x=16+k*52;
+            cv_text_in(x,104,48,&AF_XS,label,(held&PF_BIT(PF_M1+k))?RG_RED:RG_INK,RG_BG);
+        }
+    }
+}
