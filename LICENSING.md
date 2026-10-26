@@ -115,3 +115,9 @@ by those owners.
 ## Radio
 
 Felucca never enables the Bluetooth / Wi-Fi radio of the hardware.
+
+REGGAE-OS UI 0.6 adds a gated punch-in adapted from SLOOP `firmware/src/punch.c`
+(GPL-3.0-only), commit `d89364253b79a5c6002c0d90c5f16b3c3c16ea9d`.
+See `docs/research/performance-0.6.md`. Optional ROOTPERC source audio is CC0;
+individual origins and processing are in `assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md`.
+Jiant, Orchid and HiChord are design references; no artwork or proprietary code was copied.

@@ -121,3 +121,21 @@ pattern length and other tracks. **Hold SAVE to undo.**
 
 EDIT + REC still clears only the selected step. The whole-roll shortcut is not
 active in the drum grid, DETAIL, arrangement or during playback.
+
+## Live controls (UI 0.6.0)
+
+- **Hold GLO:** four-track mixer; knobs 1–4 control levels T1–T4. First four
+  black keys toggle mute. White F3/G3/A3/B3 solo while held. Double-tap GLO to
+  keep the mixer open; tap GLO to close it.
+- **Hold FX:** punch-in pads. White F3/G3/A3 repeat 1/8, 1/16, 1/32; B3 reverse;
+  C4/D4 low/high-pass; E4 tape stop; F4 freeze; G4/A4 octave up/down; B4 flanger;
+  C5 phaser; D5 reverb throw; E5 echo throw; F5 gate 1/16; G5 mono. Release to
+  return to dry (effect tails can continue). Black keys 1–4 momentarily mute tracks.
+- **Tap SCL twice, with separate taps:** CHORD GARDEN. Knobs: root, scale, chord,
+  voicing. Choose MAJ/MIN scale, then DIA3/DIA7 for one-key diatonic chords.
+  CHRD OFF returns normal notes. Eight voices are shared by all four tracks.
+- Optional **Load CC0 percussion on selected track** below the emulator installs
+  into an empty sample slot. F3 rim, G3 conga, A3 claves, B3 shaker, C4 tambourine.
+  Hold for natural tails; use the melodic piano roll. This changes the selected
+  track's sound. HOME/PRESETS returns to the curated instruments. Save through
+  the usual preset/project controls. Source/credits: `percussion/ATTRIBUTION.md`.

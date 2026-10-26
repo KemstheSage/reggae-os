@@ -42,3 +42,9 @@ approach in [SLOOP](https://github.com/isod89/sloop-fm1) by isod89 and contribut
 `firmware/src/seq.c` (`arm_start`, `rec_begin`) and `ui_studio.c` (`rec_toggle`).
 REGGAE-OS retains Felucca's note/drum step representation, synthesis and transport;
 SLOOP's free-take buffer, drum engine, project format and arranger are not imported.
+
+REGGAE-OS live performance additions: SLOOP `punch.c` (GPL-3.0-only) informed
+the added gate/mono stages; VCSL CC0 percussion was obtained from SLOOP's
+separately attributed sample collection. Exact commits, file provenance and
+design references (Jiant, Orchid and HiChord) are recorded in
+`docs/research/performance-0.6.md` and `assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md`.
