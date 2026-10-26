@@ -37,7 +37,8 @@ python3 tools/fm1_sample_upload.py load 1 ROOTPERC \
   assets/samples-cc0/REGGAE_PERC/tambourine.wav:60:60-60
 ```
 
-Then select SAMPLE, SET USR1, attack 0, decay/sustain 127, release 30 and
+Then set the keyboard octave to 0, quantise OFF and transpose 0. Select
+SAMPLE, SET USR1, attack 0, decay/sustain 127, release 30 and
 turn down the level before balancing it. The hardware uploader replaces the
 chosen slot: check `info` first. Physical upload and playback remain untested.
 This optional pack uses melodic SAMPLE sequencing, not the DRUM eight-lane grid.
