@@ -136,3 +136,7 @@ On the stopped piano roll, hold EDIT then SEQ for one second to clear the track;
 hold SAVE to undo. [Details](docs/reports/ui-0.5.1.md).
 UI 0.5.2 adds a record character whose mouth reacts to notes and drum voices;
 its groove marker follows the loop. The same character appears in the arranger.
+
+UI **0.6.4** extends the REGGAE rack theme to technical editors, settings and
+storage screens. [Screenshots, coverage and test results](docs/reports/ui-0.6.4.md).
+Existing saved colour choices are respected; select COLOR → REGGAE for this skin.

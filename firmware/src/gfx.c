@@ -170,6 +170,14 @@ static void palette_set(uint32_t i)
         ux.dim = ux.line = ux.raise = ux.lane = UI_BW_GREY;   /* the one grey: inactive, tracks, wells */
         ux.tint = ux.grid = p->bg;
     }
+    if(!cust && i==NPALETTES-1u) {
+        /* REGGAE rack: cream ink, brass values, sage labels, vermilion alerts.
+         * Other palettes remain available for accessibility and custom colours. */
+        ux.theme=RGB(235,172,47);ux.accent=RGB(207,73,47);
+        ux.mid=RGB(137,169,137);ux.dim=RGB(128,108,75);
+        ux.line=RGB(77,66,47);ux.sel=RGB(239,224,187);
+        ux.ink=ux.bg;ux.rec=ux.accent;ux.key=RGB(137,169,137);
+    }
     ux.gen++;                                    /* the text ramps change with the coverage curve */
 }
 

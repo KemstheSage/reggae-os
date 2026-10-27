@@ -2361,5 +2361,10 @@ static void draw_graph(void)
         }
     }
     cv_oy = 0;
+    if(palette_cur()==NPALETTES-1u) {
+        /* Flush rack fasteners stay outside the graph's content area. */
+        cv_rect(0,2,2,3,T_DIM);cv_rect(238,2,2,3,T_DIM);
+        cv_rect(0,graph_h()-5,2,3,T_DIM);cv_rect(238,graph_h()-5,2,3,T_DIM);
+    }
     cv_blit(0, graph_y());
 }

@@ -10,6 +10,7 @@
  * (a card value with its unit wider than the card, a dialog question or a header message too long) it is set in S;
  * free text (names) is ellipsised at its size. */
 static void draw_menu(void);
+static void reggae_rack_card(uint32_t c,const char *label,const char *value,const char *unit,int32_t ratio,int hot);
 static int name_on(void);                              /* NAME (ui_name.c) */
 static uint64_t lock_held(void);                       /* parameter locks: the steps held on STEP (ui_input.c) */
 static void name_draw(void);
@@ -410,6 +411,12 @@ static void draw_head(void)
         head_group();
     if (!(msg && centre))
         draw_battery(HEAD_BAT_X);
+    /* Three enamel tabs identify the shared REGGAE rack without taking text space. */
+    if(palette_cur()==NPALETTES-1u) {
+        cv_rect(8,H_HEAD-2,20,2,T_THEME);
+        cv_rect(30,H_HEAD-2,20,2,T_MID);
+        cv_rect(52,H_HEAD-2,20,2,T_ACCENT);
+    }
     cv_blit(0, Y_HEAD);
 }
 /* LINE: 1 px dividers in the BG gaps between the strips, not around them: under the header, above and
@@ -459,6 +466,10 @@ static void draw_frame(void)
     gap_rows(Y_LABEL + ch, gy);
     gap_rows(gy + gh, Y_FOOT);
     draw_gaps(Y_LABEL, ch);
+    if(palette_cur()==NPALETTES-1u) {
+        lcd_fill(4,gy-2,232,1,T_DIM);
+        lcd_fill(4,Y_FOOT-2,232,1,T_DIM);
+    }
 }
 
 #ifndef CARD_HOOK
@@ -702,6 +713,12 @@ static void draw_column(uint32_t c, const char *label, const char *val, const ch
     strip = !snap && str_eq(key, ui.col[c]);
     if (strip && !ui.roll[c].from[0])
         return;
+    if (kind != LK_TALL && palette_cur() == NPALETTES - 1u) {
+        ui.roll[c].from[0]=0;ui.roll[c].sig=sig;
+        str_cpy(ui.col[c],key,sizeof ui.col[c]);
+        reggae_rack_card(c,label,val,unit,ratio,hot);
+        return;
+    }
     if (strip) {                                        /* rolling: the value strip only */
         cv_begin(COL_W, ROLL_H, T_SURF);
         cv_oy = -ROLL_Y;

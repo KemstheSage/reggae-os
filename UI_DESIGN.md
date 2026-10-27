@@ -252,3 +252,10 @@ for the four track knobs; labels/values update in place, with no page change.
 Pan positions appear on short horizontal rails above the faders; slim reverb
 send bars sit beside them. These are parameter indicators, not peak meters.
 The assignment is transient UI state; project/sound formats are unchanged.
+
+### Shared rack skin (UI 0.6.4)
+
+Technical editors, storage and system screens now share REGGAE's cream/brass/sage
+palette, compact rotary parameter cards and rack detailing. Existing graphs and
+control layouts remain; alternate palettes and LARGE remain available for access.
+See [coverage and native screenshots](docs/reports/ui-0.6.4.md).

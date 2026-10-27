@@ -469,3 +469,9 @@ editing, mixer→clock navigation and release of solo/note ownership. Actual
 stereo pan and reverb-tail audio checks pass (dry 0, wet 2.66167600 energy).
 WASM menu/emulator checks pass. Hardware image 568,656 bytes, static RAM 61,064,
 pool 328,896; guards pass. See `docs/reports/ui-0.6.3.md` for screenshots.
+
+UI 0.6.4 adds `tests/reggae_skin.c`: render all visible pages across every engine,
+system menus, held physical EDIT/SCL/REC, naming, confirmation and update countdown.
+Create `build/reggae/skin` before running; snapshots are native 240×240 PPMs.
+481 states passed locally under AddressSanitizer. See the
+[reskin report](docs/reports/ui-0.6.4.md) for limits and visual evidence.

@@ -97,3 +97,7 @@ The old grey TRACK MIX view is no longer shown in the HOME cycle.
 UI 0.6.3: unified mixer, permanent vertical volume faders, in-place four-track
 LEVEL/PAN/REVERB knob assignments on C5/D5/E5. Second mixer page removed; normal
 HOME cycle is MIXER → CLOCK → instrument. Mute/solo remain available throughout.
+
+- UI 0.6.4: shared rack skin for remaining technical/system/storage screens;
+  compact controls, retained graphs, native render sweep and hardware build.
+  Alternate accessibility layouts and low-level diagnostics intentionally retained.

@@ -424,3 +424,28 @@ static void reggae_draw(void)
     if(ui.hot_t)ui.hot_t--;if(ui.msg_t)ui.msg_t--;
     ux.mono=old_mono;ux.light=old_light;ux.gen++;ui.force=0;
 }
+
+/* Shared rack modules for the remaining technical editors. Keep their graphs,
+ * units, key actions and native strip geometry; no extra framebuffer. */
+static void reggae_rack_card(uint32_t c,const char *label,const char *value,const char *unit,int32_t ratio,int hot)
+{
+    char b[40],fitted[32];
+    uint16_t color=hot?RG_INK:RG_CONTROL_COLOR[c%4];
+    cv_begin(CARD_W,CARD_H,RG_BG);
+    cv_rrect(0,0,CARD_W,CARD_H,3,RG_PANEL,RG_BG);
+    reggae_ring(8,8,5,color,RG_PANEL);
+    int ph=(640+clamp(ratio,0,1000)*762/1000)&1023;
+    cv_line(8,8,8+SINE[ph]*3/32768,8-SINE[(ph+256)&1023]*3/32768,color);
+    /* Label below the cap, full width for long DSP names. */
+    text_fit(fitted,sizeof fitted,label,&AF_XS,CARD_W-6);
+    cv_text_in(3,15,CARD_W-6,&AF_XS,fitted,RG_INK,RG_PANEL);
+    str_cpy(b,value,sizeof b);
+    if(unit && unit[0] && !str_eq(unit,label)) {
+        unsigned n=str_len(b);str_cpy(b+n," ",sizeof b-n);
+        n=str_len(b);str_cpy(b+n,unit,sizeof b-n);
+    }
+    text_fit(fitted,sizeof fitted,b,&AF_XS,CARD_W-6);
+    cv_text_in(3,28,CARD_W-6,&AF_XS,fitted,color,RG_PANEL);
+    if(ratio>=0)cv_rect(17,7,clamp(ratio,0,1000)*(CARD_W-22)/1000,2,color);
+    cv_blit(CARD_X(c),Y_LABEL);
+}
