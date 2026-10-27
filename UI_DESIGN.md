@@ -259,3 +259,22 @@ Technical editors, storage and system screens now share REGGAE's cream/brass/sag
 palette, compact rotary parameter cards and rack detailing. Existing graphs and
 control layouts remain; alternate palettes and LARGE remain available for access.
 See [coverage and native screenshots](docs/reports/ui-0.6.4.md).
+
+### Replacement workspaces (UI 0.7.0)
+
+This supersedes 0.6.4's palette-only treatment. All remaining normal UI routes now
+use `reggae_workspace.c`, shared by physical firmware and WASM. Editors use a
+56-row identity header, 124-row working area, and 60-row knob/action strip. Settings
+uses four cards at a time, storage shows three record sleeves, and naming uses a
+paper label and physical-key alphabet. Held engine/scale/record maps, confirmations,
+count-in, system information, credits and calibration use the same design language.
+
+Envelope, waveform, sample and FM diagrams retain their mathematical content;
+their stock page framing, top parameter boxes and crowded footer are removed.
+Clock and chorus now have parameter/transport-linked characters. The record face
+continues to react to active voices. ANIM OFF stops decorative movement. LARGE
+provides an enlarged readout while adjusting a parameter; STYLE LINE adds frame
+rules. New workspaces use the fixed REGGAE palette, like existing instrument pages;
+legacy COLOR choices remain stored, but do not switch the workspaces to a stock UI.
+Low-level bootloader and crash diagnostics remain separate from normal UI routing.
+See [the complete coverage report](docs/reports/ui-0.7.0.md).

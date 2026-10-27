@@ -1297,3 +1297,5 @@ static void draw_layer(void)
 }
 
 #include "reggae_seq_tools.c"
+
+#include "reggae_workspace.c"

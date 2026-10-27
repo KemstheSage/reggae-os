@@ -21,6 +21,13 @@ alongside sixteen punch-in pads, a one-key chord garden
 and an optional CC0 percussion pack. The shared hardware screen uses the tabletop
 case and animated companions. [Controls and verification](docs/reports/ui-0.6.3.md).
 
+**UI 0.7.0 redesigns the remaining page layouts**, rather than recolouring the
+stock panels: SYSTEM DESK settings cards, record-sleeve libraries, LABEL PRESS
+naming, a cable patchbay, a metronome character, chorus companions and the shared
+instrument workbench. Hold **HOME** for Settings; ALGORITHM selects a tab,
+PRESETS selects an item, OCT−/+ changes it, HOME closes it.
+[Native screenshots and verification](docs/reports/ui-0.7.0.md).
+
 **Early development build. Physical hardware and iPhone Safari are untested.**
 The expanded sounds are audition candidates; musical refinement is ongoing.
 See [TESTING.md](TESTING.md) for measured results and known limitations, and the

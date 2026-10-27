@@ -101,3 +101,8 @@ HOME cycle is MIXER → CLOCK → instrument. Mute/solo remain available through
 - UI 0.6.4: shared rack skin for remaining technical/system/storage screens;
   compact controls, retained graphs, native render sweep and hardware build.
   Alternate accessibility layouts and low-level diagnostics intentionally retained.
+
+- UI 0.7.0: replace remaining normal stock page layouts with native workspaces,
+  settings cards, record-sleeve browsing, label-printer naming, cable modulation,
+  clock/chorus characters and matching dialogs/calibration. Preserve technical
+  graphs and control semantics. Physical-device verification still outstanding.

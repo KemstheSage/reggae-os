@@ -1898,29 +1898,9 @@ static void ui_input(void)
  * any time: the keys are not part of what is taught, so one works whatever the buttons' table says */
 #define SETUP_IDLE_MS 30000u
 #define SETUP_GIVE_UP(t0) (fm1_ms - (t0) > SETUP_IDLE_MS || fm1_in.notes != 0u)
-static void setup_title(void)
-{
-    lcd_fill(0, 0, 240, 240, T_BG);
-    {   /* the title with its icon (the menu row's), centred together; M from y 8 as before */
-        const char *t = "HARDWARE CALIBRATION";
-        int32_t x = (240 - (16 + 6 + text_w(&AF_M, t))) / 2;
-        cv_begin(240, 24, T_BG);
-        GFX_HOOK_ALIGN(0, 0, 240, 0, AL_H | AL_N(2), "calibration title centred");
-        GFX_HOOK_ALIGN(0, HEAD_MY + AF_M_CAP_Y, 0, HEAD_MY + AF_M_CAP_Y + AF_M_CAP_H, AL_V | AL_PASS,
-                       "header icon on its title's line");
-        cv_icon_mid(x, 12, 16, ICON_X_DOCTOR, T_THEME, T_BG);
-        cv_text(x + 22, HEAD_MY, &AF_M, t, T_TEXT);
-        cv_blit(0, 5);
-    }
-    draw_text_box(0, 32, 240, &AF_S, "TEACH EACH BUTTON AND KNOB", T_MID, 1);
-    lcd_fill(16, 56, 208, 1, T_LINE);
-    draw_text_box(0, 206, 240, &AF_S, "ANY KEY: CANCEL", T_DIM, 1);
-}
-static void setup_show(const char *what, const char *name)     /* "PRESS" / "TURN RIGHT", the control */
-{
-    draw_text_box(0, 80, 240, &AF_S, what, T_MID, 1);
-    draw_text_box(0, 100, 240, &AF_L, name, T_THEME, 1);
-}
+static void reggae_calibration(const char *what,const char *name);
+static void setup_title(void){reggae_calibration("READY","RELEASE BUTTONS");}
+static void setup_show(const char *what,const char *name){reggae_calibration(what,name);}
 static void panel_setup(void)
 {
     uint32_t i, used = 0, t0 = fm1_ms;

@@ -1588,6 +1588,8 @@ static void style_apply(void)
 #include "reggae_ui.c"
 #include "reggae_seq_ui.c"
 
+static void reggae_workspace(uint32_t counting);
+static int32_t rg_credits(int y,int draw);
 static void ui_draw_page(uint32_t counting);
 static void ui_draw(void)
 {
@@ -1605,79 +1607,16 @@ static void ui_draw(void)
 }
 static void ui_draw_page(uint32_t counting)
 {
-    if (ui.uboot) {
-        draw_uboot();
-        draw_head();
-        return;
+    if(ui.uboot || ui.menu || ui.confirm || name_on() || counting) {
+        reggae_workspace(counting);return;
     }
-    if (ui.menu) {
-        draw_menu();
-        ui.force = 0;
-        return;
+    if(!ui.layer && !ui.home && !page_visible(ui.page)) {
+        ui.page=(uint8_t)page_first(FAM_EDIT);page_entered();
     }
-    if (counting && !ui.confirm && !name_on()) {        /* the count-in: over the page (and a layer) */
-        draw_countin();
-        draw_head();
-        return;
+    if(ui.layer && ui.layer!=LAYER_SEQ && ui.layer!=LAYER_GLO && ui.layer!=LAYER_FX) {
+        reggae_workspace(0);return;
     }
-    if (ui.confirm) {                                   /* the OCT- / OCT+ dialog */
-        if (ui.force) {
-            draw_confirm();
-            ui.force = 0;
-        }
-        draw_head();                                    /* recording remains visible over confirmations */
-        return;
-    }
-    if (name_on()) {                                    /* NAME: a user preset's or a project's (ui_name.c) */
-        name_draw();
-        return;
-    }
-    if (ui.layer == LAYER_SEQ || ui.layer == LAYER_GLO || ui.layer == LAYER_FX) { reggae_seq_draw(); return; }
-    if (ui.layer) {                                     /* a layer's map over the page (ui_layer.c) */
-        if (ui.force)
-            draw_frame();
-        draw_head();
-        draw_layer();
-        if (ui.msg_t && !--ui.msg_t && ui.msg2[0]) {
-            str_cpy(ui.msg, ui.msg2, sizeof ui.msg);
-            ui.msg2[0] = 0;
-            ui.msg_t = 60;
-        }
-        if (ui.hot_t)
-            ui.hot_t--;
-        if (ui.bpm_t)
-            ui.bpm_t--;
-        ui.force = 0;
-        return;
-    }
-    if (!ui.home && !page_visible(ui.page)) {          /* an OP page of a track that is not DIGITAL (without
-                                                         * FELUCCA_FM4: any track): EDIT 1 */
-        ui.page = (uint8_t)page_first(FAM_EDIT);
-        page_entered();
-    }
-    if (reggae_seq_screen()) { reggae_seq_draw(); return; }
-    if (reggae_screen()) { reggae_draw(); return; }
-    cursor_fix();
-    if (ui.force)
-        draw_frame();
-    felucca_dbg.stage = 3;
-    draw_head();
-    felucca_dbg.stage = 4;
-    draw_columns();
-    felucca_dbg.stage = 5;
-    draw_graph();
-    if (ui.msg_t && !--ui.msg_t && ui.msg2[0]) {     /* the second message (ui_notices) */
-        str_cpy(ui.msg, ui.msg2, sizeof ui.msg);
-        ui.msg2[0] = 0;
-        ui.msg_t = 60;
-    }
-    if (ui.bpm_t)
-        ui.bpm_t--;
-    if (ui.hot_t)
-        ui.hot_t--;
-    if (ui.help_t)
-        ui.help_t--;
-    felucca_dbg.stage = 6;
-    draw_foot();
-    ui.force = 0;
+    if(reggae_seq_screen()){reggae_seq_draw();return;}
+    if(!ui.layer && reggae_screen()){reggae_draw();return;}
+    reggae_workspace(0);
 }

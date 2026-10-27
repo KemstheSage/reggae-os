@@ -56,3 +56,6 @@ build/reggae/mixer-audio
 mkdir -p build/reggae/skin
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/skin-check tests/reggae_skin.c -lm
 build/reggae/skin-check
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/workspace-test tests/reggae_workspace.c -lm
+build/reggae/workspace-test

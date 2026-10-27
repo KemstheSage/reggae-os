@@ -143,8 +143,8 @@ static int32_t menu_document(int32_t y, int draw)
 }
 static int32_t menu_scroll_max(void)
 {
-    int32_t h = menu_document(0, 0);
-    return h > MENU_DOC_H ? h - MENU_DOC_H : 0;
+    int32_t h = rg_credits(0, 0);
+    return h > 124 ? h - 124 : 0;
 }
 
 static void menu_dots(void);

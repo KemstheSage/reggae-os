@@ -17,6 +17,9 @@ int main(void){
   }
  }
  ui.home=1;ui.layer=0;
+ for(unsigned row=0;row<MI_COUNT;row++) {ui.menu=1;ui.menu_sel=row;shot("settings-card");}
+ ui.menu=0;
+
  for(unsigned menu=1;menu<=3;menu++){ui.menu=menu;shot("settings");}
  ui.menu=0;
  const unsigned held[]={B_EDIT,B_SCL,B_REC};
@@ -25,7 +28,11 @@ int main(void){
   shot("held-controls");web_buttons(0);advance(400);
  }
  ui.layer=0;ui.confirm=CF_CLEAR_MOTION;shot("confirm");ui.confirm=0;
- name_open(NK_USER_RENAME,0);shot("name");name_close();
+ name_open(NK_USER_SAVE,0);str_cpy(nm.s,"ROOTS TEST",sizeof nm.s);nm.len=10;nm.cur=4;
+ shot("name");name_close();
+ cin_total=4;cin_left=3;ui.force=1;reggae_workspace(1);picture("build/reggae/skin/count-in.ppm");cin_left=0;
+ reggae_calibration("TURN RIGHT","KNOB 1");picture("build/reggae/skin/calibration.ppm");
+
  ui.uboot=3;shot("update-cancel");ui.uboot=0;
  printf("PASS: %u native firmware screens rendered under ASAN\n",shots);
 }

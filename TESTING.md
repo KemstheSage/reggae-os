@@ -475,3 +475,12 @@ system menus, held physical EDIT/SCL/REC, naming, confirmation and update countd
 Create `build/reggae/skin` before running; snapshots are native 240×240 PPMs.
 481 states passed locally under AddressSanitizer. See the
 [reskin report](docs/reports/ui-0.6.4.md) for limits and visual evidence.
+
+UI 0.7.0: `tests/reggae_skin.c` now covers 518 page/menu states plus dedicated
+count-in and calibration frames. `tests/reggae_workspace.c` uses physical input
+paths to test Settings opening/navigation/editing/closing, a held scale map over
+the sequencer, envelope editing, typing/saving a named user sound, confirmation
+cancellation and chorus redraw. Both are included in `tools/reggae/test.sh`.
+The screen sweep and interaction checks pass under AddressSanitizer. Rendering
+coverage is not a claim that every possible parameter combination is tested.
+See [UI 0.7.0](docs/reports/ui-0.7.0.md) for screenshots and hardware status.
