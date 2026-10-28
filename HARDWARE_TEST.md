@@ -96,3 +96,13 @@ assessment; do not repeatedly try random firmware packages.
 If any test fails, record the screen/photo, patch, track, keys held, connected
 cables and steps to reproduce. Retain the candidate and logs. Do not factory-reset
 or recalibrate before recording the evidence.
+
+### Installation update — 28 October 2026
+
+The physical FM-1 reported stock V15. REGGAE-OS was installed successfully and
+reconnected as FM-1_900. Screen, sound and control checks above remain pending.
+An exact trusted V15 recovery file is now stored locally in
+`build/hardware-test/recovery/FM-1_015.fwsc`, downloaded from M-VAVE’s
+[official repository](https://github.com/m-vave/fm1_open/blob/main/sdk/firmware/FM-1_015.fwsc).
+The installer’s simulated V15 restore test passes with this file. Physical
+rollback has not been tested; the earlier V16 limitation remains applicable.

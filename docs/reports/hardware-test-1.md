@@ -1,8 +1,8 @@
 # Hardware test candidate 1
 
 Prepared for the user's first FM-1, to connect to the development Mac.
-The device is believed to be on stock firmware; its version is not yet known.
-No connected device has been probed, flashed or physically tested in this preparation.
+Preparation was completed before the device was connected. See the installation
+record below for the subsequent physical update; audio and controls remain unverified.
 
 Frozen candidate: UI 0.7.1 / bank 0.5, existing FM-1_900 development identity.
 No new synthesis, voicing, upstream hardware-layer or bootloader code added.
@@ -34,3 +34,22 @@ confirmed after identifying the device, before any flash. Vendor files are not
 committed or included in the source archive.
 
 See [HARDWARE_TEST.md](../../HARDWARE_TEST.md) for the musician-facing procedure.
+
+## Physical installation — 28 October 2026
+
+- Connected device answered `FM-1_015` on MIDI port `FM-1`.
+- Downloaded stock V15 from M-VAVE’s repository:
+  https://raw.githubusercontent.com/m-vave/fm1_open/main/sdk/firmware/FM-1_015.fwsc
+- SHA-256 matches the installer’s trusted V15 value:
+  `db1642b2b6fa5c2cccb11ffd13878068bb28601678d3644049f99dc40e7edb8a`.
+  Kept locally at `build/hardware-test/recovery/FM-1_015.fwsc`.
+- Installer regression now passes the actual stock-V15 simulated restore and
+  modified-file rejection cases; log: `build/hardware-test/installer-v15-tests.log`.
+  This is not a physical rollback test.
+- Reverified frozen candidate SHA-256 before writing. Installed using the normal
+  CLI confirmation, without force. Device checked the package, entered update
+  mode, completed writing and restarted. Installer exited 0 with
+  `done: the FM-1 runs FM-1_900`.
+- **CONFIRMED ON HARDWARE:** installation and post-reboot MIDI identity response.
+- **PENDING:** on-screen UI 0.7.1 confirmation, audible notes, note releases,
+  physical controls, persistence, performance headroom and physical recovery.
