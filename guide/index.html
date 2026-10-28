@@ -1,0 +1,928 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REGGAE-OS — screenshot quick guide</title><style>*{box-sizing:border-box}html{scroll-behavior:auto}body{margin:0;background:#101917;color:#f3e9cb;font:17px/1.6 system-ui,sans-serif}main{max-width:1080px;margin:auto;padding:24px}a{color:#f5c65a}h1,h2,h3{line-height:1.2}h1{font-size:2.4rem}h2{margin-top:48px}p{max-width:78ch}.intro,article{background:#1d2d28;border:1px solid #486454;border-radius:12px;padding:20px;margin:18px 0}nav{display:flex;gap:12px;flex-wrap:wrap}input{width:100%;padding:14px;font:inherit;background:#f3e9cb;border:0;border-radius:6px;color:#101917}.screen{width:240px;max-width:100%;height:auto;image-rendering:pixelated;border:2px solid #486454;border-radius:4px}.body{display:grid;grid-template-columns:240px 1fr;gap:24px}.reach{color:#f5c65a}table{width:100%;border-collapse:collapse;font-size:.95rem}td,th{text-align:left;padding:9px 6px;border-bottom:1px solid #486454;vertical-align:top}td:first-child{min-width:85px}small{color:#bdd0bd}.toc{columns:3;column-gap:24px}.toc a{display:block;font-size:.95rem;break-inside:avoid}.hidden{display:none}button{padding:10px;font:inherit;background:#f5c65a;border:0;border-radius:5px}@media(max-width:650px){main{padding:14px}.body{grid-template-columns:1fr}.screen{margin:auto;display:block}.toc{columns:2}h1{font-size:2rem}article{padding:14px}}@media print{input,button,nav{display:none}body{background:white;color:black}article,.intro{background:white;border:1px solid #aaa}a,.reach,small{color:black}article{break-inside:avoid}.body{grid-template-columns:180px 1fr}.screen{width:180px}}</style><main id="top"><nav><a href="../">Open emulator</a><a href="#chords">New chords</a><a href="#pages">Find a page</a></nav><h1>REGGAE-OS<br>Screenshot quick guide</h1><p>UI 0.7.1 · Sound bank 0.5 · Screens captured from the shared firmware at the FM-1’s native 240 × 240 resolution. This guide is readable on a phone and can be printed from your browser. Physical FM-1 operation and iPhone Safari have not been verified on devices.</p><section class="intro"><h2 style="margin-top:0">Start here</h2><ol><li>Open the emulator and tap its audio-start control. Play its virtual keys.</li><li>On the instrument screen, ALGORITHM chooses track T1–T4; PRESETS chooses a sound. The four lower knobs match the four labels on the screen.</li><li>Tap a section button (ENV, LFO, FX, SCL, EDIT, SAVE, ARP or SEQ); further separate taps cycle that section’s pages. Avoid rapid double taps when navigating.</li><li>Tap HOME to get back to the instrument area. From instrument play, HOME cycles MIXER → CLOCK → instrument. Hold HOME for settings.</li><li>MASTER controls output level. SELECT’s job is configurable in Settings → CONTROL; do not assume it always selects a page.</li></ol><p>“K1–K4” means the four lower parameter knobs, from left to right. Turn an action knob to select an operation, then use OCT+ to confirm and OCT− to cancel when prompted. Settings use all four knobs to edit the same selected row. Blank knobs are intentionally unused.</p><p><strong>Record a first loop:</strong> from instrument play, tap REC and play: the first note starts recording. Tap REC to finish the overdub. Select another track and repeat. PLAY stops. On the stopped STEP editor, REC instead arms step entry. Save the complete session through SAVE → PROJECT.</p></section><section id="chords"><h2>15 new chord types</h2><p>Tap SCL to reach CHORD GARDEN. K3 chooses the chord, K4 the voicing. Try MAJ6, MIN7 or MIN9 on organ/piano; they are useful starting colours, not substitutes for offbeat articulation. Existing OFF, DIA3, DIA7, MAJ, MIN, DOM7, MAJ7, MIN7, SUS4 and POW remain available.</p><table><tr><th>Type</th><th>Example on C</th><th>Meaning</th></tr>
+<tr><td>SUS2</td><td>C D G</td><td>Open suspended sound</td></tr>
+<tr><td>MAJ6</td><td>C E G A</td><td>Warm major colour</td></tr>
+<tr><td>MIN6</td><td>C E♭ G A</td><td>Minor with a raised sixth</td></tr>
+<tr><td>ADD9</td><td>C E G D↑</td><td>Major triad plus ninth</td></tr>
+<tr><td>mADD9</td><td>C E♭ G D↑</td><td>Minor triad plus ninth</td></tr>
+<tr><td>DOM9</td><td>C E B♭ D↑</td><td>Dominant ninth; fifth omitted</td></tr>
+<tr><td>MAJ9</td><td>C E B D↑</td><td>Major ninth; fifth omitted</td></tr>
+<tr><td>MIN9</td><td>C E♭ B♭ D↑</td><td>Minor ninth; fifth omitted</td></tr>
+<tr><td>7SUS4</td><td>C F G B♭</td><td>Suspended dominant seventh</td></tr>
+<tr><td>DIM</td><td>C E♭ G♭</td><td>Diminished triad</td></tr>
+<tr><td>DIM7</td><td>C E♭ G♭ B𝄫</td><td>Diminished seventh; B𝄫 sounds as A</td></tr>
+<tr><td>m7b5</td><td>C E♭ G♭ B♭</td><td>Half-diminished seventh</td></tr>
+<tr><td>AUG</td><td>C E G♯</td><td>Augmented triad</td></tr>
+<tr><td>mMAJ7</td><td>C E♭ G B</td><td>Minor-major seventh</td></tr>
+<tr><td>6/9</td><td>C E A D↑</td><td>Major sixth/ninth; fifth omitted</td></tr>
+</table><p>↑ means the next octave. CLOSE uses the listed pitches. OPEN raises the second tone an octave; INV1/INV2 raise the first one/two tones. +OCT adds a lower root: when already using four tones it drops a tone to stay within four voices. Extended ninth/6/9 shapes keep their colour tones by replacing the upper root. At the ends of the keyboard, out-of-range tones are omitted.</p><p>DIA3/DIA7 follow ROOT and SCL; fixed shapes follow the note you play after keyboard quantisation/transposition. Choose POLY under EDIT → VOICE to hear all chord notes. MONO/LEGATO/UNISON play only the root; drum kits ignore chord mode. Eight voices are shared across the four tracks. PROJECT saves the chord settings; loading a user sound deliberately keeps the current track’s chord settings.</p></section><h2 id="pages">Find a page</h2><label for="search">Search by page, engine, control or action</label><input id="search" type="search" placeholder="Try chord, mixer, cutoff, save, drum…"><p id="count"></p><div class="toc">
+<a href="#sound-00">ROOTS ORGAN</a>
+<a href="#sound-01">ROCKSTEADY</a>
+<a href="#sound-02">DEEP ROOTS</a>
+<a href="#sound-03">DIGITAL BASS</a>
+<a href="#sound-04">REED MELODICA</a>
+<a href="#sound-05">WARM TINE</a>
+<a href="#sound-06">PIANO CHOP</a>
+<a href="#sound-07">ROOTS TRUMPET</a>
+<a href="#sound-08">MUTED SKANK</a>
+<a href="#sound-09">DUB WAIL</a>
+<a href="#sound-10">ROUND FM BASS</a>
+<a href="#sound-11">DUB DRAWBARS</a>
+<a href="#sound-12">ROOTS KIT</a>
+<a href="#sound-13">JUNGLE SIGNAL</a>
+<a href="#sound-14">FAST ALARM</a>
+<a href="#page-00-00">ENV</a>
+<a href="#page-01-00">ENV DEST</a>
+<a href="#page-02-00">LFO</a>
+<a href="#page-03-00">LFO 2</a>
+<a href="#page-04-00">LFO DEST</a>
+<a href="#page-05-00">MOD</a>
+<a href="#page-06-00">FX</a>
+<a href="#page-07-00">SLICER</a>
+<a href="#page-08-00">INSERT</a>
+<a href="#page-09-00">INSERT 2</a>
+<a href="#page-10-00">DLY</a>
+<a href="#page-11-00">REVERB</a>
+<a href="#page-12-00">CHORUS</a>
+<a href="#page-13-00">SCL</a>
+<a href="#page-14-00">CHORD</a>
+<a href="#page-15-00">EDIT 1 / ANALOG</a>
+<a href="#page-15-02">EDIT 1 / PHASE</a>
+<a href="#page-15-03">EDIT 1 / LOFI</a>
+<a href="#page-15-04">EDIT 1 / SAMPLE</a>
+<a href="#page-15-05">EDIT 1 / VOICE</a>
+<a href="#page-15-06">EDIT 1 / TRIO</a>
+<a href="#page-15-07">EDIT 1 / WHEEL</a>
+<a href="#page-15-08">EDIT 1 / GRAIN</a>
+<a href="#page-15-09">EDIT 1 / PHYS</a>
+<a href="#page-15-10">EDIT 1 / DRUM</a>
+<a href="#page-15-11">EDIT 1 / NOISE</a>
+<a href="#page-15-12">EDIT 1 / FM6</a>
+<a href="#page-15-13">EDIT 1 / SLICE</a>
+<a href="#page-16-00">EDIT 2 / ANALOG</a>
+<a href="#page-16-02">EDIT 2 / PHASE</a>
+<a href="#page-16-03">EDIT 2 / LOFI</a>
+<a href="#page-16-04">EDIT 2 / SAMPLE</a>
+<a href="#page-16-05">EDIT 2 / VOICE</a>
+<a href="#page-16-06">EDIT 2 / TRIO</a>
+<a href="#page-16-07">EDIT 2 / WHEEL</a>
+<a href="#page-16-08">EDIT 2 / GRAIN</a>
+<a href="#page-16-09">EDIT 2 / PHYS</a>
+<a href="#page-16-10">EDIT 2 / DRUM</a>
+<a href="#page-16-11">EDIT 2 / NOISE</a>
+<a href="#page-16-12">EDIT 2 / FM6</a>
+<a href="#page-16-13">EDIT 2 / SLICE</a>
+<a href="#page-17-00">FILTER</a>
+<a href="#page-18-10">LANES</a>
+<a href="#page-19-10">LANES 2</a>
+<a href="#page-20-13">SLICES</a>
+<a href="#page-21-12">OPERATOR</a>
+<a href="#page-22-12">OP ENV</a>
+<a href="#page-23-12">OPERATOR 2</a>
+<a href="#page-29-00">VOICE</a>
+<a href="#page-30-00">VOICE 2</a>
+<a href="#page-31-00">VOICE 3</a>
+<a href="#page-32-00">SONG</a>
+<a href="#page-33-00">USER</a>
+<a href="#page-34-00">PRESETS</a>
+<a href="#page-35-00">PHRASES</a>
+<a href="#page-36-00">PROJECT</a>
+<a href="#page-37-00">TOOLS</a>
+<a href="#page-38-00">ARP</a>
+<a href="#page-39-00">ARP 2</a>
+<a href="#page-40-00">STEP</a>
+<a href="#page-41-00">DETAIL</a>
+<a href="#page-42-00">AUTOMATION</a>
+<a href="#page-43-00">MIXER</a>
+<a href="#page-44-00">CLOCK</a>
+<a href="#drum-grid">RIDDIM GRID</a>
+<a href="#mixer-pan">MIXER / PAN</a>
+<a href="#mixer-reverb">MIXER / REVERB</a>
+<a href="#held-0">ENGINE WORKSHOP</a>
+<a href="#held-1">SCALE GARDEN</a>
+<a href="#held-2">RECORD DESK</a>
+<a href="#held-3">PATTERN TOOLS</a>
+<a href="#euclid">EUCLID</a>
+<a href="#held-4">DUB PUNCH-IN</a>
+<a href="#held-5">HELD MIXER</a>
+<a href="#settings-0">DISPLAY</a>
+<a href="#settings-1">CONTROL</a>
+<a href="#settings-2">AUDIO</a>
+<a href="#settings-3">MIDI</a>
+<a href="#settings-4">SYSTEM</a>
+<a href="#credits">LABEL CREDITS</a>
+<a href="#info">SYSTEM METERS</a>
+<a href="#name">LABEL PRESS</a>
+<a href="#confirm">CONFIRMATION</a>
+<a href="#update">UPDATE COUNTDOWN</a>
+<a href="#count-in">COUNT-IN</a>
+<a href="#calibration">CALIBRATION</a>
+</div>
+<article id="sound-00" data-page><h2 style="margin-top:0">ROOTS ORGAN</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-00.png" alt="Actual firmware screen: ROOTS ORGAN"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · HARM</td><td>Harmonic registration</td></tr>
+<tr><td>K2 · TONE</td><td>Upper harmonics/brightness</td></tr>
+<tr><td>K3 · ROTOR</td><td>Rotary mode/speed</td></tr>
+<tr><td>K4 · DRIVE</td><td>Saturation drive</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-01" data-page><h2 style="margin-top:0">ROCKSTEADY</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-01.png" alt="Actual firmware screen: ROCKSTEADY"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · HARM</td><td>Harmonic registration</td></tr>
+<tr><td>K2 · TONE</td><td>Upper harmonics/brightness</td></tr>
+<tr><td>K3 · ROTOR</td><td>Rotary mode/speed</td></tr>
+<tr><td>K4 · DRIVE</td><td>Saturation drive</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-02" data-page><h2 style="margin-top:0">DEEP ROOTS</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-02.png" alt="Actual firmware screen: DEEP ROOTS"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CUTOFF</td><td>Filter cutoff</td></tr>
+<tr><td>K2 · RES</td><td>Filter resonance</td></tr>
+<tr><td>K3 · ENV</td><td>Filter envelope amount</td></tr>
+<tr><td>K4 · DRIVE</td><td>Saturation drive</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-03" data-page><h2 style="margin-top:0">DIGITAL BASS</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-03.png" alt="Actual firmware screen: DIGITAL BASS"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CUTOFF</td><td>Filter cutoff</td></tr>
+<tr><td>K2 · RES</td><td>Filter resonance</td></tr>
+<tr><td>K3 · ENV</td><td>Filter envelope amount</td></tr>
+<tr><td>K4 · DRIVE</td><td>Saturation drive</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-04" data-page><h2 style="margin-top:0">REED MELODICA</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-04.png" alt="Actual firmware screen: REED MELODICA"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ATTACK</td><td>Breath-style attack time</td></tr>
+<tr><td>K2 · TONE</td><td>Filter cutoff/brightness</td></tr>
+<tr><td>K3 · VIBRATO</td><td>Pitch vibrato depth</td></tr>
+<tr><td>K4 · RELEASE</td><td>Release time</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-05" data-page><h2 style="margin-top:0">WARM TINE</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-05.png" alt="Actual firmware screen: WARM TINE"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TIMBRE</td><td>FM modulator level/brightness</td></tr>
+<tr><td>K2 · ENV</td><td>FM modulator envelope-rate offset</td></tr>
+<tr><td>K3 · CHORUS</td><td>Chorus send</td></tr>
+<tr><td>K4 · DETUNE</td><td>Detune</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-06" data-page><h2 style="margin-top:0">PIANO CHOP</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-06.png" alt="Actual firmware screen: PIANO CHOP"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TONE</td><td>Filter cutoff/brightness</td></tr>
+<tr><td>K2 · DECAY</td><td>Decay time</td></tr>
+<tr><td>K3 · DRIVE</td><td>Saturation drive</td></tr>
+<tr><td>K4 · RELEASE</td><td>Release time</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-07" data-page><h2 style="margin-top:0">ROOTS TRUMPET</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-07.png" alt="Actual firmware screen: ROOTS TRUMPET"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TONE</td><td>Filter cutoff/brightness</td></tr>
+<tr><td>K2 · ATTACK</td><td>Attack time</td></tr>
+<tr><td>K3 · DECAY</td><td>Decay time</td></tr>
+<tr><td>K4 · RELEASE</td><td>Release time</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-08" data-page><h2 style="margin-top:0">MUTED SKANK</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-08.png" alt="Actual firmware screen: MUTED SKANK"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · BRIGHT</td><td>String brightness</td></tr>
+<tr><td>K2 · DAMP</td><td>String damping</td></tr>
+<tr><td>K3 · PLUCK</td><td>Pluck/excitation position</td></tr>
+<tr><td>K4 · RELEASE</td><td>Release time</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-09" data-page><h2 style="margin-top:0">DUB WAIL</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-09.png" alt="Actual firmware screen: DUB WAIL"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PITCH</td><td>Pitch envelope amount</td></tr>
+<tr><td>K2 · RATE</td><td>LFO modulation rate</td></tr>
+<tr><td>K3 · ECHO</td><td>Delay send</td></tr>
+<tr><td>K4 · TONE</td><td>Filter cutoff</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-10" data-page><h2 style="margin-top:0">ROUND FM BASS</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-10.png" alt="Actual firmware screen: ROUND FM BASS"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TIMBRE</td><td>FM modulator level/brightness</td></tr>
+<tr><td>K2 · ENV</td><td>FM modulator envelope-rate offset</td></tr>
+<tr><td>K3 · RATIO</td><td>Modulator ratio offset</td></tr>
+<tr><td>K4 · LEVEL</td><td>Track level</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-11" data-page><h2 style="margin-top:0">DUB DRAWBARS</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-11.png" alt="Actual firmware screen: DUB DRAWBARS"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · HARM</td><td>Harmonic registration</td></tr>
+<tr><td>K2 · TONE</td><td>Upper harmonics/brightness</td></tr>
+<tr><td>K3 · ROTOR</td><td>Rotary mode/speed</td></tr>
+<tr><td>K4 · ECHO</td><td>Delay send</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-12" data-page><h2 style="margin-top:0">ROOTS KIT</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-12.png" alt="Actual firmware screen: ROOTS KIT"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TONE</td><td>Drum tone</td></tr>
+<tr><td>K2 · DECAY</td><td>Drum decay</td></tr>
+<tr><td>K3 · SNAP</td><td>Snare/transient snap</td></tr>
+<tr><td>K4 · DRIVE</td><td>Drive</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-13" data-page><h2 style="margin-top:0">JUNGLE SIGNAL</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-13.png" alt="Actual firmware screen: JUNGLE SIGNAL"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · FALL</td><td>Pitch envelope amount</td></tr>
+<tr><td>K2 · LENGTH</td><td>Amplitude decay length</td></tr>
+<tr><td>K3 · ECHO</td><td>Delay send</td></tr>
+<tr><td>K4 · TONE</td><td>Filter cutoff</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="sound-14" data-page><h2 style="margin-top:0">FAST ALARM</h2><p class="reach">HOME, then choose a track with ALGORITHM and sound with PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="sound-14.png" alt="Actual firmware screen: FAST ALARM"><div><p>Play the selected instrument and use its four performance controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · RANGE</td><td>Pitch modulation range</td></tr>
+<tr><td>K2 · RATE</td><td>Modulation rate</td></tr>
+<tr><td>K3 · ECHO</td><td>Delay send</td></tr>
+<tr><td>K4 · TONE</td><td>Filter cutoff</td></tr>
+</table></div></div>
+<p>Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-00-00" data-page><h2 style="margin-top:0">ENV</h2><p class="reach">Tap ENV to enter its pages; tap again to cycle to ENV</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-00-00.png" alt="Actual firmware screen: ENV"><div><p>Shape the loudness of each note. Try a short attack and release for crisp chops.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ATK</td><td>Time to rise after a key press</td></tr>
+<tr><td>K2 · DEC</td><td>Time to fall to the sustain level</td></tr>
+<tr><td>K3 · SUS</td><td>Level while the key stays held</td></tr>
+<tr><td>K4 · REL</td><td>Time to fade after releasing the key</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-01-00" data-page><h2 style="margin-top:0">ENV DEST</h2><p class="reach">Tap ENV to enter its pages; tap again to cycle to ENV DEST</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-01-00.png" alt="Actual firmware screen: ENV DEST"><div><p>Let the note envelope move other parts of the sound.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · FLT</td><td>Filter movement amount</td></tr>
+<tr><td>K2 · PIT</td><td>Pitch movement amount</td></tr>
+<tr><td>K3 · SHP</td><td>Engine-specific waveform/timbre movement amount</td></tr>
+<tr><td>K4 · ESYNC</td><td>Tempo-synchronised envelope timing</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-02-00" data-page><h2 style="margin-top:0">LFO</h2><p class="reach">Tap LFO to enter its pages; tap again to cycle to LFO</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-02-00.png" alt="Actual firmware screen: LFO"><div><p>Add repeating movement to the selected sound.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · RATE</td><td>Modulation speed</td></tr>
+<tr><td>K2 · WAVE</td><td>Modulation waveform</td></tr>
+<tr><td>K3 · PHS</td><td>Starting phase</td></tr>
+<tr><td>K4 · FADE</td><td>Time for modulation to fade in</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-03-00" data-page><h2 style="margin-top:0">LFO 2</h2><p class="reach">Tap LFO to enter its pages; tap again to cycle to LFO 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-03-00.png" alt="Actual firmware screen: LFO 2"><div><p>Choose how the LFO starts and follows the beat.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SYNC</td><td>Free-running or tempo-synchronised timing</td></tr>
+<tr><td>K2 · TRIG</td><td>Note-trigger/restart behaviour</td></tr>
+<tr><td>K3 · POL</td><td>Positive-only or bipolar movement</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-04-00" data-page><h2 style="margin-top:0">LFO DEST</h2><p class="reach">Tap LFO to enter its pages; tap again to cycle to LFO DEST</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-04-00.png" alt="Actual firmware screen: LFO DEST"><div><p>Decide what the LFO moves. Start with small amounts.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PIT</td><td>Pitch modulation depth (vibrato)</td></tr>
+<tr><td>K2 · FLT</td><td>Filter modulation depth</td></tr>
+<tr><td>K3 · SHP</td><td>Engine-specific timbre modulation depth</td></tr>
+<tr><td>K4 · AMP</td><td>Amplitude modulation depth (tremolo)</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-05-00" data-page><h2 style="margin-top:0">MOD</h2><p class="reach">Tap LFO to enter its pages; tap again to cycle to MOD</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-05-00.png" alt="Actual firmware screen: MOD"><div><p>Connect a modulation source to a sound parameter.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SLOT</td><td>Select a modulation slot</td></tr>
+<tr><td>K2 · SRC</td><td>Select the source</td></tr>
+<tr><td>K3 · DST</td><td>Select the destination</td></tr>
+<tr><td>K4 · AMT</td><td>Amount and direction of the modulation</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-06-00" data-page><h2 style="margin-top:0">FX</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to FX</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-06-00.png" alt="Actual firmware screen: FX"><div><p>Set the selected track’s distortion and effect sends.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · DST</td><td>Distortion amount</td></tr>
+<tr><td>K2 · CHO</td><td>Chorus send</td></tr>
+<tr><td>K3 · DLY</td><td>Delay send</td></tr>
+<tr><td>K4 · REV</td><td>Reverb send</td></tr>
+</table></div></div>
+<p>Raise a send to hear its effect. The later delay, reverb and chorus pages set the shared effects for all tracks.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-07-00" data-page><h2 style="margin-top:0">SLICER</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to SLICER</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-07-00.png" alt="Actual firmware screen: SLICER"><div><p>Chop a sustained sound into rhythmic pulses.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SLCR</td><td>Slicer mode</td></tr>
+<tr><td>K2 · PAT</td><td>Rhythm pattern</td></tr>
+<tr><td>K3 · RATE</td><td>Chopping speed</td></tr>
+<tr><td>K4 · DEPTH</td><td>Chopping depth</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-08-00" data-page><h2 style="margin-top:0">INSERT</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to INSERT</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-08-00.png" alt="Actual firmware screen: INSERT"><div><p>Process the selected track through an insert effect.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · INSRT</td><td>Choose OFF, SOFT, HARD, FOLD, FUZZ, CRUSH, PHASR, FLANG or CHOR</td></tr>
+<tr><td>K2 · INS A</td><td>Drive for distortion; bit depth for CRUSH; speed for swept effects</td></tr>
+<tr><td>K3 · INS B</td><td>Tone for distortion; sample rate for CRUSH; depth for swept effects</td></tr>
+<tr><td>K4 · INS C</td><td>Output level for distortion; low-pass cutoff for CRUSH; feedback for swept effects</td></tr>
+</table></div></div>
+<p>The labels change with the effect type. OFF leaves A/B/C inactive. Use INSERT 2 to blend the result.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-09-00" data-page><h2 style="margin-top:0">INSERT 2</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to INSERT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-09-00.png" alt="Actual firmware screen: INSERT 2"><div><p>Blend the track’s insert effect with its original sound.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MIX</td><td>Dry/wet mix</td></tr>
+<tr><td>K2 · —</td><td>Unused</td></tr>
+<tr><td>K3 · —</td><td>Unused</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-10-00" data-page><h2 style="margin-top:0">DLY</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to DLY</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-10-00.png" alt="Actual firmware screen: DLY"><div><p>Set the shared dub delay.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TIME</td><td>Delay-time division</td></tr>
+<tr><td>K2 · FDBK</td><td>Repeat feedback</td></tr>
+<tr><td>K3 · COLR</td><td>Repeat tone/colour</td></tr>
+<tr><td>K4 · MIX</td><td>Delay return mix</td></tr>
+</table></div></div>
+<p>Raise DLY on the track’s FX page to feed the delay. High feedback creates long tails; lower it to let the repeats die away.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-11-00" data-page><h2 style="margin-top:0">REVERB</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to REVERB</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-11-00.png" alt="Actual firmware screen: REVERB"><div><p>Set the shared reverb space.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TYPE</td><td>Room, spring or hall model</td></tr>
+<tr><td>K2 · SIZE</td><td>Space size/decay character</td></tr>
+<tr><td>K3 · DAMP</td><td>High-frequency damping</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>Raise the track’s REV send on FX, or use the mixer’s REVERB mode.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-12-00" data-page><h2 style="margin-top:0">CHORUS</h2><p class="reach">Tap FX to enter its pages; tap again to cycle to CHORUS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-12-00.png" alt="Actual firmware screen: CHORUS"><div><p>Set the shared chorus movement.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CRT</td><td>Modulation speed</td></tr>
+<tr><td>K2 · CDP</td><td>Modulation depth</td></tr>
+<tr><td>K3 · —</td><td>Unused</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>Raise CHO on the track’s FX page to hear the chorus.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-13-00" data-page><h2 style="margin-top:0">SCL</h2><p class="reach">Tap SCL to enter its pages; tap again to cycle to SCL</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-13-00.png" alt="Actual firmware screen: SCL"><div><p>Keep notes in a chosen musical key, or transpose a part.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ROOT</td><td>Key/root note</td></tr>
+<tr><td>K2 · SCL</td><td>Scale</td></tr>
+<tr><td>K3 · QNT</td><td>Keyboard quantisation mode</td></tr>
+<tr><td>K4 · TRN</td><td>Transpose in semitones</td></tr>
+</table></div></div>
+<p>ROOT sets the scale’s key; it does not replace the note you play. Quantisation and transpose happen before chord generation.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-14-00" data-page><h2 style="margin-top:0">CHORD</h2><p class="reach">Tap SCL to enter its pages; tap again to cycle to CHORD</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-14-00.png" alt="Actual firmware screen: CHORD"><div><p>Play a complete chord from one key.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ROOT</td><td>Key/root for scale-based chords</td></tr>
+<tr><td>K2 · SCL</td><td>Scale used by DIA3 and DIA7</td></tr>
+<tr><td>K3 · CHRD</td><td>Chord type; OFF returns single notes</td></tr>
+<tr><td>K4 · VOIC</td><td>CLOSE, OPEN, INV1, INV2 or +OCT voicing</td></tr>
+</table></div></div>
+<p>Choose a polyphonic organ or piano, set CHRD to MAJ6 or MIN9, then play a key. Fixed chord types follow that key; DIA3/DIA7 build chords from the selected scale. See the chord table above.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-00" data-page><h2 style="margin-top:0">EDIT 1 / ANALOG</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-00.png" alt="Actual firmware screen: EDIT 1 / ANALOG"><div><p>Oscillators and noise.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · WAVE</td><td>Waveform</td></tr>
+<tr><td>K2 · DTN</td><td>Oscillator detune</td></tr>
+<tr><td>K3 · MIX</td><td>Oscillator balance</td></tr>
+<tr><td>K4 · NOIS</td><td>Noise level</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-02" data-page><h2 style="margin-top:0">EDIT 1 / PHASE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-02.png" alt="Actual firmware screen: EDIT 1 / PHASE"><div><p>Phase-distortion oscillators.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · WAVE</td><td>First waveform</td></tr>
+<tr><td>K2 · WAVE2</td><td>Second waveform</td></tr>
+<tr><td>K3 · DCW</td><td>Phase-distortion amount</td></tr>
+<tr><td>K4 · ENV</td><td>Envelope influence on distortion</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-03" data-page><h2 style="margin-top:0">EDIT 1 / LOFI</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-03.png" alt="Actual firmware screen: EDIT 1 / LOFI"><div><p>Chip-style tone generation.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CHIP</td><td>Chip model</td></tr>
+<tr><td>K2 · WAVE</td><td>Waveform</td></tr>
+<tr><td>K3 · DUTY</td><td>Pulse duty cycle</td></tr>
+<tr><td>K4 · CRSH</td><td>Bit crushing</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-04" data-page><h2 style="margin-top:0">EDIT 1 / SAMPLE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-04.png" alt="Actual firmware screen: EDIT 1 / SAMPLE"><div><p>Sample playback setup.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SET</td><td>Sample set</td></tr>
+<tr><td>K2 · TUNE</td><td>Pitch tuning</td></tr>
+<tr><td>K3 · BITS</td><td>Bit depth</td></tr>
+<tr><td>K4 · LOOP</td><td>Loop mode</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-05" data-page><h2 style="margin-top:0">EDIT 1 / VOICE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-05.png" alt="Actual firmware screen: EDIT 1 / VOICE"><div><p>Vowel/formant synthesis.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VOWL</td><td>First vowel</td></tr>
+<tr><td>K2 · VOWL2</td><td>Second vowel</td></tr>
+<tr><td>K3 · TALK</td><td>Blend/talk between vowels</td></tr>
+<tr><td>K4 · SHIFT</td><td>Formant shift</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-06" data-page><h2 style="margin-top:0">EDIT 1 / TRIO</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-06.png" alt="Actual firmware screen: EDIT 1 / TRIO"><div><p>Three-oscillator intervals.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · WAVE</td><td>Waveform</td></tr>
+<tr><td>K2 · INT2</td><td>Second oscillator interval</td></tr>
+<tr><td>K3 · INT3</td><td>Third oscillator interval</td></tr>
+<tr><td>K4 · DTN</td><td>Detune</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-07" data-page><h2 style="margin-top:0">EDIT 1 / WHEEL</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-07.png" alt="Actual firmware screen: EDIT 1 / WHEEL"><div><p>Tonewheel harmonic registration.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · REG</td><td>Drawbar registration</td></tr>
+<tr><td>K2 · SUB</td><td>Low/sub harmonics</td></tr>
+<tr><td>K3 · BODY</td><td>Middle/body harmonics</td></tr>
+<tr><td>K4 · TOP</td><td>Upper harmonics</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-08" data-page><h2 style="margin-top:0">EDIT 1 / GRAIN</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-08.png" alt="Actual firmware screen: EDIT 1 / GRAIN"><div><p>Granular playback source and timing.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SRC</td><td>Source</td></tr>
+<tr><td>K2 · POS</td><td>Position within source</td></tr>
+<tr><td>K3 · SIZE</td><td>Grain size</td></tr>
+<tr><td>K4 · DENS</td><td>Grain density</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-09" data-page><h2 style="margin-top:0">EDIT 1 / PHYS</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-09.png" alt="Actual firmware screen: EDIT 1 / PHYS"><div><p>Physical-modelled resonator.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MODEL</td><td>Model</td></tr>
+<tr><td>K2 · STRC</td><td>Structure/inharmonicity</td></tr>
+<tr><td>K3 · BRIT</td><td>Brightness</td></tr>
+<tr><td>K4 · DAMP</td><td>Damping</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-10" data-page><h2 style="margin-top:0">EDIT 1 / DRUM</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-10.png" alt="Actual firmware screen: EDIT 1 / DRUM"><div><p>Electronic drum kit character.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · KIT</td><td>Kit</td></tr>
+<tr><td>K2 · TUNE</td><td>Overall tuning</td></tr>
+<tr><td>K3 · TONE</td><td>Tone</td></tr>
+<tr><td>K4 · DECY</td><td>Decay</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-11" data-page><h2 style="margin-top:0">EDIT 1 / NOISE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-11.png" alt="Actual firmware screen: EDIT 1 / NOISE"><div><p>Filtered noise generator.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MODE</td><td>Noise mode</td></tr>
+<tr><td>K2 · COLR</td><td>Noise colour</td></tr>
+<tr><td>K3 · FREQ</td><td>Filter frequency</td></tr>
+<tr><td>K4 · RES</td><td>Resonance</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-12" data-page><h2 style="margin-top:0">EDIT 1 / FM6</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-12.png" alt="Actual firmware screen: EDIT 1 / FM6"><div><p>Six-operator FM macro controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ALG</td><td>Algorithm/routing</td></tr>
+<tr><td>K2 · FB</td><td>Feedback offset</td></tr>
+<tr><td>K3 · MLVL</td><td>Modulator level offset</td></tr>
+<tr><td>K4 · MRAT</td><td>Modulator ratio offset</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-15-13" data-page><h2 style="margin-top:0">EDIT 1 / SLICE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 1</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-15-13.png" alt="Actual firmware screen: EDIT 1 / SLICE"><div><p>Sliced sample playback.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SRC</td><td>Sample source</td></tr>
+<tr><td>K2 · DIV</td><td>Slice division</td></tr>
+<tr><td>K3 · START</td><td>Start offset</td></tr>
+<tr><td>K4 · PTCH</td><td>Pitch</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-00" data-page><h2 style="margin-top:0">EDIT 2 / ANALOG</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-00.png" alt="Actual firmware screen: EDIT 2 / ANALOG"><div><p>Filter and drive.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CUT</td><td>Filter cutoff</td></tr>
+<tr><td>K2 · RES</td><td>Resonance</td></tr>
+<tr><td>K3 · DRV</td><td>Saturation drive</td></tr>
+<tr><td>K4 · KTR</td><td>Filter key tracking</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-02" data-page><h2 style="margin-top:0">EDIT 2 / PHASE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-02.png" alt="Actual firmware screen: EDIT 2 / PHASE"><div><p>Shape the oscillator combination.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · DTN</td><td>Detune</td></tr>
+<tr><td>K2 · LINE</td><td>Mix or ring-modulate the two lines</td></tr>
+<tr><td>K3 · SUB</td><td>Sub-oscillator level</td></tr>
+<tr><td>K4 · FOLD</td><td>Wavefolding amount</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-03" data-page><h2 style="margin-top:0">EDIT 2 / LOFI</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-03.png" alt="Actual firmware screen: EDIT 2 / LOFI"><div><p>Retro movement and tone.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SWP</td><td>Pitch sweep</td></tr>
+<tr><td>K2 · VIB</td><td>Vibrato amount</td></tr>
+<tr><td>K3 · ARP</td><td>Chip arpeggio</td></tr>
+<tr><td>K4 · TONE</td><td>Tone/brightness</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-04" data-page><h2 style="margin-top:0">EDIT 2 / SAMPLE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-04.png" alt="Actual firmware screen: EDIT 2 / SAMPLE"><div><p>Sample colour.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CUT</td><td>Low-pass cutoff</td></tr>
+<tr><td>K2 · —</td><td>Unused</td></tr>
+<tr><td>K3 · DRV</td><td>Drive</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-05" data-page><h2 style="margin-top:0">EDIT 2 / VOICE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-05.png" alt="Actual firmware screen: EDIT 2 / VOICE"><div><p>Voice texture.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · BUZZ</td><td>Buzz amount</td></tr>
+<tr><td>K2 · BRTH</td><td>Breath/noise amount</td></tr>
+<tr><td>K3 · Q</td><td>Formant resonance</td></tr>
+<tr><td>K4 · RAND</td><td>Random variation</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-06" data-page><h2 style="margin-top:0">EDIT 2 / TRIO</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-06.png" alt="Actual firmware screen: EDIT 2 / TRIO"><div><p>Oscillator combination and filter.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MODE</td><td>Combination mode</td></tr>
+<tr><td>K2 · CUT</td><td>Filter cutoff</td></tr>
+<tr><td>K3 · RES</td><td>Resonance</td></tr>
+<tr><td>K4 · PW</td><td>Pulse width</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-07" data-page><h2 style="margin-top:0">EDIT 2 / WHEEL</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-07.png" alt="Actual firmware screen: EDIT 2 / WHEEL"><div><p>Organ articulation and movement.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PERC</td><td>Percussion setting</td></tr>
+<tr><td>K2 · CLICK</td><td>Key-click amount</td></tr>
+<tr><td>K3 · DRV</td><td>Drive</td></tr>
+<tr><td>K4 · ROTR</td><td>Rotary mode/speed</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-08" data-page><h2 style="margin-top:0">EDIT 2 / GRAIN</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-08.png" alt="Actual firmware screen: EDIT 2 / GRAIN"><div><p>Granular pitch and texture.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PTCH</td><td>Pitch</td></tr>
+<tr><td>K2 · SPRD</td><td>Grain spread</td></tr>
+<tr><td>K3 · RAND</td><td>Random variation</td></tr>
+<tr><td>K4 · TONE</td><td>Tone</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-09" data-page><h2 style="margin-top:0">EDIT 2 / PHYS</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-09.png" alt="Actual firmware screen: EDIT 2 / PHYS"><div><p>Excitation and articulation.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · POS</td><td>Excitation/pluck position</td></tr>
+<tr><td>K2 · ACC</td><td>Accent response</td></tr>
+<tr><td>K3 · BOW</td><td>Bowed excitation amount</td></tr>
+<tr><td>K4 · EXC</td><td>Direct exciter amount mixed into output</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-10" data-page><h2 style="margin-top:0">EDIT 2 / DRUM</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-10.png" alt="Actual firmware screen: EDIT 2 / DRUM"><div><p>Drum transient and drive.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SNAP</td><td>Snap</td></tr>
+<tr><td>K2 · ACC</td><td>Accent strength</td></tr>
+<tr><td>K3 · KICK</td><td>Kick character</td></tr>
+<tr><td>K4 · DRV</td><td>Drive</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-11" data-page><h2 style="margin-top:0">EDIT 2 / NOISE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-11.png" alt="Actual firmware screen: EDIT 2 / NOISE"><div><p>Noise movement and texture.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TRK</td><td>Pitch/key tracking</td></tr>
+<tr><td>K2 · DENS</td><td>Density</td></tr>
+<tr><td>K3 · DRFT</td><td>Slow drift</td></tr>
+<tr><td>K4 · CRSH</td><td>Crushing amount</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-12" data-page><h2 style="margin-top:0">EDIT 2 / FM6</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-12.png" alt="Actual firmware screen: EDIT 2 / FM6"><div><p>FM response and source patch.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MEG</td><td>Modulator envelope-rate offset</td></tr>
+<tr><td>K2 · VMOD</td><td>Velocity-to-modulation sensitivity</td></tr>
+<tr><td>K3 · DTUN</td><td>Detune</td></tr>
+<tr><td>K4 · SLOT</td><td>FM patch slot</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-16-13" data-page><h2 style="margin-top:0">EDIT 2 / SLICE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to EDIT 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-16-13.png" alt="Actual firmware screen: EDIT 2 / SLICE"><div><p>Slice articulation.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MODE</td><td>Playback mode</td></tr>
+<tr><td>K2 · REV</td><td>Reverse</td></tr>
+<tr><td>K3 · DCAY</td><td>Decay</td></tr>
+<tr><td>K4 · TONE</td><td>Tone</td></tr>
+</table></div></div>
+<p>These controls depend on the selected engine. Choose the engine by holding EDIT outside the stopped STEP editor. Change one control while playing to hear its effect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-17-00" data-page><h2 style="margin-top:0">FILTER</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to FILTER</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-17-00.png" alt="Actual firmware screen: FILTER"><div><p>Choose the analogue engine’s filter response.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · TYPE</td><td>Filter type</td></tr>
+<tr><td>K2 · CUT</td><td>Cutoff: lower is darker</td></tr>
+<tr><td>K3 · RES</td><td>Resonance near the cutoff</td></tr>
+<tr><td>K4 · KTR</td><td>How much cutoff follows note pitch</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-18-10" data-page><h2 style="margin-top:0">LANES</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to LANES</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-18-10.png" alt="Actual firmware screen: LANES"><div><p>Balance the first four drum lanes.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · KICK</td><td>Kick level</td></tr>
+<tr><td>K2 · SNARE</td><td>Snare level</td></tr>
+<tr><td>K3 · CLAP</td><td>Clap level</td></tr>
+<tr><td>K4 · HATCL</td><td>Closed hi-hat level</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-19-10" data-page><h2 style="margin-top:0">LANES 2</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to LANES 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-19-10.png" alt="Actual firmware screen: LANES 2"><div><p>Balance the other four drum lanes.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · HATOP</td><td>Open hi-hat level</td></tr>
+<tr><td>K2 · TOM</td><td>Tom level</td></tr>
+<tr><td>K3 · RIM</td><td>Rim level</td></tr>
+<tr><td>K4 · BELL</td><td>Bell level</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-20-13" data-page><h2 style="margin-top:0">SLICES</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to SLICES</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-20-13.png" alt="Actual firmware screen: SLICES"><div><p>Trim and split an uploaded sample into playable slices.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SLICE</td><td>Select slice marker, or END</td></tr>
+<tr><td>K2 · POS</td><td>Move the selected marker</td></tr>
+<tr><td>K3 · SPLIT</td><td>Select SPLIT action</td></tr>
+<tr><td>K4 · JOIN</td><td>Select JOIN action</td></tr>
+</table></div></div>
+<p>Turn an action knob then OCT+ to apply; OCT− cancels. Editing requires a populated user sample slot. Factory sources are view-only. Keys select and audition slices.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-21-12" data-page><h2 style="margin-top:0">OPERATOR</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to OPERATOR</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-21-12.png" alt="Actual firmware screen: OPERATOR"><div><p>Edit one of the six FM operators: an oscillator that may make sound or modulate another.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · OP</td><td>Select operator</td></tr>
+<tr><td>K2 · RATIO</td><td>Coarse frequency ratio (or fixed-frequency setting)</td></tr>
+<tr><td>K3 · FINE</td><td>Fine frequency adjustment</td></tr>
+<tr><td>K4 · LEVEL</td><td>Operator output level</td></tr>
+</table></div></div>
+<p>Changing a carrier level changes loudness; changing a modulator level mainly changes brightness. The algorithm shows how operators connect.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-22-12" data-page><h2 style="margin-top:0">OP ENV</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to OP ENV</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-22-12.png" alt="Actual firmware screen: OP ENV"><div><p>Shape the selected FM operator over time.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · OP</td><td>Select operator</td></tr>
+<tr><td>K2 · STAGE</td><td>Select envelope stage</td></tr>
+<tr><td>K3 · RATE</td><td>Rate for that stage</td></tr>
+<tr><td>K4 · LEVEL</td><td>Target level for that stage</td></tr>
+</table></div></div>
+<p>This is an operator envelope, separate from the whole-instrument ENV page. Higher rate means faster movement.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-23-12" data-page><h2 style="margin-top:0">OPERATOR 2</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to OPERATOR 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-23-12.png" alt="Actual firmware screen: OPERATOR 2"><div><p>Set the selected FM operator’s tuning and touch response.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · OP</td><td>Select operator</td></tr>
+<tr><td>K2 · MODE</td><td>Ratio or fixed-frequency mode</td></tr>
+<tr><td>K3 · DTUN</td><td>Operator detune</td></tr>
+<tr><td>K4 · VEL</td><td>Velocity sensitivity</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-29-00" data-page><h2 style="margin-top:0">VOICE</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to VOICE</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-29-00.png" alt="Actual firmware screen: VOICE"><div><p>Choose how notes share voices and slide between pitches.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VCE</td><td>POLY, MONO, LEGATO or UNISON</td></tr>
+<tr><td>K2 · GLD</td><td>Glide time</td></tr>
+<tr><td>K3 · GLMOD</td><td>Glide behaviour</td></tr>
+<tr><td>K4 · PRIO</td><td>Mono note priority</td></tr>
+</table></div></div>
+<p>One-key chords need POLY. All four tracks share eight voices; long four-note chords can steal voices from other parts.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-30-00" data-page><h2 style="margin-top:0">VOICE 2</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to VOICE 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-30-00.png" alt="Actual firmware screen: VOICE 2"><div><p>Control voice allocation and the selected track’s placement.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ALLOC</td><td>Voice allocation policy</td></tr>
+<tr><td>K2 · DTUNE</td><td>Unison detune</td></tr>
+<tr><td>K3 · PAN</td><td>Track pan</td></tr>
+<tr><td>K4 · MUTE</td><td>Track mute</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-31-00" data-page><h2 style="margin-top:0">VOICE 3</h2><p class="reach">Tap EDIT to enter its pages; tap again to cycle to VOICE 3</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-31-00.png" alt="Actual firmware screen: VOICE 3"><div><p>Spread unison voices across the stereo field.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SPRD</td><td>Stereo spread</td></tr>
+<tr><td>K2 · —</td><td>Unused</td></tr>
+<tr><td>K3 · —</td><td>Unused</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-32-00" data-page><h2 style="margin-top:0">SONG</h2><p class="reach">Tap GLO to enter its pages; tap again to cycle to SONG</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-32-00.png" alt="Actual firmware screen: SONG"><div><p>Arrange saved patterns into a complete four-track performance.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SECTION</td><td>Select section, or + ADD</td></tr>
+<tr><td>K2 · TRACK</td><td>Select track cell</td></tr>
+<tr><td>K3 · PATTERN</td><td>Choose pattern source A–D or MUTE; on + ADD create a section</td></tr>
+<tr><td>K4 · LOOPS</td><td>Number of repetitions, 1–16</td></tr>
+</table></div></div>
+<p>First save variations in PROJECT slots A–D. Each arrangement row chooses a source for each track, using the current sounds. PLAY here starts the arrangement and stops at its end. Up to 16 sections. A loop follows the first unmuted track’s pattern length, not necessarily one bar. Stop playback before editing and save the project again to keep the arrangement.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-33-00" data-page><h2 style="margin-top:0">USER</h2><p class="reach">Tap SAVE to enter its pages; tap again to cycle to USER</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-33-00.png" alt="Actual firmware screen: USER"><div><p>Save or recall one instrument sound.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SLOT</td><td>Choose user slot</td></tr>
+<tr><td>K2 · LOAD</td><td>Select LOAD action</td></tr>
+<tr><td>K3 · ERASE</td><td>Select ERASE action</td></tr>
+<tr><td>K4 · SAVE</td><td>Select SAVE action</td></tr>
+</table></div></div>
+<p>Turn the action knob, then OCT+ and follow the confirmation/name prompts; OCT− cancels. Stop to save. Loading a sound preserves the track’s scale/chord settings. Use PROJECT to save the whole session including chords.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-34-00" data-page><h2 style="margin-top:0">PRESETS</h2><p class="reach">Tap SAVE to enter its pages; tap again to cycle to PRESETS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-34-00.png" alt="Actual firmware screen: PRESETS"><div><p>Browse factory and saved sounds.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · No.</td><td>Choose a preset</td></tr>
+<tr><td>K2 · ENG</td><td>Filter by engine</td></tr>
+<tr><td>K3 · FAV</td><td>Favourite control</td></tr>
+<tr><td>K4 · LIST</td><td>Choose list/category</td></tr>
+</table></div></div>
+<p>PRESETS also browses. This is the broader library; HOME’s curated browser focuses on the reggae instruments.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-35-00" data-page><h2 style="margin-top:0">PHRASES</h2><p class="reach">Tap SAVE to enter its pages; tap again to cycle to PHRASES</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-35-00.png" alt="Actual firmware screen: PHRASES"><div><p>Load an existing phrase into the selected track.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PAT</td><td>Choose phrase</td></tr>
+<tr><td>K2 · LOAD</td><td>Select LOAD action</td></tr>
+<tr><td>K3 · —</td><td>Unused</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>Confirm LOAD with OCT+. This replaces the selected track’s pattern; save a project first if you want to keep it.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-36-00" data-page><h2 style="margin-top:0">PROJECT</h2><p class="reach">Tap SAVE to enter its pages; tap again to cycle to PROJECT</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-36-00.png" alt="Actual firmware screen: PROJECT"><div><p>Keep all four parts, sounds, chord settings and arrangement together.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SLOT</td><td>Choose project slot A–D</td></tr>
+<tr><td>K2 · ERASE</td><td>Select ERASE action</td></tr>
+<tr><td>K3 · LOAD</td><td>Select LOAD action</td></tr>
+<tr><td>K4 · SAVE</td><td>Select SAVE action</td></tr>
+</table></div></div>
+<p>Turn the action knob then OCT+; follow overwrite/name prompts. OCT− cancels. Stop playback before saving. Slots A–D are also the arrangement’s pattern sources.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-37-00" data-page><h2 style="margin-top:0">TOOLS</h2><p class="reach">Tap SAVE to enter its pages; tap again to cycle to TOOLS</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-37-00.png" alt="Actual firmware screen: TOOLS"><div><p>Clear or initialise parts of a project.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PAT</td><td>Clear selected track’s pattern</td></tr>
+<tr><td>K2 · SOUND</td><td>Initialise selected track’s sound</td></tr>
+<tr><td>K3 · SEC</td><td>Remove arrangement section</td></tr>
+<tr><td>K4 · SONG</td><td>Clear arrangement</td></tr>
+</table></div></div>
+<p>Select an action and read its confirmation before OCT+. OCT− cancels. Hold SAVE to undo supported edits.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-38-00" data-page><h2 style="margin-top:0">ARP</h2><p class="reach">Tap ARP to enter its pages; tap again to cycle to ARP</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-38-00.png" alt="Actual firmware screen: ARP"><div><p>Turn held notes into a repeating arpeggio.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · MODE</td><td>Arpeggio mode; OFF disables it</td></tr>
+<tr><td>K2 · RATE</td><td>Note rate</td></tr>
+<tr><td>K3 · OCT</td><td>Octave range</td></tr>
+<tr><td>K4 · GATE</td><td>Note gate length</td></tr>
+</table></div></div>
+<p>Hold a chord and press PLAY if required by the clock/transport setup. Use short gates for separated notes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-39-00" data-page><h2 style="margin-top:0">ARP 2</h2><p class="reach">Tap ARP to enter its pages; tap again to cycle to ARP 2</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-39-00.png" alt="Actual firmware screen: ARP 2"><div><p>Add variation to the arpeggio.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · SWG</td><td>Swing</td></tr>
+<tr><td>K2 · PROB</td><td>Probability of playing a note</td></tr>
+<tr><td>K3 · HOLD</td><td>Latch/hold notes after key release</td></tr>
+<tr><td>K4 · ORD</td><td>Note order</td></tr>
+</table></div></div>
+
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-40-00" data-page><h2 style="margin-top:0">STEP</h2><p class="reach">Tap SEQ to enter its pages; tap again to cycle to STEP</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-40-00.png" alt="Actual firmware screen: STEP"><div><p>Write notes and chords into a pattern, one step at a time.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · STEP</td><td>Choose step</td></tr>
+<tr><td>K2 · NOTE</td><td>Pitch of the selected note</td></tr>
+<tr><td>K3 · LENGTH</td><td>Note duration; TIME when selecting REST/TIE</td></tr>
+<tr><td>K4 · FEEL</td><td>Normal, accent or slide feel</td></tr>
+</table></div></div>
+<p>Stopped: hold EDIT and play keys to add notes; hold REC and play keys to replace them. Hold EDIT+REC to clear one step. Hold EDIT, then SEQ for one second to clear the entire roll. Hold SAVE to undo. Tap REC to arm step entry; PLAY starts/stops playback. Up to four notes per step and 64 steps per track.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-41-00" data-page><h2 style="margin-top:0">DETAIL</h2><p class="reach">Tap SEQ to enter its pages; tap again to cycle to DETAIL</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-41-00.png" alt="Actual firmware screen: DETAIL"><div><p>Add variation to the selected sequencer step.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CHANCE</td><td>Play probability, then conditional triggers above 100%</td></tr>
+<tr><td>K2 · RATCH</td><td>Number of repeated hits within the step</td></tr>
+<tr><td>K3 · NUDGE</td><td>Timing offset (requires quantisation OFF to hear)</td></tr>
+<tr><td>K4 · VEL</td><td>Step velocity</td></tr>
+</table></div></div>
+<p>PRESETS selects the step. Accent can override the velocity; ratchets and quantisation can override nudge. The screen shows these conditions.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-42-00" data-page><h2 style="margin-top:0">AUTOMATION</h2><p class="reach">Tap SEQ to enter its pages; tap again to cycle to AUTOMATION</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-42-00.png" alt="Actual firmware screen: AUTOMATION"><div><p>Edit per-step locks and recorded parameter movement.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ROW</td><td>Select row</td></tr>
+<tr><td>K2 · EVENT</td><td>Select/move event’s step (where applicable)</td></tr>
+<tr><td>K3 · LOCK</td><td>Select parameter/type (where applicable)</td></tr>
+<tr><td>K4 · PLAY</td><td>Edit row value; PLAY row toggles automation</td></tr>
+</table></div></div>
+<p>Labels change with the row. + ADD: choose step/type, then OCT+ to add. On a record OCT+ switches LOCK (one step) and AUTO (until changed). EDIT deletes/reset the row. QUANTIZE row K4 enables/disables timing quantisation; PLAY row OCT+ asks to clear automation. The four tracks share 128 automation records.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-43-00" data-page><h2 style="margin-top:0">MIXER</h2><p class="reach">Tap HOME to enter its pages; tap again to cycle to MIXER</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-43-00.png" alt="Actual firmware screen: MIXER"><div><p>Mix all four tracks from one persistent page.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · LEVEL</td><td>Track 1 level</td></tr>
+<tr><td>K2 · LEVEL</td><td>Track 2 level</td></tr>
+<tr><td>K3 · LEVEL</td><td>Track 3 level</td></tr>
+<tr><td>K4 · LEVEL</td><td>Track 4 level</td></tr>
+</table></div></div>
+<p>C5 selects LEVEL, D5 PAN, E5 REVERB: all four knobs then edit that property for T1–T4. Vertical faders always show volume. First four black keys toggle mute; hold F3/G3/A3/B3 to solo T1/T2/T3/T4. No held button is needed to stay here.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="page-44-00" data-page><h2 style="margin-top:0">CLOCK</h2><p class="reach">Tap HOME to enter its pages; tap again to cycle to CLOCK</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="page-44-00.png" alt="Actual firmware screen: CLOCK"><div><p>Set the shared transport timing.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · BPM</td><td>Tempo in BPM</td></tr>
+<tr><td>K2 · SWG</td><td>Global swing</td></tr>
+<tr><td>K3 · CLK</td><td>Internal or external clock source</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>Use internal clock for standalone play. External clock requires a source sending MIDI clock/transport.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="drum-grid" data-page><h2 style="margin-top:0">RIDDIM GRID</h2><p class="reach">SEQ with a DRUM track selected</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="drum-grid.png" alt="Actual firmware screen: RIDDIM GRID"><div><p>Program eight drum lanes in the pattern.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · STEP</td><td>Step</td></tr>
+<tr><td>K2 · DRUM</td><td>Drum lane</td></tr>
+<tr><td>K3 · HIT</td><td>Hit on/off</td></tr>
+<tr><td>K4 · ACCENT</td><td>Accent on/off</td></tr>
+</table></div></div>
+<p>Use PLAY to audition the loop. The grid replaces the melodic roll for the DRUM engine.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="mixer-pan" data-page><h2 style="margin-top:0">MIXER / PAN</h2><p class="reach">HOME → MIXER, then D5</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="mixer-pan.png" alt="Actual firmware screen: MIXER / PAN"><div><p>Place each track left or right.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PAN</td><td>Track 1 pan</td></tr>
+<tr><td>K2 · PAN</td><td>Track 2 pan</td></tr>
+<tr><td>K3 · PAN</td><td>Track 3 pan</td></tr>
+<tr><td>K4 · PAN</td><td>Track 4 pan</td></tr>
+</table></div></div>
+<p>C5 returns the knobs to volume; E5 switches them to reverb sends.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="mixer-reverb" data-page><h2 style="margin-top:0">MIXER / REVERB</h2><p class="reach">HOME → MIXER, then E5</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="mixer-reverb.png" alt="Actual firmware screen: MIXER / REVERB"><div><p>Send each track to the shared reverb.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · REVERB</td><td>Track 1 reverb send</td></tr>
+<tr><td>K2 · REVERB</td><td>Track 2 reverb send</td></tr>
+<tr><td>K3 · REVERB</td><td>Track 3 reverb send</td></tr>
+<tr><td>K4 · REVERB</td><td>Track 4 reverb send</td></tr>
+</table></div></div>
+<p>C5 returns to volume; D5 switches to pan. Set the reverb character on FX → REVERB.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="held-0" data-page><h2 style="margin-top:0">ENGINE WORKSHOP</h2><p class="reach">Hold EDIT outside the stopped melodic STEP page</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="held-0.png" alt="Actual firmware screen: ENGINE WORKSHOP"><div><p>Select an engine and its factory sound.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ENG</td><td>Engine</td></tr>
+<tr><td>K2 · No.</td><td>Preset number</td></tr>
+<tr><td>K3 · FAV</td><td>Favourite control</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>On stopped STEP, hold EDIT is deliberately reserved for adding notes.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="held-1" data-page><h2 style="margin-top:0">SCALE GARDEN</h2><p class="reach">Hold SCL</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="held-1.png" alt="Actual firmware screen: SCALE GARDEN"><div><p>Set the chord keyboard without leaving your current page.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · ROOT</td><td>Key/root</td></tr>
+<tr><td>K2 · SCL</td><td>Scale</td></tr>
+<tr><td>K3 · CHRD</td><td>Chord type</td></tr>
+<tr><td>K4 · VOIC</td><td>Voicing</td></tr>
+</table></div></div>
+<p>Release SCL to return. The normal CHORD page offers the same four controls without holding.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="held-2" data-page><h2 style="margin-top:0">RECORD DESK</h2><p class="reach">Hold REC outside the stopped melodic STEP page</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="held-2.png" alt="Actual firmware screen: RECORD DESK"><div><p>Prepare the metronome and recording lead-in.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CLICK</td><td>Metronome: OFF / REC / ON</td></tr>
+<tr><td>K2 · COUNT</td><td>Count-in length</td></tr>
+<tr><td>K3 · LEVEL</td><td>Click level</td></tr>
+<tr><td>K4 · —</td><td>Unused</td></tr>
+</table></div></div>
+<p>Release REC to return. On stopped STEP, hold REC and keys replaces notes instead.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="held-3" data-page><h2 style="margin-top:0">PATTERN TOOLS</h2><p class="reach">Hold SEQ</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="held-3.png" alt="Actual firmware screen: PATTERN TOOLS"><div><p>Change pattern length and timing, or use the keyboard tools.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · LEN</td><td>Pattern length</td></tr>
+<tr><td>K2 · DIV</td><td>Step division/rate</td></tr>
+<tr><td>K3 · SWG</td><td>Pattern swing</td></tr>
+<tr><td>K4 · GATE</td><td>Pattern gate length</td></tr>
+</table></div></div>
+<p>F4 opens Euclid. Read the on-screen key map before using clear/random tools; hold SAVE afterwards to undo.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="euclid" data-page><h2 style="margin-top:0">EUCLID</h2><p class="reach">Hold SEQ, then F4</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="euclid.png" alt="Actual firmware screen: EUCLID"><div><p>Distribute hits evenly across a cycle.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · HITS</td><td>Number of hits</td></tr>
+<tr><td>K2 · STEPS</td><td>Number of steps</td></tr>
+<tr><td>K3 · ROT</td><td>Rotate the rhythm</td></tr>
+<tr><td>K4 · —</td><td>Unused on melodic tracks; drum lane on DRUM</td></tr>
+</table></div></div>
+<p>OCT+ applies; OCT− cancels. The preview is not committed until applied.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="held-4" data-page><h2 style="margin-top:0">DUB PUNCH-IN</h2><p class="reach">Hold FX</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="held-4.png" alt="Actual firmware screen: DUB PUNCH-IN"><div><p>Perform momentary dub effects over the playing mix.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · FILTER</td><td>Low/high-pass filter sweep</td></tr>
+<tr><td>K2 · CRUSH</td><td>Crushing amount</td></tr>
+<tr><td>K3 · THROW</td><td>Delay throw amount</td></tr>
+<tr><td>K4 · DEPTH</td><td>Punch-in effect depth; shimmer amount for harmonic effects</td></tr>
+</table></div></div>
+<p>White keys F3/G3/A3: repeat 1/8, 1/16, 1/32; B3 reverse; C4/D4 low/high-pass; E4 tape stop; F4 freeze; G4/A4 octave up/down; B4 flanger; C5 phaser; D5 reverb throw; E5 echo throw; F5 gate; G5 mono. Release to end the punch-in; tails can continue. FX LATCH in settings changes release behaviour.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="held-5" data-page><h2 style="margin-top:0">HELD MIXER</h2><p class="reach">Hold GLO (optional shortcut)</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="held-5.png" alt="Actual firmware screen: HELD MIXER"><div><p>Adjust the four track volumes temporarily.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · LEVEL</td><td>Track 1 level</td></tr>
+<tr><td>K2 · LEVEL</td><td>Track 2 level</td></tr>
+<tr><td>K3 · LEVEL</td><td>Track 3 level</td></tr>
+<tr><td>K4 · LEVEL</td><td>Track 4 level</td></tr>
+</table></div></div>
+<p>Use HOME → MIXER for the persistent page with pan and reverb.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="settings-0" data-page><h2 style="margin-top:0">DISPLAY</h2><p class="reach">Hold HOME, then ALGORITHM chooses the tab</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="settings-0.png" alt="Actual firmware screen: DISPLAY"><div><p>System settings: display.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K2 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K3 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K4 · VALUE</td><td>Change the selected row’s value</td></tr>
+</table></div></div>
+<p>PRESETS selects the row; all four knobs edit that same selected row, not four different rows. OCT−/+ also decrease/increase values. OCT+ opens action rows. HOME exits. COLOR: stored palette preference; the new REGGAE artwork keeps its own palette. STYLE: filled or outlined controls. LARGE: expanded parameter feedback while editing. ANIM: ON, OFF, or idle animation. LEDS: key-light mode. SCREEN OFF: idle timeout. SCOPE: output or pre-master mix measurement. HOME: legacy scope/tracks/levels preference; curated reggae sounds use their own performance screens.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="settings-1" data-page><h2 style="margin-top:0">CONTROL</h2><p class="reach">Hold HOME, then ALGORITHM chooses the tab</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="settings-1.png" alt="Actual firmware screen: CONTROL"><div><p>System settings: control.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K2 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K3 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K4 · VALUE</td><td>Change the selected row’s value</td></tr>
+</table></div></div>
+<p>PRESETS selects the row; all four knobs edit that same selected row, not four different rows. OCT−/+ also decrease/increase values. OCT+ opens action rows. HOME exits. HOLD: time before a button opens its held layer. KNOB ACCEL: faster turns make larger changes. FX LATCH: keep punch-in effects latched. BPM LOCK: restrict accidental SELECT tempo edits. SCALE LEDS: show notes in the scale. STEP PREVIEW: audition the selected step. CHORD ENTRY: HOLD or ADD note-entry behaviour. SELECT: choose BPM, PAGE, modulation wheel or velocity for the SELECT encoder.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="settings-2" data-page><h2 style="margin-top:0">AUDIO</h2><p class="reach">Hold HOME, then ALGORITHM chooses the tab</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="settings-2.png" alt="Actual firmware screen: AUDIO"><div><p>System settings: audio.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K2 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K3 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K4 · VALUE</td><td>Change the selected row’s value</td></tr>
+</table></div></div>
+<p>PRESETS selects the row; all four knobs edit that same selected row, not four different rows. OCT−/+ also decrease/increase values. OCT+ opens action rows. HOME exits. SPEAKER EQ: FLAT, LOWCUT or BASS+; this also affects line/headphone and USB output. USB LEVEL: follow MASTER or fixed level. CLICK: OFF, recording-only or ON. CLICK LEVEL: metronome volume. COUNT-IN: OFF, one or two bars. TUNE: master tuning offset in cents, saved with the project.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="settings-3" data-page><h2 style="margin-top:0">MIDI</h2><p class="reach">Hold HOME, then ALGORITHM chooses the tab</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="settings-3.png" alt="Actual firmware screen: MIDI"><div><p>System settings: midi.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K2 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K3 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K4 · VALUE</td><td>Change the selected row’s value</td></tr>
+</table></div></div>
+<p>PRESETS selects the row; all four knobs edit that same selected row, not four different rows. OCT−/+ also decrease/increase values. OCT+ opens action rows. HOME exits. MIDI IN: input routing mode. T1–T4 CHANNEL: channels when using TRACK routing. AUTO SELECT: incoming notes can select their track. SCREEN WAKE: panel-only or panel plus MIDI. LEARN CLEAR: OCT+ immediately removes learned CC mappings. Channel/routing choices belong to the project.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="settings-4" data-page><h2 style="margin-top:0">SYSTEM</h2><p class="reach">Hold HOME, then ALGORITHM chooses the tab</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="settings-4.png" alt="Actual firmware screen: SYSTEM"><div><p>System settings: system.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K2 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K3 · VALUE</td><td>Change the selected row’s value</td></tr>
+<tr><td>K4 · VALUE</td><td>Change the selected row’s value</td></tr>
+</table></div></div>
+<p>PRESETS selects the row; all four knobs edit that same selected row, not four different rows. OCT−/+ also decrease/increase values. OCT+ opens action rows. HOME exits. USB SERIAL: developer-console interface. RESTORE LAST: restore/autosave the previous session. HELP: on-screen hints. 2ND CORE: hardware-only beta option when included in the build. CALIBRATION: control setup. INFO: runtime/version readings. ABOUT: credits. Use OCT+ to open action rows; HOME closes settings.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="credits" data-page><h2 style="margin-top:0">LABEL CREDITS</h2><p class="reach">Hold HOME → SYSTEM → ABOUT → OCT+</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="credits.png" alt="Actual firmware screen: LABEL CREDITS"><div><p>Read project and upstream attributions.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · --</td><td>Unused</td></tr>
+<tr><td>K2 · --</td><td>Unused</td></tr>
+<tr><td>K3 · --</td><td>Unused</td></tr>
+<tr><td>K4 · --</td><td>Unused</td></tr>
+</table></div></div>
+<p>PRESETS scrolls; OCT− returns to settings; HOME exits.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="info" data-page><h2 style="margin-top:0">SYSTEM METERS</h2><p class="reach">Hold HOME → SYSTEM → INFO → OCT+</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="info.png" alt="Actual firmware screen: SYSTEM METERS"><div><p>Inspect firmware identity and runtime readings.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · --</td><td>Unused</td></tr>
+<tr><td>K2 · --</td><td>Unused</td></tr>
+<tr><td>K3 · --</td><td>Unused</td></tr>
+<tr><td>K4 · --</td><td>Unused</td></tr>
+</table></div></div>
+<p>OCT− returns to settings. Emulator CPU readings do not establish physical FM-1 performance.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="name" data-page><h2 style="margin-top:0">LABEL PRESS</h2><p class="reach">SAVE → USER or PROJECT → SAVE → OCT+</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="name.png" alt="Actual firmware screen: LABEL PRESS"><div><p>Name the sound or project before writing it.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · CURSOR</td><td>Cursor position</td></tr>
+<tr><td>K2 · CHARACTER</td><td>Character at cursor</td></tr>
+<tr><td>K3 · CATEGORY / RANDOM</td><td>Sound category for USER; random name for PROJECT</td></tr>
+<tr><td>K4 · --</td><td>Unused</td></tr>
+</table></div></div>
+<p>White keys type letters; repeated taps cycle a letter group. Black F# moves left, G# inserts space, A# moves right, C# deletes, D# switches letters/numbers. OCT+ writes, OCT− cancels. Maximum 12 characters; stop transport to save.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="confirm" data-page><h2 style="margin-top:0">CONFIRMATION</h2><p class="reach">After selecting an action that asks for confirmation</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="confirm.png" alt="Actual firmware screen: CONFIRMATION"><div><p>Check the exact operation before applying it.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · --</td><td>Unused</td></tr>
+<tr><td>K2 · --</td><td>Unused</td></tr>
+<tr><td>K3 · --</td><td>Unused</td></tr>
+<tr><td>K4 · --</td><td>Unused</td></tr>
+</table></div></div>
+<p>OCT+ confirms; OCT− cancels. Read the action and track/slot in the message.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="update" data-page><h2 style="margin-top:0">UPDATE COUNTDOWN</h2><p class="reach">Firmware-update shortcut: hold both OCT buttons</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="update.png" alt="Actual firmware screen: UPDATE COUNTDOWN"><div><p>Countdown before entering the device update path.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · --</td><td>Unused</td></tr>
+<tr><td>K2 · --</td><td>Unused</td></tr>
+<tr><td>K3 · --</td><td>Unused</td></tr>
+<tr><td>K4 · --</td><td>Unused</td></tr>
+</table></div></div>
+<p>Release the OCT buttons to cancel. This is not needed for normal music-making. See HARDWARE.md before flashing a physical FM-1; hardware installation has not been tested for REGGAE-OS.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="count-in" data-page><h2 style="margin-top:0">COUNT-IN</h2><p class="reach">Start armed recording with a configured count-in</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="count-in.png" alt="Actual firmware screen: COUNT-IN"><div><p>Shows the lead-in beats before recording starts.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · --</td><td>No count-in-specific assignment</td></tr>
+<tr><td>K2 · --</td><td>No count-in-specific assignment</td></tr>
+<tr><td>K3 · --</td><td>No count-in-specific assignment</td></tr>
+<tr><td>K4 · --</td><td>No count-in-specific assignment</td></tr>
+</table></div></div>
+<p>PLAY stops/cancels. Set count-in length using held REC or Settings → AUDIO.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<article id="calibration" data-page><h2 style="margin-top:0">CALIBRATION</h2><p class="reach">Hold HOME → SYSTEM → CALIBRATION → OCT+</p><div class="body"><img class="screen" loading="lazy" width="240" height="240" src="calibration.png" alt="Actual firmware screen: CALIBRATION"><div><p>Assign/check the physical controls.</p><table><tr><th>Knob / label</th><th>What it does</th></tr>
+<tr><td>K1 · PROMPT</td><td>Follow the named control prompt</td></tr>
+<tr><td>K2 · PROMPT</td><td>Follow the named control prompt</td></tr>
+<tr><td>K3 · PROMPT</td><td>Follow the named control prompt</td></tr>
+<tr><td>K4 · PROMPT</td><td>Follow the named control prompt</td></tr>
+</table></div></div>
+<p>Only operate the control named on the screen; any piano key cancels. This is device setup, not a musical edit page.</p>
+<small><a href="#pages">Back to page index</a></small></article>
+<p>Guide generated from firmware captures by tests/reggae_guide.c and tools/reggae/build-guide.py. Settings screenshots show the first visible rows; PRESETS scrolls to the remaining rows described alongside them. Crash diagnostics and bootloader internals are not musical pages and are outside this guide.</p><script>const input=document.querySelector("#search"), pages=[...document.querySelectorAll("[data-page]")];function filter(){const q=input.value.toLowerCase().trim();let n=0;for(const p of pages){const show=p.textContent.toLowerCase().includes(q);p.classList.toggle("hidden",!show);if(show)n++;}document.querySelector("#count").textContent=n+" of "+pages.length+" screen references";}input.addEventListener("input",filter);document.querySelectorAll(".toc a").forEach(a=>a.addEventListener("click",()=>{input.value="";filter();}));filter();</script></main></html>

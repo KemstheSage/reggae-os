@@ -1,9 +1,8 @@
 # Making a song in REGGAE-OS
 
-UI 0.5.8 gives STEP, DETAIL, AUTOMATION, ARRANGE, held-SEQ tools and the
-Euclid preview a shared tabletop-machine layout. SAVE > TOOLS uses it too.
-Compact footer hints fit inside the case. Mixer, project browser, recording
-settings and confirmation dialogs retain their existing layouts.
+UI 0.7.1 uses the REGGAE-OS tabletop interface throughout the musical pages.
+The [screenshot quick guide](https://kemsthesage.github.io/reggae-os/guide/)
+covers page navigation and each knob, including chord types, mixing and settings.
 
 ## Play and layer four parts
 
@@ -106,9 +105,7 @@ section changes do not read flash inside the audio callback.
 This supports complete four-part pattern arrangements, not multitrack audio
 recording or unlimited song storage. Four source projects, sixteen sections,
 eight shared voices and existing automation limits still apply. Sounds stay
-fixed per track across sections. No new effects, audio engines or preset changes
-are included in UI 0.4.0. Recording/mixing/automation screens and a more guided
-project workflow remain the next design work. Physical FM-1 and iPhone Safari
+fixed per track across sections. The arrangement is a pattern sequencer, not an audio tape recorder. Physical FM-1 and iPhone Safari
 interaction have not been tested on devices.
 
 ### Clear the whole piano roll
