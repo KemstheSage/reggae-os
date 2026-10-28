@@ -62,3 +62,5 @@ build/reggae/workspace-test
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/chords tests/reggae_chords.c -lm
 build/reggae/chords
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/voice-leading tests/reggae_voice_leading.c -lm
+build/reggae/voice-leading

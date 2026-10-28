@@ -7,14 +7,15 @@
  *        major scale of ROOT); all named fixed shapes: that shape on the key, whatever the scale.
  *   VOIC CLOSE (root position); OPEN (the second tone an octave up: 1-5-3); INV1 / INV2 (the lowest tone, then
  *        the next, an octave up); +OCT (the root an octave down added; four-tone shapes drop a tone to fit). At most
- *        CHORD_MAX notes, notes outside 0..127 left out.
+ *        CHORD_MAX notes, notes outside 0..127 left out. AUTO chooses nearby inversions of successive
+ *        live chords per track; preview construction does not advance its history.
  * The key is mapped first (kb_map: QNT SNAP / WHITE, TRN, the octave), the chord is built on the note it gives.
  * MONO / LEGATO / UNISON parts play the chord's root only; a kit (the DRUM engine, slices: an
  * engine that maps the keys itself) ignores CHRD. Every source keeps the notes it started (kb_chord for a
  * key, mchord for a MIDI note) and its release ends exactly those, so CHRD / VOIC changed while it is held
  * leave nothing hanging. A note several sources hold sounds once and ends with the last of them. */
 enum { CH_OFF, CH_DIA3, CH_DIA7, CH_MAJ, CH_MIN, CH_DOM7, CH_MAJ7, CH_MIN7, CH_SUS4, CH_POW, CH_SUS2, CH_MAJ6, CH_MIN6, CH_ADD9, CH_MADD9, CH_DOM9, CH_MAJ9, CH_MIN9, CH_7SUS4, CH_DIM, CH_DIM7, CH_HALF_DIM, CH_AUG, CH_MMAJ7, CH_69, CH_COUNT };
-enum { VC_CLOSE, VC_OPEN, VC_INV1, VC_INV2, VC_BASS };
+enum { VC_CLOSE, VC_OPEN, VC_INV1, VC_INV2, VC_BASS, VC_AUTO };
 #define CHORD_MAX 4u
 #define MCHORD_N 24u                     /* MIDI notes held as chords at once (more: their root alone) */
 
@@ -33,6 +34,52 @@ static mchord_t mchord[MCHORD_N];
 /* the last chord played per track (the CHORD page shows it): its root, notes, and the shape's tones above the
  * root (bit i = i semitones, 0..11) */
 static struct { uint8_t root, n, note[CHORD_MAX]; uint16_t mask; uint8_t gen; } chord_last[NTRK];
+
+/* Transient per-track performance memory, never written into a preset. */
+static struct { uint8_t n, root, note[CHORD_MAX]; } chord_lead[NTRK];
+
+/* At most four rotations x five octave placements. Integer-only, no allocation.
+ * Ordered voice motion wins; distance from the played register breaks ties.
+ * Keep the complete shape, including ninths, rather than folding colour tones. */
+static int32_t chord_distance(int32_t x) { return x < 0 ? -x : x; }
+
+static void chord_auto(uint32_t k, uint32_t root, uint8_t *out, uint32_t n)
+{
+    int32_t shape[CHORD_MAX], candidate[CHORD_MAX], best[CHORD_MAX];
+    uint32_t i, j, rot, old = chord_lead[k].n;
+    int32_t score_best = 0x7fffffff, sum = 0, shift;
+    if (old && chord_distance((int)root - (int)chord_lead[k].root) < 12) {
+        for (i=0;i<n;i++) { shape[i]=out[i]; sum+=out[i]; }
+        for (rot=0;rot<n;rot++) {
+            for (shift=-24;shift<=24;shift+=12) {
+                int32_t score=0, centre=0;
+                for (i=0;i<n;i++) {
+                    candidate[i]=shape[i]+shift;
+                    if(candidate[i]<0 || candidate[i]>127) break;
+                    centre+=candidate[i];
+                    /* Rank matching permits triad/seventh changes without
+                     * crossed voices; the endpoints stay paired. */
+                    j = n>1 ? i*(old-1)/(n-1) : 0;
+                    score+=chord_distance(candidate[i]-(int32_t)chord_lead[k].note[j]);
+                }
+                if(i!=n || chord_distance(centre-sum)>12*(int32_t)n) continue;
+                score=score*128+chord_distance(centre-sum);
+                if(score<score_best) {
+                    score_best=score;
+                    for(i=0;i<n;i++) best[i]=candidate[i];
+                }
+            }
+            /* Raise the lowest tone above the highest, preserving extensions. */
+            int32_t x=shape[0];
+            do { x+=12; } while(x<=shape[n-1]);
+            for(i=1;i<n;i++) shape[i-1]=shape[i];
+            shape[n-1]=x;
+        }
+        if(score_best!=0x7fffffff) for(i=0;i<n;i++) out[i]=(uint8_t)best[i];
+    }
+    chord_lead[k].n=(uint8_t)n; chord_lead[k].root=(uint8_t)root;
+    for(i=0;i<n;i++) chord_lead[k].note[i]=out[i];
+}
 
 /* 1 = the track's keys are a kit: no chords */
 static int chord_kit(const track_t *t)
@@ -150,6 +197,10 @@ static uint32_t chord_build(track_t *t, uint32_t root, uint8_t *out)
     int32_t r;
     uint16_t mask;
     uint32_t m = chord_make(t, root, out, &r, &mask), i, k = trk_index(t);
+    if (m > 1u && t->p[P_VOIC] == VC_AUTO)
+        chord_auto(k, root, out, m);
+    else
+        chord_lead[k].n = 0;
     if (m > 1u) {
         chord_last[k].root = (uint8_t)clamp(r, 0, 127);
         chord_last[k].mask = mask;
@@ -213,6 +264,7 @@ static int mchord_held(uint32_t id, uint32_t note)
 
 static void mchord_forget(uint32_t track)               /* panic: the track's MIDI chords are gone */
 {
+    chord_lead[track].n = 0;
     uint32_t i;
     for (i = 0; i < MCHORD_N; i++)
         if (mchord[i].id == track + 1u)

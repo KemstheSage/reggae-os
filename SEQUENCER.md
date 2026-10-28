@@ -141,3 +141,22 @@ active in the drum grid, DETAIL, arrangement or during playback.
   Hold for natural tails; use the melodic piano roll. This changes the selected
   track's sound. HOME/PRESETS returns to the curated instruments. Save through
   the usual preset/project controls. Source/credits: `percussion/ATTRIBUTION.md`.
+
+## Automatic chord voice leading (UI 0.7.2)
+
+On a POLY organ or piano, open SCL → CHORD GARDEN. K3 selects the chord
+and K4 selects AUTO. The first chord uses close position. Subsequent live
+chords choose a nearby inversion independently on each track; for example,
+C–F moves C/E/G to C/F/A instead of F/A/C. This also applies to MIDI note input.
+The routine uses a bounded integer search at note-on, not per audio sample.
+
+Play a root at least an octave away to establish a new register. Playing with
+another voicing, disabling chord mode and playing, or resetting/loading the
+track clears its phrase memory. Screen previews never advance that memory.
+The AUTO setting saves with the project; the previous chord is transient.
+Recorded notes keep the chosen pitches: AUTO does not reharmonise existing
+patterns. Mono sounds and drum kits retain their existing behaviour.
+
+This is a local nearest-inversion choice, not a progression planner; it does
+not predict future chords or apply classical counterpoint rules. The existing
+four-note chord limit and shared voice pool still apply.

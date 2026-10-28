@@ -492,3 +492,15 @@ passed. Hardware image 542,596 bytes; static RAM and pool unchanged.
 The [release report](docs/reports/ui-0.7.1.md) records the tests and guide coverage.
 Run `node tests/reggae_chords_wasm.mjs` after the emulator build; the native
 chord test is included in `tools/reggae/test.sh`.
+
+## AUTO voice leading (UI 0.7.2)
+
+`sh tools/reggae/test.sh` includes `tests/reggae_voice_leading.c`.
+After `sh web/emu/build.sh`, run `node tests/reggae_voice_leading_wasm.mjs`.
+It exercises the actual K4 input and captures `build/reggae/auto-voicing-wasm.ppm`;
+run it before rebuilding the screenshot guide with `tools/reggae/build-guide.py`.
+See [UI 0.7.2 evidence and limitations](docs/reports/ui-0.7.2.md).
+Hardware follow-up: POLY organ, SCL → CHORD GARDEN, MAJ / AUTO; play C, F, G,
+C with short releases, then overlapping notes. Compare CLOSE, test an octave
+jump, switch tracks and save/reload a project. Check note releases and timing
+while the other three tracks run. New AUTO behaviour has not been physically verified.

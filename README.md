@@ -4,6 +4,9 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
+**UI 0.7.2 adds AUTO chord voice leading:** SCL → CHORD GARDEN, K4 → AUTO.
+Each track chooses nearby inversions as you play. See [usage and reset behaviour](SEQUENCER.md#automatic-chord-voice-leading-ui-072).
+
 Sound bank 0.5 supplies **15 playable presets**, including organ, bass, reed
 melodica, electric piano, piano chop, sampled roots trumpet, muted string skank, three dub/jungle sirens
 and an eight-piece drum kit. Four-knob editing and animated 240 × 240 illustrations
