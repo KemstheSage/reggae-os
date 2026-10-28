@@ -25,7 +25,10 @@ local voice leading, not predictive harmony or classical counterpoint.
   chords differ, repeated performances are deterministic, no clipping/non-finite
   output, release returns to silence. Native 240 × 240 framebuffer inspected.
 - Existing 15 extended-chord WASM tests and baseline/heavy-song emulator tests pass.
-- All 40 protected organ/piano/bass renders remain unchanged.
+- Full REGGAE regression suite passes: 75 preset/control audio renders, 40
+  protected organ/piano/bass renders unchanged, recording/arrangement/step editing,
+  mixer pan/reverb audio, 518 screen captures, settings/naming/save, existing
+  extended chords and new AUTO keyboard/MIDI paths.
 - Hardware build passes linker, RAM-code and register-access checks: application
   542,832 bytes; static RAM 61,032 / 73,728; pool 328,896 / 368,640. Relative to
   UI 0.7.1: +236 application bytes, +32 static RAM bytes (including build alignment).

@@ -6,7 +6,8 @@ test -f build/emu/felucca.wasm
 cp LICENSE LICENSING.md CREDITS.md SEQUENCER.md build/emu/
 cp -R LICENSES build/emu/
 # The checked-in guide is generated from shared-firmware framebuffer captures.
-cp -R docs/guide build/emu/guide
+mkdir -p build/emu/guide
+cp -R docs/guide/. build/emu/guide/
 # Include the submodule's actual source, not only its gitlink. Build tools included.
 tar --exclude=.git --exclude=__pycache__ -czf build/emu/reggae-os-source.tar.gz \
   firmware tools tests assets web docs .github .gitmodules build.sh LICENSE LICENSES ./*.md
