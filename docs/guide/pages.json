@@ -1,0 +1,1214 @@
+[
+  {
+    "id": "sound-00",
+    "title": "ROOTS ORGAN",
+    "group": "Sounds",
+    "engine": "WHEEL",
+    "knobs": [
+      "HARM",
+      "TONE",
+      "ROTOR",
+      "DRIVE"
+    ]
+  },
+  {
+    "id": "sound-01",
+    "title": "ROCKSTEADY",
+    "group": "Sounds",
+    "engine": "WHEEL",
+    "knobs": [
+      "HARM",
+      "TONE",
+      "ROTOR",
+      "DRIVE"
+    ]
+  },
+  {
+    "id": "sound-02",
+    "title": "DEEP ROOTS",
+    "group": "Sounds",
+    "engine": "ANALOG",
+    "knobs": [
+      "CUTOFF",
+      "RES",
+      "ENV",
+      "DRIVE"
+    ]
+  },
+  {
+    "id": "sound-03",
+    "title": "DIGITAL BASS",
+    "group": "Sounds",
+    "engine": "ANALOG",
+    "knobs": [
+      "CUTOFF",
+      "RES",
+      "ENV",
+      "DRIVE"
+    ]
+  },
+  {
+    "id": "sound-04",
+    "title": "REED MELODICA",
+    "group": "Sounds",
+    "engine": "ANALOG",
+    "knobs": [
+      "ATTACK",
+      "TONE",
+      "VIBRATO",
+      "RELEASE"
+    ]
+  },
+  {
+    "id": "sound-05",
+    "title": "WARM TINE",
+    "group": "Sounds",
+    "engine": "FM6",
+    "knobs": [
+      "TIMBRE",
+      "ENV",
+      "CHORUS",
+      "DETUNE"
+    ]
+  },
+  {
+    "id": "sound-06",
+    "title": "PIANO CHOP",
+    "group": "Sounds",
+    "engine": "SAMPLE",
+    "knobs": [
+      "TONE",
+      "DECAY",
+      "DRIVE",
+      "RELEASE"
+    ]
+  },
+  {
+    "id": "sound-07",
+    "title": "ROOTS TRUMPET",
+    "group": "Sounds",
+    "engine": "SAMPLE",
+    "knobs": [
+      "TONE",
+      "ATTACK",
+      "DECAY",
+      "RELEASE"
+    ]
+  },
+  {
+    "id": "sound-08",
+    "title": "MUTED SKANK",
+    "group": "Sounds",
+    "engine": "PHYS",
+    "knobs": [
+      "BRIGHT",
+      "DAMP",
+      "PLUCK",
+      "RELEASE"
+    ]
+  },
+  {
+    "id": "sound-09",
+    "title": "DUB WAIL",
+    "group": "Sounds",
+    "engine": "ANALOG",
+    "knobs": [
+      "PITCH",
+      "RATE",
+      "ECHO",
+      "TONE"
+    ]
+  },
+  {
+    "id": "sound-10",
+    "title": "ROUND FM BASS",
+    "group": "Sounds",
+    "engine": "FM6",
+    "knobs": [
+      "TIMBRE",
+      "ENV",
+      "RATIO",
+      "LEVEL"
+    ]
+  },
+  {
+    "id": "sound-11",
+    "title": "DUB DRAWBARS",
+    "group": "Sounds",
+    "engine": "WHEEL",
+    "knobs": [
+      "HARM",
+      "TONE",
+      "ROTOR",
+      "ECHO"
+    ]
+  },
+  {
+    "id": "sound-12",
+    "title": "ROOTS KIT",
+    "group": "Sounds",
+    "engine": "DRUM",
+    "knobs": [
+      "TONE",
+      "DECAY",
+      "SNAP",
+      "DRIVE"
+    ]
+  },
+  {
+    "id": "sound-13",
+    "title": "JUNGLE SIGNAL",
+    "group": "Sounds",
+    "engine": "ANALOG",
+    "knobs": [
+      "FALL",
+      "LENGTH",
+      "ECHO",
+      "TONE"
+    ]
+  },
+  {
+    "id": "sound-14",
+    "title": "FAST ALARM",
+    "group": "Sounds",
+    "engine": "ANALOG",
+    "knobs": [
+      "RANGE",
+      "RATE",
+      "ECHO",
+      "TONE"
+    ]
+  },
+  {
+    "id": "page-00-00",
+    "title": "ENV",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "ATK",
+      "DEC",
+      "SUS",
+      "REL"
+    ]
+  },
+  {
+    "id": "page-01-00",
+    "title": "ENV DEST",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "FLT",
+      "PIT",
+      "SHP",
+      "ESYNC"
+    ]
+  },
+  {
+    "id": "page-02-00",
+    "title": "LFO",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "RATE",
+      "WAVE",
+      "PHS",
+      "FADE"
+    ]
+  },
+  {
+    "id": "page-03-00",
+    "title": "LFO 2",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SYNC",
+      "TRIG",
+      "POL",
+      ""
+    ]
+  },
+  {
+    "id": "page-04-00",
+    "title": "LFO DEST",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "PIT",
+      "FLT",
+      "SHP",
+      "AMP"
+    ]
+  },
+  {
+    "id": "page-05-00",
+    "title": "MOD",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SLOT",
+      "SRC",
+      "DST",
+      "AMT"
+    ]
+  },
+  {
+    "id": "page-06-00",
+    "title": "FX",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "DST",
+      "CHO",
+      "DLY",
+      "REV"
+    ]
+  },
+  {
+    "id": "page-07-00",
+    "title": "SLICER",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SLCR",
+      "PAT",
+      "RATE",
+      "DEPTH"
+    ]
+  },
+  {
+    "id": "page-08-00",
+    "title": "INSERT",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "INSRT",
+      "INS A",
+      "INS B",
+      "INS C"
+    ]
+  },
+  {
+    "id": "page-09-00",
+    "title": "INSERT 2",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "MIX",
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "id": "page-10-00",
+    "title": "DLY",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "TIME",
+      "FDBK",
+      "COLR",
+      "MIX"
+    ]
+  },
+  {
+    "id": "page-11-00",
+    "title": "REVERB",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "TYPE",
+      "SIZE",
+      "DAMP",
+      ""
+    ]
+  },
+  {
+    "id": "page-12-00",
+    "title": "CHORUS",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "CRT",
+      "CDP",
+      "",
+      ""
+    ]
+  },
+  {
+    "id": "page-13-00",
+    "title": "SCL",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "ROOT",
+      "SCL",
+      "QNT",
+      "TRN"
+    ]
+  },
+  {
+    "id": "page-14-00",
+    "title": "CHORD",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "ROOT",
+      "SCL",
+      "CHRD",
+      "VOIC"
+    ]
+  },
+  {
+    "id": "page-15-00",
+    "title": "EDIT 1 / ANALOG",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "WAVE",
+      "DTN",
+      "MIX",
+      "NOIS"
+    ]
+  },
+  {
+    "id": "page-15-02",
+    "title": "EDIT 1 / PHASE",
+    "group": "Pages",
+    "engine": "PHASE",
+    "knobs": [
+      "WAVE",
+      "WAVE2",
+      "DCW",
+      "ENV"
+    ]
+  },
+  {
+    "id": "page-15-03",
+    "title": "EDIT 1 / LOFI",
+    "group": "Pages",
+    "engine": "LOFI",
+    "knobs": [
+      "CHIP",
+      "WAVE",
+      "DUTY",
+      "CRSH"
+    ]
+  },
+  {
+    "id": "page-15-04",
+    "title": "EDIT 1 / SAMPLE",
+    "group": "Pages",
+    "engine": "SAMPLE",
+    "knobs": [
+      "SET",
+      "TUNE",
+      "BITS",
+      "LOOP"
+    ]
+  },
+  {
+    "id": "page-15-05",
+    "title": "EDIT 1 / VOICE",
+    "group": "Pages",
+    "engine": "VOICE",
+    "knobs": [
+      "VOWL",
+      "VOWL2",
+      "TALK",
+      "SHIFT"
+    ]
+  },
+  {
+    "id": "page-15-06",
+    "title": "EDIT 1 / TRIO",
+    "group": "Pages",
+    "engine": "TRIO",
+    "knobs": [
+      "WAVE",
+      "INT2",
+      "INT3",
+      "DTN"
+    ]
+  },
+  {
+    "id": "page-15-07",
+    "title": "EDIT 1 / WHEEL",
+    "group": "Pages",
+    "engine": "WHEEL",
+    "knobs": [
+      "REG",
+      "SUB",
+      "BODY",
+      "TOP"
+    ]
+  },
+  {
+    "id": "page-15-08",
+    "title": "EDIT 1 / GRAIN",
+    "group": "Pages",
+    "engine": "GRAIN",
+    "knobs": [
+      "SRC",
+      "POS",
+      "SIZE",
+      "DENS"
+    ]
+  },
+  {
+    "id": "page-15-09",
+    "title": "EDIT 1 / PHYS",
+    "group": "Pages",
+    "engine": "PHYS",
+    "knobs": [
+      "MODEL",
+      "STRC",
+      "BRIT",
+      "DAMP"
+    ]
+  },
+  {
+    "id": "page-15-10",
+    "title": "EDIT 1 / DRUM",
+    "group": "Pages",
+    "engine": "DRUM",
+    "knobs": [
+      "KIT",
+      "TUNE",
+      "TONE",
+      "DECY"
+    ]
+  },
+  {
+    "id": "page-15-11",
+    "title": "EDIT 1 / NOISE",
+    "group": "Pages",
+    "engine": "NOISE",
+    "knobs": [
+      "MODE",
+      "COLR",
+      "FREQ",
+      "RES"
+    ]
+  },
+  {
+    "id": "page-15-12",
+    "title": "EDIT 1 / FM6",
+    "group": "Pages",
+    "engine": "FM6",
+    "knobs": [
+      "ALG",
+      "FB",
+      "MLVL",
+      "MRAT"
+    ]
+  },
+  {
+    "id": "page-15-13",
+    "title": "EDIT 1 / SLICE",
+    "group": "Pages",
+    "engine": "SLICE",
+    "knobs": [
+      "SRC",
+      "DIV",
+      "START",
+      "PTCH"
+    ]
+  },
+  {
+    "id": "page-16-00",
+    "title": "EDIT 2 / ANALOG",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "CUT",
+      "RES",
+      "DRV",
+      "KTR"
+    ]
+  },
+  {
+    "id": "page-16-02",
+    "title": "EDIT 2 / PHASE",
+    "group": "Pages",
+    "engine": "PHASE",
+    "knobs": [
+      "DTN",
+      "LINE",
+      "SUB",
+      "FOLD"
+    ]
+  },
+  {
+    "id": "page-16-03",
+    "title": "EDIT 2 / LOFI",
+    "group": "Pages",
+    "engine": "LOFI",
+    "knobs": [
+      "SWP",
+      "VIB",
+      "ARP",
+      "TONE"
+    ]
+  },
+  {
+    "id": "page-16-04",
+    "title": "EDIT 2 / SAMPLE",
+    "group": "Pages",
+    "engine": "SAMPLE",
+    "knobs": [
+      "CUT",
+      "",
+      "DRV",
+      ""
+    ]
+  },
+  {
+    "id": "page-16-05",
+    "title": "EDIT 2 / VOICE",
+    "group": "Pages",
+    "engine": "VOICE",
+    "knobs": [
+      "BUZZ",
+      "BRTH",
+      "Q",
+      "RAND"
+    ]
+  },
+  {
+    "id": "page-16-06",
+    "title": "EDIT 2 / TRIO",
+    "group": "Pages",
+    "engine": "TRIO",
+    "knobs": [
+      "MODE",
+      "CUT",
+      "RES",
+      "PW"
+    ]
+  },
+  {
+    "id": "page-16-07",
+    "title": "EDIT 2 / WHEEL",
+    "group": "Pages",
+    "engine": "WHEEL",
+    "knobs": [
+      "PERC",
+      "CLICK",
+      "DRV",
+      "ROTR"
+    ]
+  },
+  {
+    "id": "page-16-08",
+    "title": "EDIT 2 / GRAIN",
+    "group": "Pages",
+    "engine": "GRAIN",
+    "knobs": [
+      "PTCH",
+      "SPRD",
+      "RAND",
+      "TONE"
+    ]
+  },
+  {
+    "id": "page-16-09",
+    "title": "EDIT 2 / PHYS",
+    "group": "Pages",
+    "engine": "PHYS",
+    "knobs": [
+      "POS",
+      "ACC",
+      "BOW",
+      "EXC"
+    ]
+  },
+  {
+    "id": "page-16-10",
+    "title": "EDIT 2 / DRUM",
+    "group": "Pages",
+    "engine": "DRUM",
+    "knobs": [
+      "SNAP",
+      "ACC",
+      "KICK",
+      "DRV"
+    ]
+  },
+  {
+    "id": "page-16-11",
+    "title": "EDIT 2 / NOISE",
+    "group": "Pages",
+    "engine": "NOISE",
+    "knobs": [
+      "TRK",
+      "DENS",
+      "DRFT",
+      "CRSH"
+    ]
+  },
+  {
+    "id": "page-16-12",
+    "title": "EDIT 2 / FM6",
+    "group": "Pages",
+    "engine": "FM6",
+    "knobs": [
+      "MEG",
+      "VMOD",
+      "DTUN",
+      "SLOT"
+    ]
+  },
+  {
+    "id": "page-16-13",
+    "title": "EDIT 2 / SLICE",
+    "group": "Pages",
+    "engine": "SLICE",
+    "knobs": [
+      "MODE",
+      "REV",
+      "DCAY",
+      "TONE"
+    ]
+  },
+  {
+    "id": "page-17-00",
+    "title": "FILTER",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "TYPE",
+      "CUT",
+      "RES",
+      "KTR"
+    ]
+  },
+  {
+    "id": "page-18-10",
+    "title": "LANES",
+    "group": "Pages",
+    "engine": "DRUM",
+    "knobs": [
+      "KICK",
+      "SNARE",
+      "CLAP",
+      "HATCL"
+    ]
+  },
+  {
+    "id": "page-19-10",
+    "title": "LANES 2",
+    "group": "Pages",
+    "engine": "DRUM",
+    "knobs": [
+      "HATOP",
+      "TOM",
+      "RIM",
+      "BELL"
+    ]
+  },
+  {
+    "id": "page-20-13",
+    "title": "SLICES",
+    "group": "Pages",
+    "engine": "SLICE",
+    "knobs": [
+      "SLICE",
+      "POS",
+      "SPLIT",
+      "JOIN"
+    ]
+  },
+  {
+    "id": "page-21-12",
+    "title": "OPERATOR",
+    "group": "Pages",
+    "engine": "FM6",
+    "knobs": [
+      "OP",
+      "RATIO",
+      "FINE",
+      "LEVEL"
+    ]
+  },
+  {
+    "id": "page-22-12",
+    "title": "OP ENV",
+    "group": "Pages",
+    "engine": "FM6",
+    "knobs": [
+      "OP",
+      "STAGE",
+      "RATE",
+      "LEVEL"
+    ]
+  },
+  {
+    "id": "page-23-12",
+    "title": "OPERATOR 2",
+    "group": "Pages",
+    "engine": "FM6",
+    "knobs": [
+      "OP",
+      "MODE",
+      "DTUN",
+      "VEL"
+    ]
+  },
+  {
+    "id": "page-29-00",
+    "title": "VOICE",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "VCE",
+      "GLD",
+      "GLMOD",
+      "PRIO"
+    ]
+  },
+  {
+    "id": "page-30-00",
+    "title": "VOICE 2",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "ALLOC",
+      "DTUNE",
+      "PAN",
+      "MUTE"
+    ]
+  },
+  {
+    "id": "page-31-00",
+    "title": "VOICE 3",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SPRD",
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "id": "page-32-00",
+    "title": "SONG",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SECTION",
+      "TRACK",
+      "PATTERN",
+      "LOOPS"
+    ]
+  },
+  {
+    "id": "page-33-00",
+    "title": "USER",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SLOT",
+      "LOAD",
+      "ERASE",
+      "SAVE"
+    ]
+  },
+  {
+    "id": "page-34-00",
+    "title": "PRESETS",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "No.",
+      "ENG",
+      "FAV",
+      "LIST"
+    ]
+  },
+  {
+    "id": "page-35-00",
+    "title": "PHRASES",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "PAT",
+      "LOAD",
+      "",
+      ""
+    ]
+  },
+  {
+    "id": "page-36-00",
+    "title": "PROJECT",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SLOT",
+      "ERASE",
+      "LOAD",
+      "SAVE"
+    ]
+  },
+  {
+    "id": "page-37-00",
+    "title": "TOOLS",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "PAT",
+      "SOUND",
+      "SEC",
+      "SONG"
+    ]
+  },
+  {
+    "id": "page-38-00",
+    "title": "ARP",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "MODE",
+      "RATE",
+      "OCT",
+      "GATE"
+    ]
+  },
+  {
+    "id": "page-39-00",
+    "title": "ARP 2",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "SWG",
+      "PROB",
+      "HOLD",
+      "ORD"
+    ]
+  },
+  {
+    "id": "page-40-00",
+    "title": "STEP",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "STEP",
+      "NOTE",
+      "LENGTH",
+      "FEEL"
+    ]
+  },
+  {
+    "id": "page-41-00",
+    "title": "DETAIL",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "CHANCE",
+      "RATCH",
+      "NUDGE",
+      "VEL"
+    ]
+  },
+  {
+    "id": "page-42-00",
+    "title": "AUTOMATION",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "ROW",
+      "EVENT",
+      "LOCK",
+      "PLAY"
+    ]
+  },
+  {
+    "id": "page-43-00",
+    "title": "MIXER",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "LEVEL",
+      "LEVEL",
+      "LEVEL",
+      "LEVEL"
+    ]
+  },
+  {
+    "id": "page-44-00",
+    "title": "CLOCK",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "BPM",
+      "SWG",
+      "CLK",
+      ""
+    ]
+  },
+  {
+    "id": "drum-grid",
+    "title": "RIDDIM GRID",
+    "group": "Sequencer",
+    "engine": "DRUM",
+    "knobs": [
+      "STEP",
+      "DRUM",
+      "HIT",
+      "ACCENT"
+    ]
+  },
+  {
+    "id": "mixer-pan",
+    "title": "MIXER / PAN",
+    "group": "Mixer",
+    "engine": "WHEEL",
+    "knobs": [
+      "PAN",
+      "PAN",
+      "PAN",
+      "PAN"
+    ]
+  },
+  {
+    "id": "mixer-reverb",
+    "title": "MIXER / REVERB",
+    "group": "Mixer",
+    "engine": "WHEEL",
+    "knobs": [
+      "REVERB",
+      "REVERB",
+      "REVERB",
+      "REVERB"
+    ]
+  },
+  {
+    "id": "held-0",
+    "title": "ENGINE WORKSHOP",
+    "group": "Held controls",
+    "engine": "WHEEL",
+    "knobs": [
+      "ENG",
+      "No.",
+      "FAV",
+      ""
+    ]
+  },
+  {
+    "id": "held-1",
+    "title": "SCALE GARDEN",
+    "group": "Held controls",
+    "engine": "WHEEL",
+    "knobs": [
+      "ROOT",
+      "SCL",
+      "CHRD",
+      "VOIC"
+    ]
+  },
+  {
+    "id": "held-2",
+    "title": "RECORD DESK",
+    "group": "Held controls",
+    "engine": "WHEEL",
+    "knobs": [
+      "CLICK",
+      "COUNT",
+      "LEVEL",
+      ""
+    ]
+  },
+  {
+    "id": "held-3",
+    "title": "PATTERN TOOLS",
+    "group": "Held controls",
+    "engine": "WHEEL",
+    "knobs": [
+      "LEN",
+      "DIV",
+      "SWG",
+      "GATE"
+    ]
+  },
+  {
+    "id": "euclid",
+    "title": "EUCLID",
+    "group": "Sequencer",
+    "engine": "WHEEL",
+    "knobs": [
+      "HITS",
+      "STEPS",
+      "ROT",
+      ""
+    ]
+  },
+  {
+    "id": "held-4",
+    "title": "DUB PUNCH-IN",
+    "group": "Held controls",
+    "engine": "WHEEL",
+    "knobs": [
+      "FILTER",
+      "CRUSH",
+      "THROW",
+      "DEPTH"
+    ]
+  },
+  {
+    "id": "held-5",
+    "title": "HELD MIXER",
+    "group": "Held controls",
+    "engine": "WHEEL",
+    "knobs": [
+      "LEVEL",
+      "LEVEL",
+      "LEVEL",
+      "LEVEL"
+    ]
+  },
+  {
+    "id": "settings-0",
+    "title": "DISPLAY",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "VALUE",
+      "VALUE",
+      "VALUE",
+      "VALUE"
+    ]
+  },
+  {
+    "id": "settings-1",
+    "title": "CONTROL",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "VALUE",
+      "VALUE",
+      "VALUE",
+      "VALUE"
+    ]
+  },
+  {
+    "id": "settings-2",
+    "title": "AUDIO",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "VALUE",
+      "VALUE",
+      "VALUE",
+      "VALUE"
+    ]
+  },
+  {
+    "id": "settings-3",
+    "title": "MIDI",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "VALUE",
+      "VALUE",
+      "VALUE",
+      "VALUE"
+    ]
+  },
+  {
+    "id": "settings-4",
+    "title": "SYSTEM",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "VALUE",
+      "VALUE",
+      "VALUE",
+      "VALUE"
+    ]
+  },
+  {
+    "id": "credits",
+    "title": "LABEL CREDITS",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "--",
+      "--",
+      "--",
+      "--"
+    ]
+  },
+  {
+    "id": "info",
+    "title": "SYSTEM METERS",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "--",
+      "--",
+      "--",
+      "--"
+    ]
+  },
+  {
+    "id": "name",
+    "title": "LABEL PRESS",
+    "group": "Saving",
+    "engine": "WHEEL",
+    "knobs": [
+      "CURSOR",
+      "CHARACTER",
+      "CATEGORY / RANDOM",
+      "--"
+    ]
+  },
+  {
+    "id": "confirm",
+    "title": "CONFIRMATION",
+    "group": "Saving",
+    "engine": "WHEEL",
+    "knobs": [
+      "--",
+      "--",
+      "--",
+      "--"
+    ]
+  },
+  {
+    "id": "update",
+    "title": "UPDATE COUNTDOWN",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "--",
+      "--",
+      "--",
+      "--"
+    ]
+  },
+  {
+    "id": "count-in",
+    "title": "COUNT-IN",
+    "group": "Saving",
+    "engine": "WHEEL",
+    "knobs": [
+      "--",
+      "--",
+      "--",
+      "--"
+    ]
+  },
+  {
+    "id": "calibration",
+    "title": "CALIBRATION",
+    "group": "Settings",
+    "engine": "WHEEL",
+    "knobs": [
+      "PROMPT",
+      "PROMPT",
+      "PROMPT",
+      "PROMPT"
+    ]
+  }
+]

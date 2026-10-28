@@ -106,3 +106,10 @@ HOME cycle is MIXER → CLOCK → instrument. Mute/solo remain available through
   settings cards, record-sleeve browsing, label-printer naming, cable modulation,
   clock/chorus characters and matching dialogs/calibration. Preserve technical
   graphs and control semantics. Physical-device verification still outstanding.
+
+### UI 0.7.1
+
+- [x] Fifteen additional chord types with four-voice voicings and saved-project compatibility.
+- [x] Searchable screenshot guide covering musical pages, settings and four-knob controls.
+- [x] Native chord/audio and actual WASM input checks; hardware target build.
+- [ ] Physical FM-1 and iPhone Safari verification.

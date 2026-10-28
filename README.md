@@ -28,6 +28,12 @@ instrument workbench. Hold **HOME** for Settings; ALGORITHM selects a tab,
 PRESETS selects an item, OCT−/+ changes it, HOME closes it.
 [Native screenshots and verification](docs/reports/ui-0.7.0.md).
 
+**UI 0.7.1 adds 15 chord types**: suspended, sixth, add9, ninth, diminished,
+augmented and minor-major colours. SCL → CHORD: K3 type, K4 voicing.
+Read the [screenshot quick guide](https://kemsthesage.github.io/reggae-os/guide/)
+for every musical page, how to reach it and all four knob assignments.
+[Build and test report](docs/reports/ui-0.7.1.md).
+
 **Early development build. Physical hardware and iPhone Safari are untested.**
 The expanded sounds are audition candidates; musical refinement is ongoing.
 See [TESTING.md](TESTING.md) for measured results and known limitations, and the

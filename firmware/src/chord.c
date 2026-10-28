@@ -4,22 +4,27 @@
  * after kb_map; runs in the audio ISR with the rest of the note input.
  *   CHRD OFF; DIA3 / DIA7: the triad / seventh of the track's scale (ROOT, SCALE) built on the key, every tone
  *        in key (a key outside the scale takes the scale note below it, as QNT SNAP does; CHR builds on the
- *        major scale of ROOT); MAJ MIN DOM7 MAJ7 MIN7 SUS4 POW: that shape on the key, whatever the scale.
+ *        major scale of ROOT); all named fixed shapes: that shape on the key, whatever the scale.
  *   VOIC CLOSE (root position); OPEN (the second tone an octave up: 1-5-3); INV1 / INV2 (the lowest tone, then
- *        the next, an octave up); +OCT (the root an octave down added; a seventh drops its fifth). At most
+ *        the next, an octave up); +OCT (the root an octave down added; four-tone shapes drop a tone to fit). At most
  *        CHORD_MAX notes, notes outside 0..127 left out.
  * The key is mapped first (kb_map: QNT SNAP / WHITE, TRN, the octave), the chord is built on the note it gives.
  * MONO / LEGATO / UNISON parts play the chord's root only; a kit (the DRUM engine, slices: an
  * engine that maps the keys itself) ignores CHRD. Every source keeps the notes it started (kb_chord for a
  * key, mchord for a MIDI note) and its release ends exactly those, so CHRD / VOIC changed while it is held
  * leave nothing hanging. A note several sources hold sounds once and ends with the last of them. */
-enum { CH_OFF, CH_DIA3, CH_DIA7, CH_MAJ, CH_MIN, CH_DOM7, CH_MAJ7, CH_MIN7, CH_SUS4, CH_POW };
+enum { CH_OFF, CH_DIA3, CH_DIA7, CH_MAJ, CH_MIN, CH_DOM7, CH_MAJ7, CH_MIN7, CH_SUS4, CH_POW, CH_SUS2, CH_MAJ6, CH_MIN6, CH_ADD9, CH_MADD9, CH_DOM9, CH_MAJ9, CH_MIN9, CH_7SUS4, CH_DIM, CH_DIM7, CH_HALF_DIM, CH_AUG, CH_MMAJ7, CH_69, CH_COUNT };
 enum { VC_CLOSE, VC_OPEN, VC_INV1, VC_INV2, VC_BASS };
 #define CHORD_MAX 4u
 #define MCHORD_N 24u                     /* MIDI notes held as chords at once (more: their root alone) */
 
-static const int8_t CHORD_SHAPE[CH_POW - CH_MAJ + 1][CHORD_MAX] = {
+static const int8_t CHORD_SHAPE[CH_COUNT - CH_MAJ][CHORD_MAX] = {
     {0, 4, 7, -1}, {0, 3, 7, -1}, {0, 4, 7, 10}, {0, 4, 7, 11}, {0, 3, 7, 10}, {0, 5, 7, -1}, {0, 7, 12, -1},
+    /* Appended IDs preserve old saved patches. Ninth/6-9 voicings omit the
+     * fifth to fit four voices; their thirds and colour tones remain intact. */
+    {0, 2, 7, -1}, {0, 4, 7, 9}, {0, 3, 7, 9}, {0, 4, 7, 14}, {0, 3, 7, 14},
+    {0, 4, 10, 14}, {0, 4, 11, 14}, {0, 3, 10, 14}, {0, 5, 7, 10},
+    {0, 3, 6, -1}, {0, 3, 6, 9}, {0, 3, 6, 10}, {0, 4, 8, -1}, {0, 3, 7, 11}, {0, 4, 9, 14},
 };
 
 static uint8_t kb_chord[27][CHORD_MAX], kb_chn[27];   /* the notes key k started (kb_chn 0: none) */
@@ -77,7 +82,7 @@ static uint32_t chord_make(const track_t *t, uint32_t root, uint8_t *out, int32_
     uint16_t mask = 0;
     *rp = r;
     *maskp = 0;
-    if (!mode || mode > CH_POW || chord_kit(t)) {
+    if (!mode || mode >= CH_COUNT || chord_kit(t)) {
         out[0] = (uint8_t)root;
         return 1;
     }
@@ -106,7 +111,10 @@ static uint32_t chord_make(const track_t *t, uint32_t root, uint8_t *out, int32_
         break;
     case VC_BASS:                                       /* the root an octave down; a seventh drops its fifth */
         if (n == CHORD_MAX) {
-            iv[2] = iv[3];
+            /* Preserve legacy +OCT. Extended shapes without a perfect fifth
+             * replace the upper root instead of losing their seventh/sixth. */
+            uint32_t drop = mode <= CH_POW || iv[2] == 7 ? 2u : 0u;
+            for(i=drop;i+1<n;i++)iv[i]=iv[i+1];
             n--;
         }
         for (i = n; i > 0; i--)
@@ -166,9 +174,9 @@ static void chord_name(char *b, uint32_t root, uint32_t mask)
     else if (ma && !mi && s5 && !p5)
         q = m7 ? "+7" : M7 ? "+M7" : "aug";
     else if (ma && !mi)
-        q = m7 ? "7" : M7 ? "maj7" : d7 ? "6" : "";
+        q = (mask & 4u) ? (m7 ? "9" : M7 ? "maj9" : d7 ? "6/9" : "add9") : m7 ? "7" : M7 ? "maj7" : d7 ? "6" : "";
     else if (mi)
-        q = m7 ? "m7" : M7 ? "mM7" : d7 ? "m6" : "m";
+        q = (mask & 4u) ? (m7 ? "m9" : "madd9") : m7 ? "m7" : M7 ? "mM7" : d7 ? "m6" : "m";
     else if ((mask >> 5) & 1u) {                        /* no third: suspended */
         q = m7 ? "7" : "";
         x = "sus4";

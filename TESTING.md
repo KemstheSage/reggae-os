@@ -484,3 +484,11 @@ cancellation and chorus redraw. Both are included in `tools/reggae/test.sh`.
 The screen sweep and interaction checks pass under AddressSanitizer. Rendering
 coverage is not a claim that every possible parameter combination is tested.
 See [UI 0.7.0](docs/reports/ui-0.7.0.md) for screenshots and hardware status.
+
+## UI 0.7.1
+
+Expanded chord shapes, actual WASM knob/input audio and unchanged preset PCM
+passed. Hardware image 542,596 bytes; static RAM and pool unchanged.
+The [release report](docs/reports/ui-0.7.1.md) records the tests and guide coverage.
+Run `node tests/reggae_chords_wasm.mjs` after the emulator build; the native
+chord test is included in `tools/reggae/test.sh`.

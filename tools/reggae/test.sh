@@ -59,3 +59,6 @@ build/reggae/skin-check
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/workspace-test tests/reggae_workspace.c -lm
 build/reggae/workspace-test
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/chords tests/reggae_chords.c -lm
+build/reggae/chords
