@@ -26,7 +26,7 @@ The default matrix mappings and hardware calibration are retained; upstream note
 some label mapping as a best guess and PLAY/REC as hardware measured.
 Do not treat every mapping as independently verified.
 
-HOME opens the performance view. PRESETS cycles the thirteen curated sounds when
+HOME opens the performance view. PRESETS cycles the fifteen curated sounds when
 already on one of them on HOME; other pages retain full-library browsing.
 EDIT, ENV, FX, held HOME menu and SAVE retain upstream navigation.
 Select lower octaves for bass. Original MIDI channels and four-part operation remain.
@@ -79,3 +79,12 @@ shared pool 328,896 / 368,640. The new gate/mono stages add no audio ring buffer
 Optional ROOTPERC uses 44,637 bytes ADPCM in one existing 80 KiB user flash slot,
 not extra application flash. Actual hardware playback/upload and CPU headroom
 remain untested; successful packaging alone is not a physical performance test.
+
+## First physical test kit
+
+See [HARDWARE_TEST.md](HARDWARE_TEST.md). The 0.7.1 candidate was rebuilt:
+542,596-byte application, 61,000-byte static RAM, 328,896-byte pool.
+The kit includes checksum validation and a read-only Mac identity-check launcher.
+No physical flash or recovery has been performed. The current official download
+is V16, not the V15 hash accepted by the pinned installer; verify the recovery
+route before the first write.
