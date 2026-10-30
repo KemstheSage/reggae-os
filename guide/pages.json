@@ -805,7 +805,7 @@
   },
   {
     "id": "page-33-00",
-    "title": "USER",
+    "title": "SOUNDS",
     "group": "Pages",
     "engine": "ANALOG",
     "knobs": [
@@ -957,6 +957,18 @@
       "NOTE",
       "LENGTH",
       "FEEL"
+    ]
+  },
+  {
+    "id": "page-46-00",
+    "title": "PUNCH-IN",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "FILTER",
+      "CRUSH",
+      "THROW",
+      "DEPTH"
     ]
   },
   {
