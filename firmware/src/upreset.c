@@ -584,7 +584,7 @@ static void up_ui_named(uint32_t op, uint32_t k, const char *name, uint32_t cat)
         up_load(k);
         if (up_has_pat(k))                              /* SAVE > PHRASES starts at its pattern */
             ui.ppick = (uint8_t)(NPATTERNS + up_pat_rank(k));
-        ui_say("LOADED ", l);
+        ui_message("SOUND ONLY / USE PROJECT");
         return;
     }
     rc = op == 1u ? up_put(k, 0) : op == 3u ? up_rename_cat(k, name, cat) : up_store_cat(k, name, cat);

@@ -98,9 +98,9 @@ a.render(800);
 const brK = a.ex.web_breath_keys(), brB = a.ex.web_breath_buttons(), litK = a.ex.web_lit_keys();
 a.ex.web_buttons(0);
 a.render(300);
-check("FX held: its button and the effects' keys breathe, none lit; let go: nothing",
+check("FX held: its button and the effects' keys breathe, none lit; release keeps punch page open",
       (brB >> B.FX & 1) === 1 && brK !== 0 && (brK & litK) === 0 && litK === 0 &&
-      a.ex.web_breath_keys() === 0 && a.ex.web_breath_buttons() === 0);
+      a.ex.web_breath_keys() !== 0 && (a.ex.web_breath_buttons() >> B.FX & 1) === 1);
 { // the page's breathing peaks against the firmware's (hal/fm1_input.h FM1_LED_BREATH_PK / _LO, /256 of lit): the
   // colour at 50 % between the dark and the lit one by the LED's share, gamma-encoded (sRGB), within 0.06
   const html = fs.readFileSync(new URL("./index.html", import.meta.url), "utf8");
@@ -121,12 +121,14 @@ check("FX held: its button and the effects' keys breathe, none lit; let go: noth
 
 // ---- a user preset saved from the panel, kept across a fresh instance
 const w0 = a.ex.web_flash_writes_count();
-a.tap(B.SAVE);
+a.tap(B.SAVE); // PROJECT first
+a.tap(B.SAVE); // TOOLS
+a.tap(B.SAVE); // SOUNDS
 a.tap(B.OCTUP);
 a.tap(B.OCTUP);
 a.render(200);
 const saved = storeSectors(new Uint8Array(a.mem.buffer, a.ex.web_nor(), a.ex.web_nor_size()));
-check(`SAVE, OCT+, OCT+: user preset 1 written (${Object.keys(saved).length} sectors kept)`,
+check(`SAVE to SOUNDS, OCT+, OCT+: user preset 1 written (${Object.keys(saved).length} sectors kept)`,
       a.ex.web_test_user_preset(0) === 1 && a.ex.web_flash_writes_count() > w0 && Object.keys(saved).length > 0);
 const kept = JSON.parse(JSON.stringify(Object.fromEntries(     // as the page keeps them (base64 in localStorage)
   Object.entries(saved).map(([k, v]) => [k, Buffer.from(v).toString("base64")]))));

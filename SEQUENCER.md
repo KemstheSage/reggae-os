@@ -194,3 +194,36 @@ within the existing flash-sector size. Earlier projects still load. Firmware
 before UI 0.7.3 cannot load a FUNB project: export/keep older projects before
 returning to an older release. User sound presets do not carry these edits;
 use PROJECT to preserve the complete pattern and its dynamics.
+
+## UI 0.7.4: saving beats and persistent punch-in
+
+SAVE now opens **PROJECT** first. K1 picks A–D; K4 selects SAVE; OCT+ opens the
+name/overwrite prompt and confirms. To recall a beat, select its slot with K1,
+select LOAD with K3, then press OCT+. Changing K1 to an occupied slot also selects LOAD automatically; it never carries an armed SAVE across. Slot selection alone does not load it. Each project stores all four tracks,
+patterns, individual velocities, sounds, mixer and arrangement. Loading stops
+playback. Saving requires stopped playback.
+
+The **SOUNDS** page (previously USER) stores an instrument. Loading it deliberately
+leaves the current beat playing and says `SOUND ONLY / USE PROJECT`. Two sound
+slots can therefore appear to play the same beat even though their stored sounds
+are independent. Use PROJECT for alternate beats; no existing sound/project data
+is erased or migrated by this interface change.
+
+Tap FX through its pages to **PUNCH-IN**, or hold FX then release. The punch-in
+page remains open. White keys trigger momentary effects, black keys mute tracks,
+and the four knobs control the existing performance macros. Releasing a key
+ends its momentary effect; releasing FX no longer closes the page. Tap FX for
+the next effects page or another page button to leave. FX LATCH retains its
+existing behaviour.
+
+Standard preset browsing now lists only the approved REGGAE-OS bank and your
+saved user sounds. EDIT engine selection chooses an approved patch or refuses
+engines without an approved patch. Existing projects and explicit editor/MIDI
+loads remain compatible; HOME's preset knob can recover from an older stock
+sound into the approved bank.
+
+Four tracks remain. Eight tracks is not a supported switch: four-track masks,
+project-sector packing, arrangement sources, per-part DSP state and UI all need
+review. The eight-voice audio budget is shared across tracks; eight tracks would
+not automatically mean eight independent polyphonic instruments. No eight-track
+change is made while hardware reliability is being established.

@@ -519,3 +519,23 @@ The legacy `motion_test.c` has three pre-existing UI failures under REGGAE-OS
 row). Running it against the untouched UI 0.7.2 source at `9a67ddf` reproduces the
 same three failures. Do not report that legacy suite as passing. Dedicated
 REGGAE gesture tests cover the intentionally changed controls.
+
+### UI 0.7.4 feedback regressions
+
+`tests/reggae_feedback.c` exercises independent project A/B flash records,
+cache-discard/reload, note/drum velocities, panel save/name/load through C/D,
+occupied-slot overwrite confirmation, failed-format save refusal, persistent
+punch-in entry/exit, and approved-bank browsing/recovery. The original reported
+hardware duplicate-beat behaviour is **not reproduced**; do not call it a confirmed
+storage fix. Save/load messages now identify the slot and occupied-slot selection
+arms LOAD rather than carrying SAVE across. Selecting a slot still requires OCT+
+to load it.
+
+`node tests/reggae_project_wasm.mjs` uses actual panel operations to save different
+notes to A/B, verifies A's flash bytes are unchanged, serializes the same sectors
+as the browser, starts fresh WASM instances and recalls both. Both are audible,
+finite and unclipped; A repeats identically and differs from B. This verifies
+emulator persistence, not physical NOR or power-cycle behaviour on the user's FM-1.
+
+`web/emu/emu_test.mjs` now expects persistent punch-in and navigates to SOUNDS
+explicitly for its existing user-preset persistence check.

@@ -265,7 +265,7 @@ static void name_ok(void)
         up_ui_named(3, nm.slot, b, nm.cat);
         break;
     case NK_PROJ_SAVE:
-        project_save_as(nm.slot, b);
+        if (project_save_as(nm.slot, b)) return;
         break;
     default:
         project_rename(nm.slot, b);

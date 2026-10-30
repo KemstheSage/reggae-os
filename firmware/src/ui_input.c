@@ -1026,7 +1026,7 @@ static void edit_param(uint32_t slot, int32_t steps)
         if (slot == 0u) {
             preset_step(steps);
         } else if (slot == 1u) {
-            select_engine(eng_step(TSEL->eng_req, steps));
+            preset_step(steps);
         } else if (slot == 2u) {
             preset_mark(steps > 0);
         } else if (slot == 3u) {                          /* LIST: ALL FAV BASS .. OTHER (ui.c list_mode), no wrap */
@@ -1060,6 +1060,13 @@ static void edit_param(uint32_t slot, int32_t steps)
     if ((act_cols() >> slot) & 1u) {                      /* an action's knob picks it (right) or drops it (left); */
         if (pg->graph != GR_PATS)                         /* OCT+ does it (act_do) */
             ui.act = steps > 0 ? (uint8_t)(slot + 1u) : ui.act == slot + 1u ? 0u : ui.act;
+        return;
+    }
+    if (pg->graph == GR_SLOTS && slot == 0u) {
+        song.g[G_SLOT] = (int16_t)clamp(song.g[G_SLOT] + steps, 1, 4);
+        /* Changing destination never carries an armed overwrite into another slot. */
+        ui.act = project_used((uint32_t)song.g[G_SLOT]-1u) ? 3u : 4u;
+        ui_message(ui.act==3u ? "OCT+: LOAD SELECTED" : "EMPTY / OCT+: SAVE");
         return;
     }
     if (pg->graph == GR_USER) {                           /* KNOB 1 the slot */

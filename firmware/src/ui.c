@@ -525,6 +525,7 @@ static int help_on(void) { return (ui_prefs2 & (PREF_HELP >> 16)) != 0u; }
 static uint32_t midi_lit_ms[NTRK];
 static int midi_lit(uint32_t k) { return midi_lit_ms[k % NTRK] && (fm1_ms | 1u) - midi_lit_ms[k % NTRK] < MLIT_MS; }
 static void help_start(void) { ui.help_t = (uint8_t)(help_on() ? HELP_FRAMES : 0u); }
+static void punch_page_enter(void);
 static void page_entered(void)
 {
     const page_t *pg = cur_page();
@@ -535,8 +536,9 @@ static void page_entered(void)
     song.seq_mode = !ui.home && pg->fam == FAM_SEQ;
     ui.entry_open = 0;
     ui.hot_t = 0;                                /* clear the previous page's emphasis */
-    ui.act = pg->graph == GR_USER ? 4u : 0u;     /* the save screen is ready for OCT+ */
+    ui.act = (pg->graph == GR_USER || pg->graph == GR_SLOTS) ? 4u : 0u;     /* the save screen is ready for OCT+ */
     ui.tl_clean = 0;
+    if (!ui.home && pg->graph == GR_PUNCH) punch_page_enter();
     help_start();
     ui.force = 1;
 }
@@ -793,8 +795,8 @@ static void open_family(uint32_t fam)
     } else if (fam == FAM_SAVE) {
         uint32_t i;
         for (i = 0; i < NPAGES; i++)
-            if (PAGES[i].graph == GR_USER) break;
-        ui.page = (uint8_t)i;                         /* SAVE enters the sound save screen directly */
+            if (PAGES[i].graph == GR_SLOTS) break;
+        ui.page = (uint8_t)i;                         /* SAVE enters complete beat/project storage. */
     } else {
         uint32_t i = ui.fam_last[fam];
         ui.page = (uint8_t)(i && i < NPAGES && PAGES[i].fam == fam && page_visible(i) ? i : page_first(fam));
@@ -1532,38 +1534,24 @@ static void select_engine(uint32_t e)
     ui.force = 1;
 }
 
-/* the presets of every engine (in ENGINE_ORDER), then the used user presets, as one list (the PRESETS knob and the
- * PRESETS page browse it) */
+/* Approved REGGAE-OS patches followed by the user's own sounds, on every browser page. */
 static uint32_t preset_all_pos(uint32_t *total)          /* list index of the selected track's preset */
 {
-    uint32_t n = 0, cur = 0, e, r;
-    for (r = 0; r < NENG_SHOWN; r++) {                  /* (engines.c ENGINE_ORDER) */
-        const engine_t *en = ENGINES[e = eng_vis(r)];
-        if (e == TSEL->eng_req)
-            cur = n + preset_rank(en, preset_orig(en, TSEL->preset % (en->npresets ? en->npresets : 1u)));
-        n += preset_shown(e);
-    }
-    if (user_of(TSEL) < UP_SLOTS)
-        cur = n + up_rank(user_of(TSEL));
+    uint32_t n = NELEM(REGGAE_BANK), u = user_of(TSEL);
+    int r = reggae_index(TSEL);
     *total = n + up_count();
-    return cur;
+    return u < UP_SLOTS ? n + up_rank(u) : r >= 0 ? (uint32_t)r : *total;
 }
 
 /* list index n (< total) -> engine, *k its preset; NENGINES = user preset, *k its slot */
 static uint32_t preset_all_at(uint32_t n, uint32_t *k)
 {
-    uint32_t e = 0, i, r;
-    for (r = 0; r < NENG_SHOWN && n >= preset_shown(eng_vis(r)); r++)
-        n -= preset_shown(eng_vis(r));
-    if (r == NENG_SHOWN) {
-        *k = up_nth(n);
-        return NENGINES;
+    if (n < NELEM(REGGAE_BANK)) {
+        *k = REGGAE_BANK[n].preset;
+        return REGGAE_BANK[n].engine;
     }
-    e = eng_vis(r);
-    for (i = 0; preset_orig(ENGINES[e], i) != i || n--; i++)    /* the n-th shown preset */
-        ;
-    *k = i;
-    return e;
+    *k = up_nth(n - NELEM(REGGAE_BANK));
+    return NENGINES;
 }
 
 /* PRESETS > LIST (KNOB 4): ALL, FAV (favorites.filter, as up to 1.1.5), or one category (1.2, Discussion #90: BASS ..
@@ -1694,51 +1682,42 @@ static void preset_go(uint32_t n)                    /* load list index n into t
  * made with it (slot order). List index of the current sound; *total the length */
 static uint32_t eng_list_pos(uint32_t *total)
 {
-    const engine_t *en = ENGINES[TSEL->eng_req % NENGINES];
-    uint32_t e = TSEL->eng_req % NENGINES, np = preset_shown(e), u = user_of(TSEL), k, n = 0;
-    uint32_t cur = np ? preset_rank(en, preset_orig(en, TSEL->preset % en->npresets)) : 0u;   /* (#124: the aliases
-                                        * skipped, as on PRESETS: SAMPLE 1 loads as 0, so counting it stuck KNOB 2) */
-    for (k = 0; k < UP_SLOTS; k++)
-        if (up_used(k) && up_engine(k) == e) {
-            if (k == u)
-                cur = np + n;
-            n++;
-        }
-    *total = np + n;
-    return cur;
+    uint32_t cur = preset_pos(total);
+    return cur < *total ? cur : 0u;
 }
 
-static void eng_list_step(int32_t direction)         /* the next / previous sound of the engine (wraps) */
+static void reggae_select_engine(uint32_t e)
 {
-    uint32_t total, cur = eng_list_pos(&total), e = TSEL->eng_req % NENGINES, np = preset_shown(e), k, n;
-    if (total < 2u)
+    for (uint32_t i=0;i<NELEM(REGGAE_BANK);i++) if(REGGAE_BANK[i].engine==e) {
+        if(TSEL->eng_req!=e) select_engine(e);
+        apply_preset(REGGAE_BANK[i].preset);
         return;
-    n = (cur + (direction > 0 ? 1u : total - 1u)) % total;
-    if (n < np) {
-        for (k = 0; preset_orig(ENGINES[e], k) != k || n--; k++)   /* the n-th shown preset */
-            ;
-        apply_preset(k);
-    } else {
-        n -= np;
-        for (k = 0; k < UP_SLOTS; k++)
-            if (up_used(k) && up_engine(k) == e && !n--) {
-                up_load(k);
-                break;
-            }
     }
-    preset_hinted();
+    ui_message("REGGAE BANK ONLY");
+}
+
+static void eng_list_step(int32_t direction)         /* next / previous approved or saved sound (wraps) */
+{
+    uint32_t total, cur = preset_pos(&total);
+    if (!total) return;
+    preset_go(cur >= total ? 0 : (cur + (direction > 0 ? 1 : total - 1)) % total);
 }
 
 static void preset_step(int32_t direction)
 {
     /* On the performance page, cycle the curated REGGAE-OS instruments.
-     * PRESETS browse and all other pages retain the complete upstream library. */
+     * Other pages use the same bank plus saved user sounds. */
     int r = reggae_index(TSEL);
-    if (ui.home && !home_levels() && r >= 0 && !list_mode()) {
+    if (ui.home && !home_levels() && !list_mode()) {
         /* Performance bank: track four stays the Roots drum kit; other tracks
          * retain the complete bank. Full editor/user-preset compatibility stays intact. */
-        if (song.sel == 3) { ui_message("DRUM TRACK / EDIT KIT"); return; }
-        r = (r + (direction > 0 ? 1 : NELEM(REGGAE_BANK)-1)) % NELEM(REGGAE_BANK);
+        if (song.sel == 3) {
+            if (r < 0) for (uint32_t i=0;i<NELEM(REGGAE_BANK);i++) if(REGGAE_BANK[i].kind==RG_DRUM) {
+                select_engine(REGGAE_BANK[i].engine);apply_preset(REGGAE_BANK[i].preset);preset_hinted();return;
+            }
+            ui_message("DRUM TRACK / EDIT KIT"); return;
+        }
+        r = r < 0 ? 0 : (r + (direction > 0 ? 1 : NELEM(REGGAE_BANK)-1)) % NELEM(REGGAE_BANK);
         if (TSEL->eng_req != REGGAE_BANK[r].engine) select_engine(REGGAE_BANK[r].engine);
         apply_preset(REGGAE_BANK[r].preset);
         preset_hinted();

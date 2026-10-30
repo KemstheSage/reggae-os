@@ -159,7 +159,7 @@ static void layer_arm(uint32_t pressed, uint32_t now)
         if (pressed & ly_bit(l)) {
             ui.ly = (uint8_t)l;
             ui.ly_t0 = (now & ~15u) | 1u | (layer_allowed() ? 0u : LY_DEAD);
-            lys.dtap = !(ui.home && l == LAYER_REC) && lys.dt_l == l && fm1_ms - lys.dt_ms <= LY_DTAP_MS;   /* (#83: the second tap of a double tap?) */
+            lys.dtap = l != LAYER_FX && !(ui.home && l == LAYER_REC) && lys.dt_l == l && fm1_ms - lys.dt_ms <= LY_DTAP_MS;   /* (#83: the second tap of a double tap?) */
             lys.dt_l = 0;
             return;
         }
@@ -200,8 +200,12 @@ static void layer_lock_input(uint32_t pressed)
         lys.dt_l = 0;
     if (!ui.lock)
         return;
-    if (pressed & ly_bit(ui.lock))
-        ui.lock = 0;
+    if (pressed & ly_bit(ui.lock)) {
+        if (ui.lock == LAYER_FX && cur_page()->graph == GR_PUNCH) {
+            layer_let_go(1); /* Re-arm this press as a normal tap to the next FX page. */
+            lys.dt_l = 0;
+        } else ui.lock = 0;
+    }
     else if (pressed & ~keep)
         layer_let_go(1);
 }
@@ -265,6 +269,16 @@ static void layer_opened(uint32_t l)
         lys.v[0] = ui_rec_prefs;
 }
 
+/* Persistent punch page reuses the tested performance-layer input and DSP path. */
+static void punch_page_enter(void)
+{
+    if (!layer_allowed()) return;
+    ui.ly = ui.lock = LAYER_FX;
+    ui.ly_t0 = 1u | LY_OPEN;
+    lys.dt_l = 0;
+    layer_opened(LAYER_FX);
+}
+
 /* the armed button: 0, or the layer whose button was tapped (let go) */
 static uint32_t layer_gesture(uint32_t now, uint32_t combo)
 {
@@ -281,6 +295,12 @@ static uint32_t layer_gesture(uint32_t now, uint32_t combo)
             *t0 |= LY_OPEN | (combo ? LY_COMBO : 0u);
             layer_opened(l);
         }
+        return 0;
+    }
+    if (l == LAYER_FX && (*t0 & LY_OPEN) && !(*t0 & LY_DEAD)) {
+        /* A held punch map joins the persistent FX page when released. */
+        for (uint32_t i=0;i<NPAGES;i++) if(PAGES[i].graph==GR_PUNCH) ui.page=(uint8_t)i;
+        ui.home=0;ui.lock=LAYER_FX;ui.fam_last[FAM_FX]=ui.page;
         return 0;
     }
     l = *t0 & (LY_OPEN | LY_DEAD) || combo ? 0u : l;   /* (a knob turned as it was let go: a combo, no tap) */
@@ -331,6 +351,10 @@ static void layer_tap(uint32_t l)
         lys.nv.go = (uint8_t)(idle && transport_req == 1u);
     } else {
         acted = page_tap(LAYERS[l].btn);
+        if (l == LAYER_FX && cur_page()->graph == GR_PUNCH) {
+            lys.dt_l = 0;
+            return;
+        }
     }
     lys.dt_hint = 0;
     if (!((layer_seen >> l) & 1u) && ui.msg_t == m && !name_on() && !ui.confirm && !ui.menu) {
@@ -356,7 +380,7 @@ static void edit_load(uint32_t e, int32_t step)
     if (e < NENGINES) {
         if (e == TSEL->eng_req % NENGINES)
             return;                                     /* its engine already: the sound stays */
-        select_engine(e);
+        reggae_select_engine(e);
         preset_hinted();
     } else {
         eng_list_step(step);

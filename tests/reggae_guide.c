@@ -37,6 +37,7 @@ int main(void){
    snprintf(title,sizeof title,"%s%s%s",PAGES[p].title,variants?" / ":"",variants?ENGINES[e]->name:"");
    if(PAGES[p].graph==GR_SONG){custom("SECTION","TRACK","PATTERN","LOOPS");entry(key,title,"Pages",1);}
    else if(PAGES[p].graph==GR_ROLL && !detail_on()){custom("STEP","NOTE","LENGTH","FEEL");entry(key,title,"Pages",1);}
+   else if(PAGES[p].graph==GR_PUNCH){punch_page_enter();advance(100);entry(key,title,"Pages",0);layer_let_go(0);ui.layer=0;}
    else entry(key,title,"Pages",0);
    if(!variants)break;
   }
@@ -52,7 +53,7 @@ int main(void){
  for(unsigned k=0;k<6;k++){
   web_buttons(1u<<keys[k]);advance(700);char id[24];snprintf(id,sizeof id,"held-%u",k);entry(id,names[k],"Held controls",0);
   if(keys[k]==B_SEQ){tools_key(TL_EUCLID);advance(150);entry("euclid","EUCLID","Sequencer",0);eu_close(TSEL,0);}
-  web_buttons(0);advance(400);
+  web_buttons(0);advance(400);if(keys[k]==B_FX){layer_let_go(0);ui.layer=0;}
  }
  for(unsigned tab=0;tab<MTAB_COUNT;tab++){
   ui.menu=1;ui.menu_sel=mtab_first(tab);custom("VALUE","VALUE","VALUE","VALUE");char id[24];snprintf(id,sizeof id,"settings-%u",tab);entry(id,MTAB_NAME[tab],"Settings",1);

@@ -4,6 +4,12 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
+**UI 0.7.4 improves live workflow:** SAVE opens PROJECT; occupied-slot selection
+arms LOAD for OCT+; PUNCH-IN remains open; preset browsing stays in the approved
+bank plus user sounds. The reported duplicate-beat save issue has not reproduced
+in emulated flash or physical-input tests; physical-device verification is still
+needed. [Feedback report](docs/reports/ui-0.7.4.md).
+
 **UI 0.7.3 adds individual note/drum velocities:** SEQ → NOTE VELOCITY.
 K1 chooses the step, K2 the note, K3 the velocity, K4 individual/inherited.
 Saved with PROJECT; shares the 128-entry automation budget. See [details](SEQUENCER.md#individual-note-velocities-ui-073).
@@ -160,3 +166,7 @@ its groove marker follows the loop. The same character appears in the arranger.
 UI **0.6.4** extends the REGGAE rack theme to technical editors, settings and
 storage screens. [Screenshots, coverage and test results](docs/reports/ui-0.6.4.md).
 Existing saved colour choices are respected; select COLOR → REGGAE for this skin.
+
+UI 0.7.4 makes SAVE open complete PROJECT storage, distinguishes instrument-only
+SOUNDS slots, adds a persistent PUNCH-IN FX page, and keeps standard browsing in
+the approved bank plus user sounds. See [sequencer workflow](SEQUENCER.md).

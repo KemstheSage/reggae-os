@@ -914,7 +914,7 @@ static int project_save_as(uint32_t slot, const char *name)
         proj_name_get(proj_name, (const uint8_t *)p->name);
         proj_cur = (uint8_t)(slot & 3u);
         pat_from_set((slot & 3u) + 1u);
-        ui_message("SAVED");
+        char msg[]="SAVED PROJECT A";msg[14]=(char)('A'+(slot&3u));ui_message(msg);
         return 0;
     }
 #endif
@@ -1144,6 +1144,7 @@ static void project_load(uint32_t slot)
     if (!project_restore_runtime(&proj_scratch)) {
         proj_cur = (uint8_t)(slot & 3u);
         pat_from_set((slot & 3u) + 1u);
+        char msg[]="LOADED PROJECT A";msg[15]=(char)('A'+(slot&3u));ui_message(msg);
     }
 }
 

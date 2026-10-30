@@ -67,3 +67,6 @@ build/reggae/voice-leading
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/note-velocity tests/reggae_note_velocity.c -lm
 build/reggae/note-velocity
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/feedback tests/reggae_feedback.c -lm
+build/reggae/feedback
