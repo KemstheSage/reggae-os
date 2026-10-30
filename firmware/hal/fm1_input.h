@@ -519,12 +519,19 @@ static int fm1_led_anim_on(void) { return fm1__an_f != 0u; }
 static void fm1_led_idle_start(uint32_t glow) { fm1__anim_begin(glow, 1); }
 static int fm1_led_idle_on(void) { return fm1__an_f != 0u && fm1__an_idle; }
 static void fm1_led_anim_stop(void) { fm1__an_f = 0; }   /* (the LEDs as the last frame left them: the UI writes them) */
+#ifdef FM1_PRESSURE_HW
+#include "fm1_pressure.h"
+#else
+#define fm1_pressure_before() ((void)0)
+#define fm1_pressure_after(col) ((void)0)
+#endif
 static void fm1_input_tick(void)
 {
     uint32_t p = fm1__tick_col, n = p + 1u == FM1_NCOL ? 0u : p + 1u;
     uint32_t t0 = fm1_ticks(), g = t0 - fm1_in_stat.last, b = 0;
     uint32_t w = 0xFFFFu ^ (1u << n) ^ (n < 2u ? 1u << (11u + n) : 0u), lit, dim = 0, k = fm1__dim_k;
     uint32_t br = 0, kb = 0;
+    fm1_pressure_before();
     fm1__led_lines(0);
     fm1_in_stat.last = t0;
     while (b < FM1_GAP_BINS - 1u && g >= (150u * FM1_TICKS_PER_US << b))
@@ -574,6 +581,7 @@ static void fm1_input_tick(void)
     }
     fm1__sr_bits(w, k, 16u);
     fm1__sr_latch();                               /* column n, the lines dark */
+    fm1_pressure_after(n);
     if (n == 0u)                                   /* (a new frame: the mid level's turn, before column 0 lights) */
         fm1__mid_ph = (uint8_t)(fm1__mid_ph + 1u >= fm1__mid_n ? 0u : fm1__mid_ph + 1u);
     fm1__led_lines(FM1__LIT(n));

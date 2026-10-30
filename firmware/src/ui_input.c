@@ -983,6 +983,16 @@ static void edit_param(uint32_t slot, int32_t steps)
     const page_t *pg = cur_page();
     const param_desc_t *d;
     int32_t v;
+    if(pg->graph==GR_PRESSURE){
+        if(slot==0){
+            int mode=clamp((int)pressure_mode+steps,0,2);
+            if(mode && fm1_in.notes){pressure_status="RELEASE KEYS FIRST";return;}
+            fm1_irq_off();pressure_mode=mode;perf_remap=1;fm1_irq_on();
+            pressure_status=mode==2?"LIVE: CALIBRATED KEYS":mode?"TEST: NO FX PRESSURE":"SENSING OFF";
+        }else if(slot==1)pressure_selected=clamp((int)pressure_selected+steps,0,26);
+        else {fm1_irq_off();pressure_capture(slot-2);fm1_irq_on();}
+        ui.force=1;return;
+    }
     if (pg->graph == GR_EVENTS) {                         /* AUTOMATION (ui_events.c) */
         ev_knob(slot, steps);
         return;

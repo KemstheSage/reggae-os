@@ -73,3 +73,9 @@ build/reggae/feedback
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/pressure tests/reggae_pressure.c -lm
 build/reggae/pressure
+
+# Opt-in pressure: synthetic model/UI and mocked hardware-register lifecycle.
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/pressure-input tests/reggae_pressure_input.c -lm
+build/reggae/pressure-input
+${CC:-cc} -O1 -o build/reggae/pressure-hal tests/reggae_pressure_hal.c
+build/reggae/pressure-hal

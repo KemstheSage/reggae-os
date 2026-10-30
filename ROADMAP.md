@@ -113,3 +113,8 @@ HOME cycle is MIXER → CLOCK → instrument. Mute/solo remain available through
 - [x] Searchable screenshot guide covering musical pages, settings and four-knob controls.
 - [x] Native chord/audio and actual WASM input checks; hardware target build.
 - [ ] Physical FM-1 and iPhone Safari verification.
+
+- Pressure candidate: implement opt-in ADC reader, per-key light/firm calibration
+  page and continuous punch-in depth mapping. Keep OFF default and stable release
+  separate. Physical signal quality, ISR overhead and musical feel are still to
+  be measured on the FM-1 before considering this a general-release feature.

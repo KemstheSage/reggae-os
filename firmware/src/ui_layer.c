@@ -138,6 +138,8 @@ static int mixer_page_keys(void)
 {
     return !ui.home && cur_page()->graph==GR_MIX4 && layer_allowed() && !ui.ly && !ui.lock;
 }
+static int pressure_page_keys(void)
+{ return !ui.home && cur_page()->graph==GR_PRESSURE && layer_allowed() && !ui.ly && !ui.lock; }
 static void layer_masks(void)
 {
     uint32_t m = !layer_allowed() || (ui.ly && (ui.ly_t0 & LY_DEAD)) ? 0u
@@ -146,7 +148,7 @@ static void layer_masks(void)
         m &= ~(ly_bit(LAYER_EDIT)|ly_bit(LAYER_REC));
     kb_mask = m;
     perf_mask = m & ly_bit(LAYER_FX);
-    kb_lock = (uint8_t)(m && ui.lock ? 1u | (ui.lock == LAYER_FX ? 2u : 0u) : mixer_page_keys()?1u:0u);   /* (no button held: the ISR's) */
+    kb_lock = (uint8_t)(m && ui.lock ? 1u | (ui.lock == LAYER_FX ? 2u : 0u) : (mixer_page_keys()||pressure_page_keys())?1u:0u);   /* (no button held: the ISR's) */
 }
 
 /* a layer button pressed (its edge) while none is armed: it is now, a dead one where no layer opens */
@@ -543,6 +545,7 @@ static void fx_assign(int32_t s)
         return;
     }
     p = key_place(--k);
+    if(pressure_mode==2 && p<4){ui_message("LIVE PRESSURE KEY");return;}
     i = perf_map_of(fx_keys, p);                        /* (the list: NONE, then the effects in order) */
     i = i < PF_NFX ? i + 1u : 0u;
     i = (i + (s > 0 ? 1u : n - 1u)) % n;
@@ -559,6 +562,7 @@ static void fx_default(void)
     if (!k)
         return;
     p = key_place(--k);
+    if(pressure_mode==2 && p<4){ui_message("LIVE PRESSURE KEY");return;}
     perf_map_put(fx_keys, p, PF_DEF[p]);
     lys.rp_dirty = 1;
     fx_map_sync();
@@ -713,6 +717,10 @@ static void layer_key(uint32_t l, uint32_t k)
 /* each pass: the keys the layer got now; then GLO's solo: the tracks of its keys still held (perform.c) */
 static void layer_keys(uint32_t keys)
 {
+    if(pressure_page_keys()){
+        for(uint32_t k=0;k<27;k++)if(keys&(1u<<k)){pressure_selected=k;ui.force=1;}
+        return;
+    }
     uint32_t k, l = layer_open() ? layer_open() : mixer_page_keys()?LAYER_GLO:ui.layer, s = 0;
     if(l!=LAYER_GLO)lys.solo=0;
     for (k = 0; keys && k < 27u; k++)
@@ -1019,7 +1027,7 @@ static void layer_fx(void)
     uint32_t ed = fx_key_held() ? key_place(fx_key_held() - 1u) : PF_KEYS;
     char n[3] = {0, 0, 0};
     for (p = 0; p < PF_KEYS; p++) {                     /* the white keys F3 .. G5, 4 a row: the effect each holds */
-        e = perf_map[p];
+        e = perf_effect_at(p);
         st = p == ed ? LS_SEL : e >= PF_NFX || !((ok >> e) & 1u) ? LS_DIM : !((held >> e) & 1u) ? LS_OFF
            : (act >> e) & 1u ? LS_HELD : LS_WAIT;       /* (the key PRESETS assigns: the selection's fill) */
         n[0] = W_NOTE[p];
@@ -1273,7 +1281,7 @@ static void draw_layer(void)
         sig += (perf_kill ? 0u : perf_held | perf_latched) * 31u + perf_latch_on * 11u + perf_act * 131u + perf_avail() * 7u + (uint32_t)perf_harm_on() * 3u +
                fx_key_held() * 4099u;
         for (p = 0; p < PF_KEYS; p++)                   /* (the key map) */
-            sig = sig * 33u + perf_map[p];
+            sig = sig * 33u + perf_effect_at(p);
     }
     else if (l == LAYER_GLO)
         sig += perf_solo * 31u + (uint32_t)song.g[G_CLOCK] * 5u + ui.ml.on * 7u + seq_fill * 1009u +

@@ -48,3 +48,7 @@ the added gate/mono stages; VCSL CC0 percussion was obtained from SLOOP's
 separately attributed sample collection. Exact commits, file provenance and
 design references (Jiant, Orchid and HiChord) are recorded in
 `docs/research/performance-0.6.md` and `assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md`.
+
+- Experimental contact-pressure reader: ADC/weak-row-drive technique adapted from
+  Charles Vestal's [fm1-velocity](https://github.com/charlesvestal/fm1-velocity),
+  commit `8f62ce0d968c91ce8bfdafbb908f81d15351650a`, GPL-3.0-only.

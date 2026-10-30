@@ -88,3 +88,12 @@ The kit includes checksum validation and a read-only Mac identity-check launcher
 No physical flash or recovery has been performed. The current official download
 is V16, not the V15 hash accepted by the pinned installer; verify the recovery
 route before the first write.
+
+### Experimental pressure candidate
+
+0.7.5 TEST adds an opt-in PA7/PA8 contact-resistance reader for twenty keys,
+coordinated with MASTER/battery ADC sampling. OFF is the power-on default;
+calibration is RAM-only. Upper seven keys remain digital. See
+[implementation and limitations](docs/research/pressure-punch-in.md) and
+[physical trial instructions](docs/reports/pressure-hardware-test.md).
+This is hardware-targeted code, not verified pressure-sensitive hardware support.

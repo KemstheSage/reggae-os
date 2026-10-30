@@ -55,7 +55,7 @@ int main(void){
  advance(2000);assert(ui.layer==LAYER_FX);
  web_keys(1u<<24);advance(150);assert(perf_act&PF_BIT(PF_GATE));
  web_keys(0);advance(300);assert(!perf_act&&ui.layer==LAYER_FX);
- tap(B_FX);assert(!ui.layer&&!ui.lock&&cur_page()->graph==GR_FX);
+ tap(B_FX);assert(!ui.layer&&!ui.lock&&cur_page()->graph==GR_PRESSURE);
  web_buttons(1u<<B_FX);advance(650);web_buttons(0);advance(500);
  assert(ui.layer==LAYER_FX&&ui.lock==LAYER_FX&&cur_page()->graph==GR_PUNCH);
  tap(B_HOME);assert(!ui.layer&&!ui.lock);

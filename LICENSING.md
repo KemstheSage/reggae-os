@@ -121,3 +121,8 @@ REGGAE-OS UI 0.6 adds a gated punch-in adapted from SLOOP `firmware/src/punch.c`
 See `docs/research/performance-0.6.md`. Optional ROOTPERC source audio is CC0;
 individual origins and processing are in `assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md`.
 Jiant, Orchid and HiChord are design references; no artwork or proprietary code was copied.
+
+The experimental pressure HAL (`firmware/hal/fm1_pressure.h`) adapts the ADC and
+weak-row-drive technique from Charles Vestal's GPL-3.0-only fm1-velocity at commit
+`8f62ce0d968c91ce8bfdafbb908f81d15351650a`. It remains GPL-3.0-only; attribution is
+in that source file and CREDITS.md. No upper-row probe is included.

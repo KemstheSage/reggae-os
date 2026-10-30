@@ -58,7 +58,7 @@ static void reggae_live_panel(int mixer)
     } else {
         uint32_t held=perf_act,available=perf_avail();
         for(unsigned p=0;p<PF_KEYS;p++) {
-            unsigned fx=perf_map[p];int x=16+(p%4)*52,y=3+(p/4)*23;
+            unsigned fx=perf_effect_at(p);int x=16+(p%4)*52,y=3+(p/4)*23;
             int on=fx<PF_NFX&&((held>>fx)&1u),ok=fx<PF_NFX&&((available>>fx)&1u);
             uint16_t bg=on?RG_GOLD:RG_PANEL;char key[4]={W_NOTE[p],(char)('3'+(p>=4)+(p>=11)),0};
             cv_rrect(x,y,48,21,2,bg,RG_BG);cv_text(x+3,y,&AF_XS,key,on?RG_BG:RG_GOLD);

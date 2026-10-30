@@ -539,3 +539,13 @@ emulator persistence, not physical NOR or power-cycle behaviour on the user's FM
 
 `web/emu/emu_test.mjs` now expects persistent punch-in and navigates to SOUNDS
 explicitly for its existing user-preset persistence check.
+
+## Opt-in pressure candidate (0.7.5 TEST)
+
+See [physical trial procedure](docs/reports/pressure-hardware-test.md).
+`reggae_pressure.c` checks actual DSP with synthetic normalized input;
+`reggae_pressure_input.c` checks raw calibration, silent UI selection, live map,
+stale/unsupported fallback and continuously held effects; `reggae_pressure_hal.c`
+uses mocked registers to check scheduling, ADC ownership and GPIO restoration.
+The two new tests run from `tools/reggae/test.sh`. All physical sensing, timing,
+MASTER/battery accuracy and electrical behaviour remain hardware untested.

@@ -58,6 +58,8 @@
 #define C1_RUN(fn, arg) fm1_cpu1_run(fn, arg)
 #define C1_WAIT() fm1_cpu1_wait()
 #endif
+#include "fm1_adc.h"
+#define FM1_PRESSURE_HW 1
 #include "fm1_input.h"
 #include "fm1_timer.h"
 #include "fm1_audio.h"

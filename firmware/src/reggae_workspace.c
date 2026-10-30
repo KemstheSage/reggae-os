@@ -207,7 +207,7 @@ static void rg_settings(void)
     if(ui.menu==2){cv_scroll=1;rg_credits(-(int)ui.menu_scroll,1);cv_scroll=0;}
     else if(ui.menu==3){
         info_sig();static const char *const usbname[]={"OFF","WAIT","BUS","ENUM","MIDI"};
-        rg_sleeve(0,"FIRMWARE","REGGAE-OS UI 0.7.4",1,1);
+        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.5 TEST",1,1);
         rg_sleeve(1,"USB",usbname[info_usb()],0,usb.up);
         fmt_int(b,info.cpu);str_cpy(b+str_len(b)," % AUDIO CPU",sizeof b-str_len(b));rg_sleeve(2,"PROCESSING",b,0,1);
     } else {
@@ -272,6 +272,34 @@ static void rg_dialog(unsigned counting)
     cv_blit(0,56);
     rg_footer(ui.confirm?"OCT-: CANCEL / OCT+: CONFIRM":ui.uboot?"RELEASE OCT-/+ TO CANCEL":"RECORDING STARTS AFTER 1",ui.confirm?"CHANGES APPLY ONLY WHEN CONFIRMED":counting?"PLAY: STOP":"KEEP POWER CONNECTED");
 }
+/* Hardware-sized diagnostic; all sensing data comes from the firmware model. */
+static void rg_pressure(void)
+{
+    static const char *modes[]={"OFF","TEST","LIVE"};
+    char b[32];uint32_t k=pressure_selected,v=0;
+    rg_heading("KEY PRESSURE","EXPERIMENTAL / RAM ONLY");rg_panel();
+    rg_caption(15,3,95,"PHYSICAL KEY",RG_GREEN);fmt_int(b,k+1);rg_caption(139,3,78,b,RG_GOLD);
+    if(k<PRESSURE_KEYS){
+        __typeof__(pressure_keys[0]) *p=&pressure_keys[k];
+        rg_caption(15,22,80,"RAW ADC",RG_INK);fmt_int(b,p->raw);rg_caption(139,22,78,b,RG_INK);
+        cv_rect(15,40,202,12,RG_PANEL);cv_rect(16,41,p->raw*200u/1023u,10,RG_GREEN);
+        rg_caption(15,59,80,"LIGHT / FIRM",RG_INK);
+        fmt_int(b,p->light);rg_caption(125,59,40,b,RG_GOLD);
+        fmt_int(b,p->firm);rg_caption(176,59,40,b,RG_RED);
+        pressure_value(k,&v);cv_rect(15,80,202,12,RG_PANEL);cv_rect(16,81,v*200u/32768u,10,RG_GOLD);
+        rg_caption(15,101,155,pressure_status,RG_INK);
+        fmt_int(b,pressure_faults);rg_caption(174,101,43,b,RG_RED);
+    }else rg_caption(15,44,202,"TOP 7: DIGITAL ONLY",RG_GOLD);
+    cv_blit(0,56);reggae_seq_machine(180,60);
+    const char *labels[]={"MODE","KEY","LIGHT","FIRM"};
+    for(unsigned i=0;i<4;i++){
+        int x=13+i*55;rg_caption(x,4,52,labels[i],RG_CONTROL_COLOR[i]);
+        if(i==0)rg_caption(x,21,52,modes[pressure_mode],RG_INK);
+        else if(i==1){fmt_int(b,k+1);rg_caption(x,21,52,b,RG_INK);}
+        else rg_caption(x,21,52,"CAPTURE",RG_INK);
+    }
+    rg_caption(14,43,211,"TEST: HOLD KEY / TURN K3 THEN K4",RG_GREEN);cv_blit(0,180);
+}
 #ifndef REGGAE_WORKSPACE_HOOK
 #define REGGAE_WORKSPACE_HOOK() ((void)0)
 #endif
@@ -288,6 +316,7 @@ static void reggae_workspace(uint32_t counting)
     if(ui.uboot||ui.confirm||counting)rg_dialog(counting);
     else if(ui.menu)rg_settings();
     else if(name_on())rg_name();
+    else if(!ui.home && cur_page()->graph==GR_PRESSURE)rg_pressure();
     else rg_workspace_page();
     if(ui.msg_t && !--ui.msg_t && ui.msg2[0]){str_cpy(ui.msg,ui.msg2,sizeof ui.msg);ui.msg2[0]=0;ui.msg_t=60;}
     if(ui.hot_t)ui.hot_t--;if(ui.bpm_t)ui.bpm_t--;if(ui.help_t)ui.help_t--;

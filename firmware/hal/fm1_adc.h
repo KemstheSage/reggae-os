@@ -15,6 +15,11 @@
 #define FM1_WLA_CON0 (*(volatile uint32_t *)0x11900u)
 enum { FM1_ADC_BATT = 3, FM1_ADC_MASTER = 4 };
 
+/* Single-core arbitration: main marks busy before checking timer ownership.
+ * Timer never waits; it owns the ADC continuously only while sensing is enabled. */
+static volatile uint8_t fm1_adc_scan_owned, fm1_adc_main_busy;
+static volatile int32_t fm1_adc_master_cache=-1, fm1_adc_batt_cache=-1;
+
 /* Both are only ever analog inputs: PB1 held low for 8 s would reset the
  * chip (isd_config). */
 static void fm1_adc_init(void)
@@ -29,6 +34,11 @@ static void fm1_adc_init(void)
 static int32_t fm1_adc_read(uint32_t ch)
 {
     uint32_t t, v;
+    fm1_adc_main_busy=1;
+    if(fm1_adc_scan_owned){
+        int32_t cached=ch==FM1_ADC_MASTER?fm1_adc_master_cache:fm1_adc_batt_cache;
+        fm1_adc_main_busy=0;return cached;
+    }
     FM1_ADC_CON = 0;
     if (FM1_WLA_CON0 & (1u << 14))
         FM1_WLA_CON0 &= ~(1u << 14);
@@ -41,5 +51,6 @@ static int32_t fm1_adc_read(uint32_t ch)
     v = FM1_ADC_RES & 0x3FFu;
     FM1_ADC_CON = 0x40u;
     FM1_ADC_CON = 0;
+    fm1_adc_main_busy=0;
     return t == 20000u ? -1 : (int32_t)v;
 }

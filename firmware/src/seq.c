@@ -667,13 +667,26 @@ static void input_off(track_t *t, uint32_t note)
 static uint32_t perf_key(uint32_t k)
 {
     uint32_t p = key_place(k);
-    return !key_black(k) ? (p < PF_KEYS ? perf_map[p] : PF_N) : p < NTRK ? PF_M1 + p : PF_N;
+    return !key_black(k) ? (p < PF_KEYS ? perf_effect_at(p) : PF_N) : p < NTRK ? PF_M1 + p : PF_N;
 }
 
 /* a key of the FX layer down (FX held) / up: the effect it holds. kb_fx: the one it took (+ 1, 0 none), so a key
  * remapped while held lets go of what it holds; an effect two keys hold ends with the last of them. noinline: out
  * of keyboard_block's loop (the audio ISR) */
 static uint8_t kb_fx[27];
+static void perf_pressure_refresh(void)
+{
+    uint16_t amounts[PF_NFX]={0};uint32_t held=0;
+    if(pressure_mode!=2){perf_pressure_valid=0;return;}
+    for(uint32_t k=0;k<27;k++)if(kb_fx[k] && (fm1_in.notes&(1u<<k))){
+        uint32_t e=kb_fx[k]-1u,v=32768;
+        if(e>=PF_NFX)continue;
+        pressure_value(k,&v);
+        if(v>amounts[e])amounts[e]=v;
+        held|=PF_BIT(e);
+    }
+    for(uint32_t e=0;e<PF_NFX;e++)perf_pressure_set(e,amounts[e],held&PF_BIT(e));
+}
 static __attribute__((noinline)) void perf_key_press(uint32_t k, int down)
 {
     uint32_t e, j;
@@ -776,6 +789,7 @@ static void keyboard_block(void)
     ch = cur ^ kb_prev;                          /* keys also sound while entering steps */
     if (perf_remap)
         perf_key_remap();
+    perf_pressure_refresh();
     if (!ch)
         return;
     if (kb_boot_hold) {                           /* #137: under the splash; their release is silent too */
@@ -828,6 +842,7 @@ static void keyboard_block(void)
         }
     }
     kb_prev = cur;
+    perf_pressure_refresh();
 }
 
 /* -------------------------------------------------------- sequencer --- */

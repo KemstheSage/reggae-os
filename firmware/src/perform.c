@@ -100,7 +100,7 @@ static volatile uint8_t perf_latch_on;   /* main: MENU > FX LATCH ON (#40): a ke
 static volatile uint32_t perf_latched;   /* ISR: the effects latched (FX LATCH; main clears it: OCT-, the menu) */
 static volatile uint32_t perf_act;    /* ISR: .. running (a 1/16 one from its start on) */
 static uint32_t perf_ord[PF_N], perf_seq;   /* press order: the last pressed buffer effect plays */
-/* Experimental pressure input seam. No hardware reader is enabled yet. Call from
+/* Experimental pressure input, opt-in and calibrated per key. Call from
  * the audio/key-input context only, after aggregating keys assigned to each FX.
  * Unavailable sensing retains the original full-strength button behaviour.
  * Mutes and latched FX stay binary. Normalised Q15 pressure is 0..32768. */
@@ -119,6 +119,8 @@ static int32_t perf_pressure_depth(uint32_t e, int32_t full)
     return (int32_t)((full * (int32_t)perf_pressure[e]) >> 15);
 }
 
+
+#include "pressure.c"
 
 /* the ZDF state-variable filter at cutoff index i (30 Hz * 2^(i / 7), 0..63: up to 15.4 kHz), k = 1:
  * a1 a2 a3 in Q14 (tools: g = tan(pi fc / fs), a1 = 1 / (1 + g (g + k)), a2 = g a1, a3 = g a2) */
