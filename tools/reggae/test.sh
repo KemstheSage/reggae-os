@@ -70,3 +70,6 @@ build/reggae/note-velocity
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/feedback tests/reggae_feedback.c -lm
 build/reggae/feedback
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/pressure tests/reggae_pressure.c -lm
+build/reggae/pressure

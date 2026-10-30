@@ -100,6 +100,25 @@ static volatile uint8_t perf_latch_on;   /* main: MENU > FX LATCH ON (#40): a ke
 static volatile uint32_t perf_latched;   /* ISR: the effects latched (FX LATCH; main clears it: OCT-, the menu) */
 static volatile uint32_t perf_act;    /* ISR: .. running (a 1/16 one from its start on) */
 static uint32_t perf_ord[PF_N], perf_seq;   /* press order: the last pressed buffer effect plays */
+/* Experimental pressure input seam. No hardware reader is enabled yet. Call from
+ * the audio/key-input context only, after aggregating keys assigned to each FX.
+ * Unavailable sensing retains the original full-strength button behaviour.
+ * Mutes and latched FX stay binary. Normalised Q15 pressure is 0..32768. */
+static uint16_t perf_pressure[PF_NFX];
+static uint32_t perf_pressure_valid;
+static void perf_pressure_set(uint32_t e, uint32_t amount, int valid)
+{
+    if (e >= PF_NFX) return;
+    perf_pressure[e] = (uint16_t)(amount > 32768u ? 32768u : amount);
+    if (valid) perf_pressure_valid |= PF_BIT(e);
+    else perf_pressure_valid &= ~PF_BIT(e);
+}
+static int32_t perf_pressure_depth(uint32_t e, int32_t full)
+{
+    if (e >= PF_NFX || perf_latch_on || !(perf_pressure_valid & PF_BIT(e))) return full;
+    return (int32_t)((full * (int32_t)perf_pressure[e]) >> 15);
+}
+
 
 /* the ZDF state-variable filter at cutoff index i (30 Hz * 2^(i / 7), 0..63: up to 15.4 kHz), k = 1:
  * a1 a2 a3 in Q14 (tools: g = tan(pi fc / fs), a1 = 1 / (1 + g (g + k)), a2 = g a1, a3 = g a2) */
@@ -190,6 +209,8 @@ static void perf_press(uint32_t e, int down)
 {
     if (e >= PF_N)
         return;
+    /* Release cannot leave a stale force on a later press. */
+    if (!down && e < PF_NFX) perf_pressure_set(e, 0, 0);
     if (perf_latch_on) {                  /* FX LATCH: a press turns it on or off, letting go does nothing */
         if (down) {
             perf_latched ^= PF_BIT(e);
@@ -338,12 +359,14 @@ static __attribute__((noinline)) int perf_begin(uint32_t n)
             t = pf.lt < bar ? pf.lt : bar;
             lt = PF_TOP - (int32_t)((uint32_t)(PF_TOP - PF_LOW) / 64u * (t * 64u / bar));
         }
+        lt = PF_TOP - perf_pressure_depth(PF_LPF, PF_TOP - lt);
         if (m < 0 && PF_TOP + m * (PF_TOP - PF_LOW) / 100 < lt)
             lt = PF_TOP + m * (PF_TOP - PF_LOW) / 100;
         if (pf.ht) {
             t = pf.ht < bar ? pf.ht : bar;
             ht = (int32_t)((uint32_t)(PF_TOP - PF_LOW) / 64u * (t * 64u / bar));
         }
+        ht = perf_pressure_depth(PF_HPF, ht);
         if (m > 0 && m * (PF_TOP - PF_LOW) / 100 > ht)
             ht = m * (PF_TOP - PF_LOW) / 100;
         pf.lc += clamp(lt - pf.lc, -192, 192);      /* ~45 ms over the range */
@@ -358,8 +381,8 @@ static __attribute__((noinline)) int perf_begin(uint32_t n)
         int32_t s = THR_SLOPE * (int32_t)n;
         pf.rw = pf.rw1;
         pf.ew = pf.ew1;
-        pf.rw1 += clamp((pf.act & PF_BIT(PF_RTHR) ? 32768 : 0) - pf.rw1, -s, s);
-        pf.ew1 += clamp((pf.act & PF_BIT(PF_ETHR) ? 32768 : 0) - pf.ew1, -s, s);
+        pf.rw1 += clamp((pf.act & PF_BIT(PF_RTHR) ? perf_pressure_depth(PF_RTHR, 32768) : 0) - pf.rw1, -s, s);
+        pf.ew1 += clamp((pf.act & PF_BIT(PF_ETHR) ? perf_pressure_depth(PF_ETHR, 32768) : 0) - pf.ew1, -s, s);
         pf.thr = (pf.rw | pf.rw1 | pf.ew | pf.ew1) != 0;
     }
     pf.mute = 0;
@@ -618,7 +641,7 @@ static inline void perf_buf(int32_t *pl, int32_t *pr)
         perf_harm(l, r, &yl, &yr);
         on = 2;                                     /* (KNOB 4 is the shimmer: the level stays full) */
     }
-    pf.tw = on && pf.src != PF_N ? on == 2 ? 32768 : 32768 - perf_k[3] * 327 : 0;
+    pf.tw = on && pf.src != PF_N ? perf_pressure_depth(pf.src, on == 2 ? 32768 : 32768 - perf_k[3] * 327) : 0;
     pf.w += clamp(pf.tw - pf.w, -SL_SLOPE, SL_SLOPE);
     if (pf.w) {
         *pl = pf_mix(l, yl, pf.w);
@@ -657,7 +680,7 @@ static inline uint32_t pf_tri(uint32_t q)
     return t < 32768u ? t << 1 : (65535u - t) << 1;
 }
 /* the share a FLANGER / PHASER fades to: KNOB 4 DEPTH (its shimmer while OCT UP / DN plays: full) */
-static int32_t perf_mod_depth(void) { return (PF_HARM >> perf_pick(perf_act)) & 1u ? 32768 : 32768 - perf_k[3] * 327; }
+static int32_t perf_mod_depth(uint32_t effect) { return perf_pressure_depth(effect, (PF_HARM >> perf_pick(perf_act)) & 1u ? 32768 : 32768 - perf_k[3] * 327); }
 
 /* FLANGER on one side c: x in, the line read at the sweep's place q (see the top) */
 static inline int32_t fl_side(uint32_t c, int32_t x, uint32_t q)
@@ -676,7 +699,7 @@ static inline int32_t fl_side(uint32_t c, int32_t x, uint32_t q)
 static __attribute__((noinline)) void perf_flanger(int32_t *bl, int32_t *br, uint32_t n)
 {
     uint32_t i, c, inc, q = perf_lfo(16u, n, &inc);
-    int32_t tw = pf.act & PF_BIT(PF_FLG) ? perf_mod_depth() : 0, *const b[2] = {bl, br};
+    int32_t tw = pf.act & PF_BIT(PF_FLG) ? perf_mod_depth(PF_FLG) : 0, *const b[2] = {bl, br};
     if (!pf.fw && !(pf.act & PF_BIT(PF_FLG))) {         /* let go and faded: off, the line empty next time */
         pf.fn = 0;
         return;
@@ -726,7 +749,7 @@ static inline int32_t ph_side(uint32_t c, int32_t x, int32_t a)
 static __attribute__((noinline)) void perf_phaser(int32_t *bl, int32_t *br, uint32_t n)
 {
     uint32_t i, c, inc, q = perf_lfo(8u, n, &inc) + (n >> 1) * inc;
-    int32_t tw = pf.act & PF_BIT(PF_PHS) ? perf_mod_depth() : 0, *const b[2] = {bl, br};
+    int32_t tw = pf.act & PF_BIT(PF_PHS) ? perf_mod_depth(PF_PHS) : 0, *const b[2] = {bl, br};
     int32_t a[2] = {ph_coef(q), ph_coef(q - 0x40000000u)};   /* (the right a quarter of the sweep behind) */
     if (!pf.pw) {                                       /* starting: the stages from rest */
         memset(pf.px, 0, sizeof pf.px);
@@ -798,7 +821,7 @@ static __attribute__((noinline)) void perf_block(int32_t *bl, int32_t *br, uint3
          * provenance in docs/research/performance-0.6.md. Keep stereo and use
          * this firmware's clock/mix ramps; no additional audio ring buffer. */
         if((a&PF_BIT(PF_GATE)) || pf.gate_w) {
-        pf.gate_w+=clamp(((a&PF_BIT(PF_GATE))?32768:0)-pf.gate_w,-512,512);
+        pf.gate_w+=clamp(((a&PF_BIT(PF_GATE))?perf_pressure_depth(PF_GATE,32768):0)-pf.gate_w,-512,512);
         if(pf.gate_w) {
             int32_t gain=gate_pos<gate_step/2?32768:0;
             if(gate_pos<64)gain=(int32_t)gate_pos*512;
@@ -811,7 +834,7 @@ static __attribute__((noinline)) void perf_block(int32_t *bl, int32_t *br, uint3
         if(++gate_pos>=gate_step)gate_pos=0;
         /* Mono sum, as in SLOOP's PX_MONO, with an independent release ramp. */
         if((a&PF_BIT(PF_MONO)) || pf.mono_w) {
-        pf.mono_w+=clamp(((a&PF_BIT(PF_MONO))?32768:0)-pf.mono_w,-512,512);
+        pf.mono_w+=clamp(((a&PF_BIT(PF_MONO))?perf_pressure_depth(PF_MONO,32768):0)-pf.mono_w,-512,512);
         if(pf.mono_w) {int32_t mono=(l>>1)+(r>>1);l=pf_mix(l,mono,pf.mono_w);r=pf_mix(r,mono,pf.mono_w);}
         }
         bl[i] = l;
