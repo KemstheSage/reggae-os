@@ -60,6 +60,6 @@ static void pressure_capture(uint32_t endpoint)
 }
 static uint32_t perf_effect_at(uint32_t p)
 {
-    static const uint8_t live[4]={PF_ETHR,PF_RTHR,PF_LPF,PF_HPF};
-    return pressure_mode==2 && p<4?live[p]:p<PF_KEYS?perf_map[p]:PF_N;
+    /* Pressure must never hide or replace the user's effects. */
+    return p<PF_KEYS?perf_map[p]:PF_N;
 }

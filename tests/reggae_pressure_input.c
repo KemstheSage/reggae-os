@@ -13,7 +13,9 @@ int main(void){
  samples(0,500);edit_param(3,1);assert(pressure_calibrated(0));
  edit_param(0,1);assert(pressure_mode==1); /* live requires released keys */
  web_keys(0);advance(100);edit_param(0,1);assert(pressure_mode==2);
- assert(perf_key(0)==PF_ETHR&&perf_key(2)==PF_RTHR);
+ for(unsigned i=0;i<PF_KEYS;i++)assert(perf_effect_at(i)==PF_DEF[i]);
+ /* Explicit user reassignment, never an automatic pressure-mode remap. */
+ perf_map_put(fx_keys,0,PF_ETHR);fx_map_sync();
  uint32_t v=123;assert(!pressure_value(20,&v)&&v==123); /* unsupported */
  pressure_sample(0,0,0);assert(pressure_value(0,&v)&&v==0); /* missing calibrated = dry */
  samples(0,650);assert(pressure_value(0,&v)&&v==16384);
@@ -31,6 +33,16 @@ int main(void){
  tap(B_FX);assert(cur_page()->graph==GR_PRESSURE);pressure_status="CALIBRATED";
  ui.force=1;advance(150);picture("build/reggae/pressure-screen.ppm");
  edit_param(0,-2);assert(!pressure_mode);keyboard_block();assert(!perf_pressure_valid);
- assert(perf_key(0)==PF_R8);
+ assert(perf_key(0)==PF_ETHR); /* OFF also preserves user assignments */
+ /* Render the restored map with a real held LPF key and a changing meter. */
+ perf_map_put(fx_keys,0,PF_R8);fx_map_sync();pressure_mode=2;
+ pressure_keys[7].captures=3;pressure_keys[7].light=800;pressure_keys[7].firm=420;
+ for(unsigned i=0;i<12&&cur_page()->graph!=GR_PUNCH;i++)tap(B_FX);
+ web_keys(1u<<7);
+ for(unsigned i=0;i<100;i++){pressure_sample(7,610,1);web_render(128);}
+ for(unsigned i=0;i<PF_KEYS;i++)assert(perf_effect_at(i)==PF_DEF[i]);
+ assert(perf_pressure[PF_LPF]==16384);
+ picture("build/reggae/pressure-076-live.ppm");
+ web_keys(0);advance(100);
  puts("PASS: calibration, stale/saturated/unsupported sensing, continuous held-key FX, silent diagnostic keys, actual FX-page navigation, OFF fallback; synthetic samples only");
 }

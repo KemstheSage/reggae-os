@@ -545,7 +545,6 @@ static void fx_assign(int32_t s)
         return;
     }
     p = key_place(--k);
-    if(pressure_mode==2 && p<4){ui_message("LIVE PRESSURE KEY");return;}
     i = perf_map_of(fx_keys, p);                        /* (the list: NONE, then the effects in order) */
     i = i < PF_NFX ? i + 1u : 0u;
     i = (i + (s > 0 ? 1u : n - 1u)) % n;
@@ -562,7 +561,6 @@ static void fx_default(void)
     if (!k)
         return;
     p = key_place(--k);
-    if(pressure_mode==2 && p<4){ui_message("LIVE PRESSURE KEY");return;}
     perf_map_put(fx_keys, p, PF_DEF[p]);
     lys.rp_dirty = 1;
     fx_map_sync();

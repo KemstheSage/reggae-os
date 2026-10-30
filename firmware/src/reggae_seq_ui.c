@@ -225,6 +225,18 @@ static void reggae_seq_draw(void)
         for(unsigned k=0;k<NTRK;k++) { b[0]='T';b[1]='1'+k;b[2]=0;
             cv_text_in(55+k*30,40,27,&AF_S,b,RG_CONTROL_COLOR[k],RG_BG); }
         cv_text(182,40,&AF_S,"LOOPS",RG_WOOD);
+    } else if(punch && pressure_mode==2) {
+        uint32_t key=27,value=0;
+        for(uint32_t k=0;k<27;k++)if(kb_fx[k] && (fm1_in.notes&(1u<<k)) && kb_fx[k]-1u<PF_NFX){key=k;break;}
+        const char *status="PRESSURE: HOLD FX KEY";
+        if(perf_latch_on)status="LATCH: PRESSURE BYPASSED";
+        else if(key<27){
+            if(key>=PRESSURE_KEYS)status="THIS KEY: DIGITAL ONLY";
+            else if(!pressure_calibrated(key))status="THIS KEY: CALIBRATE FIRST";
+            else if(!pressure_keys[key].fresh || fm1_ms-pressure_keys[key].at>40u)status="PRESSURE: SIGNAL LOST";
+            else {pressure_value(key,&value);fmt_int(b,value*100u/32768u);str_cpy(b+str_len(b),"% PRESSURE",sizeof b-str_len(b));status=b;}
+        }
+        cv_text_in(57,40,162,&AF_XS,status,RG_GREEN,RG_BG);
     } else {
         b[0]='T';b[1]='1'+song.sel;b[2]=0;cv_text(57,40,&AF_S,b,RG_GOLD);
         int idx=reggae_index(TSEL);

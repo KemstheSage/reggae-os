@@ -1,6 +1,6 @@
 # Pressure-responsive punch-in — opt-in hardware candidate
 
-Status: UI 0.7.5 TEST integrates a physical ADC reader, calibration page and shared
+Status: UI 0.7.6 TEST integrates a physical ADC reader, calibration page and shared
 DSP mapping. Physical sensing remains **HARDWARE UNTESTED**. Public UI 0.7.4 and
 the installed FM-1 are unchanged by preparing this candidate. This is continuous
 held-key contact sensing, not note-on velocity or a dedicated aftertouch sensor.
@@ -46,11 +46,17 @@ Multiple keys on one effect use the greatest depth, with an unsupported key
 providing full depth. Release clears pressure ownership. Latch and track mutes
 stay binary. Regular notes, MIDI, note velocities and instrument patches are unchanged.
 
-Pressure scales filter sweep depth, echo/reverb sends, buffered-effect wet mix,
-flanger/phaser depth, gate and mono blend through existing effect ramps. Knob
-filter macros retain precedence. In LIVE only, the first four white keys map to
-ECHO, REVERB, LPF, HPF. This temporary map is shown on PUNCH-IN and cannot be
-reassigned while LIVE. OFF/TEST restore the saved FX key map.
+Calibrated pressure directly sets LPF/HPF cutoff with smoothing, independent of
+beat duration. Digital keys retain the original timed filter sweep. Other effects
+scale sends/wet mix/depth through their existing ramps. Knob filter macros retain
+precedence. The saved FX map is preserved in every mode, including all repeat
+and reverse shortcuts. Pressure has no automatic key reassignment in 0.7.6.
+
+The user reported physical light/firm readings around 800/420 on one key, with
+calibration accepted but an unsatisfactory binary-feeling echo trial. This
+confirms a reported raw range only; musical pressure control is still unverified.
+See [0.7.6 investigation](../reports/ui-0.7.6-pressure.md) for the filter-path
+correction and clear per-key readout added for retesting.
 
 ## Test procedure
 

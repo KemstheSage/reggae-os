@@ -1,4 +1,4 @@
-# REGGAE-OS 0.7.5 TEST: pressure candidate
+# REGGAE-OS 0.7.6 TEST: pressure candidate
 
 This candidate is for a supervised physical trial. It boots with sensing **OFF**.
 No firmware has been flashed merely by creating this build. Keep a backup of
@@ -28,18 +28,21 @@ has been independently verified. HOLD KEY STEADY means no recent stable batch;
 NEED MORE RANGE means light/firm are reversed or less than 32 counts apart.
 Repeat captures if needed. Do not use excessive force to obtain a range.
 
-Calibrate the first four white keys separately (physical keys 1, 3, 5, 7).
-Release all keys, choose LIVE, then navigate back to PUNCH-IN. With a beat running:
+For the first filter trial, calibrate **C4**, the fifth white key from the left
+(physical key 8 when black keys are counted). Release it, select LIVE and return
+to PUNCH-IN. Keep the FILTER macro OFF and FX LATCH OFF. Hold C4 lightly, press
+harder, then ease off without releasing. The pressure percentage should track
+the change, with progressively less treble as pressure increases.
 
-- Lowest white key: echo throw amount.
-- Next white key: reverb throw amount.
-- Third white key: low-pass sweep depth.
-- Fourth white key: high-pass sweep depth.
+The original FX map is preserved in every mode. The lowest key is REPEAT 1/8;
+C4 is LPF and D4 is HPF. Echo/reverb retain their upper-key assignments, which
+are outside the twenty-key sensing range. Explicit user assignments still work.
+Calibrate each supported physical key separately. The header identifies missing
+calibration, unsupported keys, stale data and latch bypass. Uncalibrated keys
+retain digital behaviour. Calibration is discarded on power-off/update.
 
-Press/ease/press without releasing and listen for changing effect depth. Release
-must end the effect (existing echo/reverb tails may ring out). Keep FX LATCH OFF
-for this test; latched effects deliberately remain binary. Uncalibrated keys act
-as ordinary switches. The upper seven keys have no pressure sensing.
+Release must end the effect (existing echo/reverb tails may ring out). Track
+mutes and latched effects remain binary. See [0.7.6 changes](ui-0.7.6-pressure.md).
 
 ## Checks on the real FM-1
 

@@ -361,18 +361,26 @@ static __attribute__((noinline)) int perf_begin(uint32_t n)
             t = pf.lt < bar ? pf.lt : bar;
             lt = PF_TOP - (int32_t)((uint32_t)(PF_TOP - PF_LOW) / 64u * (t * 64u / bar));
         }
-        lt = PF_TOP - perf_pressure_depth(PF_LPF, PF_TOP - lt);
+        /* Calibrated pressure is the cutoff position, not a multiplier on a
+         * bar-long automatic sweep. Digital keys retain the legacy sweep. */
+        if((pf.act & PF_BIT(PF_LPF)) && !perf_latch_on && (perf_pressure_valid & PF_BIT(PF_LPF)))
+            lt = PF_TOP - perf_pressure_depth(PF_LPF, PF_TOP - PF_LOW);
         if (m < 0 && PF_TOP + m * (PF_TOP - PF_LOW) / 100 < lt)
             lt = PF_TOP + m * (PF_TOP - PF_LOW) / 100;
         if (pf.ht) {
             t = pf.ht < bar ? pf.ht : bar;
             ht = (int32_t)((uint32_t)(PF_TOP - PF_LOW) / 64u * (t * 64u / bar));
         }
-        ht = perf_pressure_depth(PF_HPF, ht);
+        if((pf.act & PF_BIT(PF_HPF)) && !perf_latch_on && (perf_pressure_valid & PF_BIT(PF_HPF)))
+            ht = perf_pressure_depth(PF_HPF, PF_TOP - PF_LOW);
         if (m > 0 && m * (PF_TOP - PF_LOW) / 100 > ht)
             ht = m * (PF_TOP - PF_LOW) / 100;
-        pf.lc += clamp(lt - pf.lc, -192, 192);      /* ~45 ms over the range */
-        pf.hc += clamp(ht - pf.hc, -192, 192);
+        /* A direct pressure sweep traverses the range in ~49 ms at 128 frames.
+         * Keep the original rate for digital/knob-only operation. */
+        int32_t ls=!perf_latch_on && (perf_pressure_valid&PF_BIT(PF_LPF))?768:192;
+        int32_t hs=!perf_latch_on && (perf_pressure_valid&PF_BIT(PF_HPF))?768:192;
+        pf.lc += clamp(lt - pf.lc, -ls, ls);
+        pf.hc += clamp(ht - pf.hc, -hs, hs);
         for (k = 0; k < 3u; k++) {                  /* the coefficients, between two table rows */
             int32_t i = pf.lc >> 8, f = pf.lc & 255, j = pf.hc >> 8, g = pf.hc & 255;
             pf.lk[k] = (int16_t)(PF_SVF[i][k] + (((PF_SVF[i < 63 ? i + 1 : 63][k] - PF_SVF[i][k]) * f) >> 8));

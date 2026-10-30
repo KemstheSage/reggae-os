@@ -549,3 +549,8 @@ stale/unsupported fallback and continuously held effects; `reggae_pressure_hal.c
 uses mocked registers to check scheduling, ADC ownership and GPIO restoration.
 The two new tests run from `tools/reggae/test.sh`. All physical sensing, timing,
 MASTER/battery accuracy and electrical behaviour remain hardware untested.
+
+0.7.6 adds `reggae_pressure_filter.c`: raw samples through the actual LPF key and
+DSP, spectral attenuation at three pressure levels, tempo independence, easing,
+digital fallback and HPF. The PUNCH-IN screenshot also checks the restored map
+and per-key pressure display. See [retest](docs/reports/ui-0.7.6-pressure.md).
