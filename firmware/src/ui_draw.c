@@ -1214,6 +1214,18 @@ static void draw_columns(void)
         draw_column(3, "AMT", val, unit, a ? VAL(3u) : T_DIM, RATIO(&TP[id + 2u], a), mod_src_icon(MS_OFF));
         return;
     }
+    if(nv_on()) {
+        const step_t *st=&seq_steps(TSEL)[ui.cursor];uint32_t item=nv_item();
+        fmt_int(val,ui.cursor+1);draw_column(0,"STEP",val,"",VAL(0u),-1,ICON_AUTO);
+        if(item>=4)str_cpy(val,drum_lane_name(TSEL,item-4),sizeof val);
+        else if(item<st->n)note_name(val,st->note[item]);else str_cpy(val,"--",sizeof val);
+        draw_column(1,item>=4?"DRUM":"NOTE",val,"",VAL(1u),-1,ICON_AUTO);
+        uint32_t v=nv_get(chain_motion(TSEL),song.sel,ui.cursor,item,nv_fallback(st,item));
+        if(nv_present(st,item))fmt_int(val,v);else str_cpy(val,"--",sizeof val);
+        draw_column(2,"VEL",val,"",VAL(2u),(int32_t)v*1000/127,ICON_AUTO);
+        draw_column(3,"SOURCE",nv_get(chain_motion(TSEL),song.sel,ui.cursor,item,0)?"NOTE":"STEP","",VAL(3u),-1,ICON_AUTO);
+        return;
+    }
     if (detail_on()) {                                  /* DETAIL (1.5.1, #199): the cursor step's CHANCE RATCH NUDGE VEL;
                                                          * DIM where they do not play (ui_input.c sd_turn) */
         static const char *const SD_LABEL[4] = {"CHANCE", "RATCH", "NUDGE", "VEL"};

@@ -4,6 +4,10 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
+**UI 0.7.3 adds individual note/drum velocities:** SEQ → NOTE VELOCITY.
+K1 chooses the step, K2 the note, K3 the velocity, K4 individual/inherited.
+Saved with PROJECT; shares the 128-entry automation budget. See [details](SEQUENCER.md#individual-note-velocities-ui-073).
+
 **UI 0.7.2 adds AUTO chord voice leading:** SCL → CHORD GARDEN, K4 → AUTO.
 Each track chooses nearby inversions as you play. See [usage and reset behaviour](SEQUENCER.md#automatic-chord-voice-leading-ui-072).
 

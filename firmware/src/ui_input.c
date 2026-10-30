@@ -692,7 +692,7 @@ static void grid_keys(uint32_t pressed)
             if (chain_busy()) { ui_message("STOP TO EDIT"); continue; }
             if (i >= len)
                 continue;                               /* past LEN: no step there */
-            if (detail_on()) {                          /* DETAIL (1.5.1): the key picks the step, no hit toggled */
+            if (detail_on() || nv_on()) {               /* DETAIL (1.5.1): the key picks the step, no hit toggled */
                 cursor_set((int32_t)i);
                 continue;
             }
@@ -734,7 +734,7 @@ static uint64_t lock_held(void)
     uint32_t k, len = (uint32_t)t->p[P_SLEN], keys = fm1_in.notes & ~kb_layer;
     uint64_t m = 0;
     if (ui.home || ui.menu || ui.confirm || ui.layer || name_on() || !song.seq_mode || cur_page()->graph != GR_ROLL ||
-        !keys || detail_on())                           /* (DETAIL: its knobs are the step's own fields, sd_turn) */
+        !keys || detail_on() || nv_on())                           /* (DETAIL: its knobs are the step's own fields, sd_turn) */
         return 0;
     if (!grid_on())                                     /* the roll: the step being entered */
         return ui.entry_open && !live_rec_sel() && ui.cursor < len ? (uint64_t)1 << ui.cursor : 0u;
@@ -906,10 +906,29 @@ static void sd_reset(void)
     ui_message("STEP RESET");
 }
 
+static void nv_turn(uint32_t slot,int32_t delta)
+{
+    track_t *t=TSEL;step_t *s=&t->step[ui.cursor];
+    if(slot==0) {cursor_move(ui.cursor+delta);return;}
+    if(slot==1) {
+        if(drum_track(t))ui.lane=(uint8_t)clamp((int32_t)ui.lane+delta,0,NLANE-1);
+        else nv_selected[song.sel]=(uint8_t)clamp((int32_t)nv_selected[song.sel]+delta,0,s->n?s->n-1:0);
+        return;
+    }
+    uint32_t item=nv_item();
+    if(!nv_present(s,item)){ui_message("NO NOTE");return;}
+    step_undo_take(t,0x7000u|ui.cursor<<4|item);
+    uint32_t old=nv_get(&motion,song.sel,ui.cursor,item,nv_fallback(s,item));
+    uint32_t value=slot==3 ? (delta<0?0:old) : (uint32_t)clamp((int32_t)old+accel(EN_K3,delta,126),1,127);
+    if(nv_set(t,ui.cursor,item,value)==2)ui_message("VELOCITY / LOCKS FULL");
+    motion_undo_done(t);
+}
+
 static void step_edit(uint32_t slot, int32_t steps)
 {
     step_t *st = &TSEL->step[ui.cursor];
     uint32_t i;
+    if(nv_on()){follow_hold();nv_turn(slot,steps);return;}
     if (detail_on()) {                                    /* DETAIL (1.5.1): CHANCE RATCH NUDGE VEL */
         follow_hold();
         sd_turn(slot, steps);
@@ -1193,6 +1212,7 @@ static void step_toggle(const track_t *t, step_t *st, const uint8_t *ch, uint32_
 {
     uint32_t i, j, k;
     if (st->time != ST_NOTE) {
+        nv_clear((track_t *)t,(uint32_t)(st-t->step));
         st->n = 0;
         st->time = ST_NOTE;
     }
@@ -1202,8 +1222,10 @@ static void step_toggle(const track_t *t, step_t *st, const uint8_t *ch, uint32_
         for (i = 0; i < n; i++)
             for (j = 0; j < st->n; j++)
                 if (st->note[j] == ch[i]) {
-                    for (k = j; k + 1u < st->n; k++)
+                    nv_remove_note((track_t *)t,(uint32_t)(st-t->step),j);
+                    for (k = j; k + 1u < st->n; k++) {
                         st->note[k] = st->note[k + 1u];
+                    }
                     st->n--;
                     break;
                 }
@@ -1212,6 +1234,7 @@ static void step_toggle(const track_t *t, step_t *st, const uint8_t *ch, uint32_
         return;
     }
     if (t->p[P_VOICE] && !ENGINES[t->engine]->oneshot) {   /* MONO / LEG / UNI: one note */
+        nv_clear((track_t *)t,(uint32_t)(st-t->step));
         st->note[0] = ch[0];
         st->n = 1;
         return;
@@ -1249,6 +1272,7 @@ static void seq_entry(uint32_t pressed)
             ui.entry_open = 1;
             follow_hold();                                /* (1.6, #242) */
             if (!add) {
+                nv_clear(t,ui.cursor);
                 st->n = 0;
                 st->time = ST_NOTE;
             }
@@ -1525,7 +1549,7 @@ static int reggae_step_gesture(uint32_t notes)
             if(!n)continue;
             if(!used) {
                 step_undo_take(t,0);
-                if(mode==2){st->n=0;st->hit=st->acc=0;}
+                if(mode==2){nv_clear(t,step);st->n=0;st->hit=st->acc=0;}
                 st->time=ST_NOTE;if(!st->vel)st->vel=kb_vel;
                 used=1;
             }
@@ -1706,7 +1730,7 @@ static void ui_input(void)
                 str_cpy(ui.msg2, "[SAVE] HOLD TO UNDO", sizeof ui.msg2);
             } else if (kind == CF_CLEAR_MOTION) {
                 track_t *t = &trk[ui.confirm_trk % NTRK];
-                if (!chain_busy()) { load_begin(t, UNDO_PAT); motion_clear(t); load_end(t); ui_message("AUTOMATION CLEARED"); }
+                if (!chain_busy()) { load_begin(t, UNDO_PAT); motion_clear_automation(t); load_end(t); ui_message("AUTOMATION CLEARED"); }
             } else if (kind == CF_DEL_ROW) {
                 uint32_t r = ui.confirm_trk;
                 if (!chain_busy() && r < chain_config.count) {
@@ -1815,7 +1839,7 @@ static void ui_input(void)
         song_keys(notes);
     } else if (song.grid) {
         grid_keys(notes);
-    } else if (song.seq_mode && cur_page()->graph == GR_ROLL) {   /* STEP */
+    } else if (song.seq_mode && cur_page()->graph == GR_ROLL && !nv_on()) {   /* STEP */
         if (live_rec_sel() || !((song.rec >> song.sel) & 1u))   /* armed and playing: the keys record live, not
                                                          * into the cursor step too; not armed (1.2, #133): they
                                                          * only play, being on STEP writes nothing */

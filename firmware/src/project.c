@@ -94,6 +94,7 @@
  *
  * Built on the Mac too (tests/project_test.c, -DPROJ_HOST): the part above the #ifndef
  * PROJ_HOST needs core.h, params.c (TP) and engines.c. */
+#define PROJ_MAGIC_NV 0x46554E42u /* FUNB: FUNA layout, reserved per-note velocity records */
 #define PROJ_MAGIC 0x46554E41u                 /* "FUNA" (FUN10): 104 (1.5: 111) parameters, 128 motion records, nudges */
 #define PROJ_MAGIC_V9 0x46554E39u              /* "FUN9": FUN8, 64 bytes longer (the DRUM lane levels, 99 parameters) */
 #define PROJ_MAGIC_V8 0x46554E38u              /* "FUN8": FUN7 + the tracks' FM6 patches */
@@ -507,7 +508,7 @@ static int proj_import(project_t *q, const void *b, int n)
 }
 static int proj_import_any(project_t *q, const void *b, int n)
 {
-    if (n == PROJ_STORE_SIZE && ((const uint32_t *)b)[0] == PROJ_MAGIC)
+    if (n == PROJ_STORE_SIZE && (((const uint32_t *)b)[0] == PROJ_MAGIC || ((const uint32_t *)b)[0] == PROJ_MAGIC_NV))
         return proj_unpack(q, b, PROJ_STORE_SIZE);
     if (n == PROJ_STORE_SIZE && ((const uint32_t *)b)[1] >= 8u && ((const uint32_t *)b)[1] < PROJ_STORE_SIZE)
         n = (int)((const uint32_t *)b)[1];      /* a retained slot holding an older, shorter record: its own size
@@ -624,6 +625,7 @@ static int proj_pack(project_store_t *out, const project_t *q)
         for (i = 0; i < FM6_PACKED; i++)
             if (q->fm6[t][i] > 127u) return 0;
     if (!chain_valid(&q->chain) || !motion_valid(&q->motion) || P_COUNT > 127u) return 0;
+    for(i=0;i<q->motion.count;i++) if(nv_id(MOTION_ID(&q->motion.event[i]))) magic=PROJ_MAGIC_NV;
     memset(out, 0, sizeof *out); memcpy(b, &magic, 4); memcpy(b + 4, &size, 4);
     memcpy(b + 8, q->g, sizeof q->g); b[62] = q->sel; b[63] = q->parts; b[64] = q->phys; b[66] = P_COUNT;
     for (t = 0; t < NTRK; t++) {
@@ -669,6 +671,7 @@ static int proj_motion_ids(motion_store_t *m, uint32_t np)
     uint32_t i;
     for (i = 0; i < m->count && i < MOTION_MAX; i++) {
         uint32_t id = MOTION_ID(&m->event[i]);
+        if (nv_id(id)) continue;
         if (id >= np) return 0;
         if (np < P_COUNT && id >= np - 8u)
             m->event[i].param = (uint8_t)((m->event[i].param & MOTION_LOCK) | (id + P_COUNT - np));
@@ -704,7 +707,7 @@ static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
     uint32_t name_off = st - 4u - PROJ_NAME_LEN, end = v7 ? name_off : name_off - NTRK * FM6_PACKED;
     uint32_t mot = v10 ? sizeof q->motion : PROJ_MOTION_V9, chn = v10 ? sizeof q->chain : sizeof(chain_v9_t);
     memcpy(&magic, b, 4); memcpy(&size, b + 4, 4); memcpy(&sum, b + st - 4u, 4);
-    if (magic != (v7 ? PROJ_MAGIC_V7 : st == PROJ_STORE_V8 ? PROJ_MAGIC_V8 : st == PROJ_STORE_V9 ? PROJ_MAGIC_V9 : PROJ_MAGIC) ||
+    if ((magic != (v7 ? PROJ_MAGIC_V7 : st == PROJ_STORE_V8 ? PROJ_MAGIC_V8 : st == PROJ_STORE_V9 ? PROJ_MAGIC_V9 : PROJ_MAGIC) && !(v10 && magic == PROJ_MAGIC_NV)) ||
         size != st || sum != proj_hash(b, st - 4u) ||
         np < 8u || np > P_COUNT || 68u + NTRK * (np + 2u + NSTEP * 9u) + chn + mot > end)
         return 0;
@@ -749,6 +752,8 @@ static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
         memcpy(&q->motion, b + pos, sizeof q->motion);
     else if (!proj_motion_v9(&q->motion, b + pos))
         return 0;
+    for(i=0;i<q->motion.count && i<MOTION_MAX;i++)
+        if(nv_id(MOTION_ID(&q->motion.event[i])) && magic!=PROJ_MAGIC_NV) return 0;
     if (!proj_motion_ids(&q->motion, np) || !chain_valid(&q->chain) || !motion_valid(&q->motion)) return 0;
     if (v10)
         proj_midi_unpack(q, b);                         /* (1.5.5: 0 in every FUN10 before, FUN9..FUN7 have none) */

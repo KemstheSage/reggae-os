@@ -453,7 +453,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         } else if (na > 1u && chain_busy()) rc = 3;
         else if (na > 1u) {
             if (a[1] == 1u) motion_set_enabled(t, a[2]);
-            else if (a[1] == 2u) { load_begin(t, UNDO_PAT); motion_clear(t); load_end(t); }
+            else if (a[1] == 2u) { load_begin(t, UNDO_PAT); motion_clear_automation(t); load_end(t); }
             else if (a[1] == 3u) rc = motion_set_event(t, a[2], a[3], (int16_t)ed_rv(a + 4));
             else if (a[1] == 4u && a[2] < NSTEP && motion_param(a[3])) motion_delete_event(t, a[2], a[3]);
             else if (a[1] == 5u) rc = motion_set_lock(t, a[2], a[3], (int16_t)ed_rv(a + 4));

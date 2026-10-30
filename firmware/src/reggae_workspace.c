@@ -207,7 +207,7 @@ static void rg_settings(void)
     if(ui.menu==2){cv_scroll=1;rg_credits(-(int)ui.menu_scroll,1);cv_scroll=0;}
     else if(ui.menu==3){
         info_sig();static const char *const usbname[]={"OFF","WAIT","BUS","ENUM","MIDI"};
-        rg_sleeve(0,"FIRMWARE","REGGAE-OS UI 0.7.2",1,1);
+        rg_sleeve(0,"FIRMWARE","REGGAE-OS UI 0.7.3",1,1);
         rg_sleeve(1,"USB",usbname[info_usb()],0,usb.up);
         fmt_int(b,info.cpu);str_cpy(b+str_len(b)," % AUDIO CPU",sizeof b-str_len(b));rg_sleeve(2,"PROCESSING",b,0,1);
     } else {

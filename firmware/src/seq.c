@@ -497,6 +497,7 @@ static void rec_note(track_t *t, uint32_t note, uint32_t vel)
     if (drum_track(t)) {                            /* DRUM: into the grid, no holds (hits) */
         uint32_t l = drum_lane(note);
         if (s->time != ST_NOTE || (!s->n && !s->hit)) {
+            nv_clear(t,idx);
             s->n = s->hit = s->acc = 0;
             s->flags = 0;
             s->vel = 0;
@@ -531,6 +532,7 @@ static void rec_note(track_t *t, uint32_t note, uint32_t vel)
         return;
     }
     if (s->time != ST_NOTE || !s->n || trk_vmode(t) != V_POLY) {
+        nv_clear(t,idx);
         s->n = 0;                                   /* a fresh step */
         s->flags = 0;
         s->vel = 0;
@@ -927,6 +929,7 @@ static int seq_miss(const track_t *t, const step_t *s, uint32_t idx)
     return step_chance(s) < 100u && rng() % 100u >= step_chance(s);
 }
 #define SEQ_REP (1u << 16)
+static const motion_store_t *chain_motion(const track_t *t);
 #define SEQ_ROLLED (1u << 17)   /* seq_tick rolled the chance already (before the step's parameter locks): it passed */
 #define SEQ_MISS (1u << 18)     /* .. it failed: nothing plays */
 static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint32_t idx, uint32_t period, uint32_t skip)
@@ -978,14 +981,14 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
                 continue;
         }
         nn[m] = (uint8_t)x;
-        vv[m] = (uint8_t)vel;
+        vv[m] = (uint8_t)nv_get(chain_motion(t),trk_index(t),idx,drum_track(t)?4u+drum_lane(x):i,vel);
         sk |= ((skip >> i) & 1u) << m;
         m++;
     }
     for (i = 0; i < NLANE; i++)
         if ((s->hit >> i) & 1u) {
             nn[m] = DRUM_LANE_NOTE[i];
-            vv[m] = (uint8_t)((s->acc >> i) & 1u ? 127u : vel);
+            vv[m] = (uint8_t)nv_get(chain_motion(t),trk_index(t),idx,4u+i,(s->acc >> i) & 1u ? 127u : vel);
             sk |= ((skip >> (8u + i)) & 1u) << m;
             m++;
         }

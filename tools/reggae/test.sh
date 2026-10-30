@@ -64,3 +64,6 @@ ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware
 build/reggae/chords
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/voice-leading tests/reggae_voice_leading.c -lm
 build/reggae/voice-leading
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/note-velocity tests/reggae_note_velocity.c -lm
+build/reggae/note-velocity

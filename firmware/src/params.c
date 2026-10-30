@@ -497,6 +497,7 @@ static const page_t PAGES[] = {
      * GLO > GLOBAL; its TUNE is MENU > AUDIO's now), again HOME (ui.c home_tap) */
     {"MIXER", FAM_TRK, SC_TRK, GR_MIX4, {0, 1, 2, 3}},
     {"CLOCK", FAM_TRK, SC_GLOBAL, GR_NONE, {G_BPM, G_SWING, G_CLOCK, 0xFF}},
+    {"VELOCITY", FAM_SEQ, SC_STEP, GR_ROLL, {0, 1, 2, 3}},
 };
 #define NPAGES (sizeof(PAGES) / sizeof(PAGES[0]))
 /* Mixer knob assignment is UI state, never part of a sound or project. */

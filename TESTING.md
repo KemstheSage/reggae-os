@@ -504,3 +504,18 @@ Hardware follow-up: POLY organ, SCL → CHORD GARDEN, MAJ / AUTO; play C, F, G,
 C with short releases, then overlapping notes. Compare CLOSE, test an octave
 jump, switch tracks and save/reload a project. Check note releases and timing
 while the other three tracks run. New AUTO behaviour has not been physically verified.
+
+## Individual note velocity (UI 0.7.3)
+
+`tests/reggae_note_velocity.c` runs in the REGGAE suite. It checks actual voice
+velocities, independent chord/drum edits, physical-control selection, inheritance,
+full-pool refusal, undo/copy/clear, project round-trip and arrangement source data.
+`node tests/reggae_note_velocity_wasm.mjs` uses actual buttons and encoders to
+write a chord, soften its notes separately, audition the sequencer, and restore
+inherited velocity. Every audio sample is checked for finiteness and clipping.
+
+The legacy `motion_test.c` has three pre-existing UI failures under REGGAE-OS
+(EDIT clears a step, playing-song lock handling, and EDIT deletes an automation
+row). Running it against the untouched UI 0.7.2 source at `9a67ddf` reproduces the
+same three failures. Do not report that legacy suite as passing. Dedicated
+REGGAE gesture tests cover the intentionally changed controls.

@@ -199,10 +199,10 @@ static void reggae_seq_draw(void)
     static uint32_t last;
     int tools=ui.layer==LAYER_SEQ,mixer=ui.layer==LAYER_GLO||(!ui.layer&&!ui.home&&cur_page()->graph==GR_MIX4),punch=ui.layer==LAYER_FX;
     int live=mixer||punch,chords=!ui.layer&&cur_page()->graph==GR_CHORD;
-    int detail=!ui.layer&&detail_on();
+    int velocity=!ui.layer&&nv_on(),detail=!ui.layer&&detail_on();
     int events=!ui.layer&&cur_page()->graph==GR_EVENTS,cleanup=!ui.layer&&cur_page()->graph==GR_TOOLS;
     int arrange=!ui.layer&&cur_page()->graph==GR_SONG;
-    int advanced=tools||detail||events||cleanup||live||chords;
+    int advanced=velocity||tools||detail||events||cleanup||live||chords;
     __typeof__(ux) saved=ux;
     char b[32],v[4][16];const char *label[4];
     if(!ui.force && (uint32_t)(fm1_ms-last)<100u)return;
@@ -213,7 +213,7 @@ static void reggae_seq_draw(void)
     reggae_seq_machine(0,56);
     cv_rrect(53,17,169,36,3,RG_BG,RG_CASE);
     reggae_seq_record(arrange);
-    cv_text(57,16,&AF_S,mixer?"FOUR TRACK MIX":punch?"DUB PUNCH-IN":chords?"CHORD GARDEN":tools?(reggae_seq_euclid()?"EUCLID":"PATTERN TOOLS"):detail?"STEP DETAIL":events?"AUTOMATION":cleanup?"CLEANUP":arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
+    cv_text(57,16,&AF_S,velocity?"NOTE VELOCITY":mixer?"FOUR TRACK MIX":punch?"DUB PUNCH-IN":chords?"CHORD GARDEN":tools?(reggae_seq_euclid()?"EUCLID":"PATTERN TOOLS"):detail?"STEP DETAIL":events?"AUTOMATION":cleanup?"CLEANUP":arrange?"DUB ARRANGE":drum_track(TSEL)?"RIDDIM GRID":"GROOVE ROLL",RG_INK);
     fmt_int(b,song.g[G_BPM]);cv_text(57,28,&AF_S,b,RG_GOLD);
     cv_text(83,28,&AF_S,"BPM",RG_WOOD);
     cv_text(117,28,&AF_S,song.rec?"REC":song.playing?"PLAY":"STOP",song.rec?RG_RED:RG_GREEN);
@@ -232,7 +232,20 @@ static void reggae_seq_draw(void)
         cv_text_in(78,40,140,&AF_S,b,RG_INK,RG_BG);
     }
     cv_blit(0,0);
-    if(arrange||events||tools||cleanup||live||chords) {
+    if(velocity) {
+        const step_t *s=&seq_steps(TSEL)[ui.cursor];uint32_t count=drum_track(TSEL)?8:s->n;
+        reggae_seq_machine(56,124);cv_rect(12,0,212,124,RG_BG);cv_oy=0;
+        for(uint32_t i=0;i<count;i++) {
+            uint32_t item=drum_track(TSEL)?i+4:i;int x=12+i*(drum_track(TSEL)?27:54),w=drum_track(TSEL)?20:40;
+            uint32_t v=nv_get(chain_motion(TSEL),song.sel,ui.cursor,item,nv_fallback(s,item));
+            int h=nv_present(s,item)?(int)v*72/127:0;
+            cv_rect(x,90-h,w,h,item==nv_item()?RG_GOLD:RG_GREEN);
+            if(item>=4) {str_cpy(b,drum_lane_name(TSEL,i),4);}else note_name(b,s->note[i]);
+            cv_text_in(x,94,w,&AF_S,b,RG_INK,RG_BG);
+            fmt_int(b,v);cv_text_in(x,108,w,&AF_S,nv_present(s,item)?b:"--",RG_INK,RG_BG);
+        }
+        if(!count)cv_text(60,50,&AF_S,"NO NOTES IN STEP",RG_INK);
+    } else if(arrange||events||tools||cleanup||live||chords) {
         reggae_seq_machine(56,124);cv_rect(12,0,212,124,RG_BG);cv_oy=0;
         if(live)reggae_live_panel(mixer);
         else if(chords)reggae_chord_panel();
@@ -285,7 +298,8 @@ static void reggae_seq_draw(void)
         seq_card_draw=0;
     } else for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
     const char *hint=drum_track(TSEL)?"SEQ: DETAIL  GLO: SONG":"HOLD EDIT+SEQ: CLEAR";
-    if(arrange) {
+    if(velocity)hint="K2: NOTE  K3: VEL  K4: INHERIT";
+    else if(arrange) {
         hint=chain.running?"PLAY: STOP / SONG RUNNING":"PLAY: SONG / SAVE: PROJECT";
         if(ui.song_row>=chain_config.count)hint="KNOB 3: ADD / SAVE: PATTERNS";
         else {unsigned sl=chain_config.row[ui.song_row].slot[ui.song_trk%NTRK];

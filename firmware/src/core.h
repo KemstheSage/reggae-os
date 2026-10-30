@@ -224,6 +224,10 @@ static void step_set_nudge(step_t *s, int32_t v)
  * param: the P_* id (< 128: P_COUNT is at most 127, project.c), bit 7 (MOTION_LOCK, 1.1) a parameter lock: the value
  * sounds on that step only and goes back after it (motion.c motion_step); without it an automation event, the
  * value holds until another one changes it. One record per (track, step, id), of either kind */
+#define NV_BASE 116u
+#define NV_COUNT 12u /* four chord-note slots, eight drum lanes */
+_Static_assert(P_COUNT <= NV_BASE, "velocity record IDs overlap parameters");
+static int nv_id(uint32_t id) { return id >= NV_BASE && id < NV_BASE + NV_COUNT; }
 #define MOTION_LOCK 0x80u
 #define MOTION_ID(e) ((uint32_t)(e)->param & 0x7Fu)
 typedef struct { uint8_t place, param; int8_t value; } motion_event_t;

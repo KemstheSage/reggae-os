@@ -551,6 +551,8 @@ static int step_detailed(const step_t *st)
 
 static void step_clear(step_t *st)
 {
+    for(uint32_t t=0;t<NTRK;t++)for(uint32_t i=0;i<NSTEP;i++)
+        if(st==&trk[t].step[i])nv_clear(&trk[t],i);
     st->n = 0;
     st->time = ST_REST;
     st->flags = 0;
@@ -597,6 +599,16 @@ static int grid_on(void) { return !ui.home && !ui.menu && !ui.confirm && cur_pag
 static int detail_on(void)
 {
     return !ui.home && !ui.menu && !ui.confirm && cur_page()->scope == SC_STEP && str_eq(cur_page()->title, "DETAIL");
+}
+/* Individual note/lane velocity editor; separate from the legacy step VEL. */
+static uint8_t nv_selected[NTRK];
+static int nv_on(void) { return !ui.home && !ui.menu && !ui.confirm && str_eq(cur_page()->title,"VELOCITY"); }
+static uint32_t nv_item(void) { return drum_track(TSEL)?4u+ui.lane%NLANE:(uint32_t)clamp(nv_selected[song.sel],0,TSEL->step[ui.cursor].n?TSEL->step[ui.cursor].n-1:0); }
+static int nv_present(const step_t *s,uint32_t item) {
+    return s->time==ST_NOTE && (item<4 ? item<s->n : (step_lanes(s)>>(item-4))&1u);
+}
+static uint32_t nv_fallback(const step_t *s,uint32_t item) {
+    return (s->flags&SF_ACCENT) || (item>=4 && ((s->acc>>(item-4))&1u)) ? 127 : s->vel?s->vel:96;
 }
 /* GLO > SONG (1.2): the white keys A B C D (A3 B3 C4 D4, white places 2..5: seq.c song_key) set the selected cell's slot;
  * they do not sound there, the other keys play as anywhere (seq.c keyboard_block: song.grid 3) */
@@ -645,6 +657,7 @@ static void grid_hit(track_t *t, uint32_t i, uint32_t l, uint32_t on)
     if (on) {
         s->hit |= (uint8_t)b;
     } else {
+        nv_set(t,i%NSTEP,4u+l%NLANE,0);
         s->hit &= (uint8_t)~b;
         s->acc &= (uint8_t)~b;
         if (!s->n && !s->hit)
@@ -677,7 +690,7 @@ static int reggae_step_gesture_page(void)
 {
     return !ui.home && !ui.menu && !ui.confirm && !ui.lock && !ui.layer &&
         !ui.ml.on && !rg_live_rec && !song.playing && !chain_busy() && !seq_counting() &&
-        !transport_req && cur_page()->graph==GR_ROLL && !detail_on() && !drum_track(TSEL);
+        !transport_req && cur_page()->graph==GR_ROLL && !detail_on() && !nv_on() && !drum_track(TSEL);
 }
 
 static void cursor_set(int32_t c)

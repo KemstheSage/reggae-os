@@ -49,7 +49,9 @@ static int motion_valid(const motion_store_t *m)
     if (m->count > MOTION_MAX || (m->on & ~((1u << NTRK) - 1u))) return 0;
     for (i = 0; i < m->count; i++) {
         const motion_event_t *e = &m->event[i];
-        if (!motion_param(MOTION_ID(e)) || e->value < -64 || e->value > 127) return 0;
+        if (nv_id(MOTION_ID(e))) {
+            if (!(e->param & MOTION_LOCK) || e->value < 1) return 0;
+        } else if (!motion_param(MOTION_ID(e)) || e->value < -64 || e->value > 127) return 0;
         for (j = 0; j < i; j++)
             if (m->event[j].place == e->place && MOTION_ID(&m->event[j]) == MOTION_ID(e)) return 0;
     }
@@ -193,7 +195,7 @@ static int motion_set_lock(track_t *t, uint32_t step, uint32_t id, int16_t value
 static void motion_delete_event(track_t *t, uint32_t step, uint32_t id)   /* (either kind) */
 {
     uint32_t f = motion_guard(), place = trk_index(t) << 6 | step, i, n = 0;
-    motion_restore(t);
+    if(!nv_id(id)) motion_restore(t);
     for (i = 0; i < motion.count; i++)
         if (motion.event[i].place != place || MOTION_ID(&motion.event[i]) != id) motion.event[n++] = motion.event[i];
     memset(motion.event + n, 0, (MOTION_MAX - n) * sizeof motion.event[0]);
@@ -279,7 +281,7 @@ static __attribute__((noinline)) void motion_step(track_t *t, uint32_t step, con
     for (i = 0; i < m->count; i++) {
         const motion_event_t *e = &m->event[i];
         uint32_t id = MOTION_ID(e);
-        if (e->place != (k << 6 | step) || ((e->param & MOTION_LOCK) && !play)) continue;
+        if (nv_id(id) || e->place != (k << 6 | step) || ((e->param & MOTION_LOCK) && !play)) continue;
         const param_desc_t *d = param_desc_of(eng_idx(t->eng_req), id);
         t->p[id] = (int16_t)param_fit(d, e->value);
         motion_active[k][id / 32u] |= 1u << (id % 32u);
@@ -330,7 +332,7 @@ static uint32_t motion_rows(uint32_t k, uint8_t *idx)
     for (i = 0; i < motion.count; i++) {
         const motion_event_t *e = &motion.event[i];
         uint32_t key = e->place & 63u;
-        if ((e->place >> 6) != k)
+        if ((e->place >> 6) != k || nv_id(MOTION_ID(e)))
             continue;
         for (j = n; j > 0u; j--) {                       /* (insertion, stable: at most MOTION_MAX) */
             const motion_event_t *o = &motion.event[idx[j - 1u]];
@@ -392,4 +394,61 @@ static uint32_t motion_sound_loaded(track_t *t, uint32_t from, uint32_t to)
     motion.count = (uint8_t)n;
     motion_unguard(f);
     return gone;
+}
+
+/* Per-note velocities use reserved, locked records. They are musical note data,
+ * not sound parameters: never index p[], and ignore automation PLAY ON/OFF. */
+static uint32_t nv_get(const motion_store_t *m, uint32_t track, uint32_t step, uint32_t item, uint32_t fallback)
+{
+    if(m) for(uint32_t i=0;i<m->count;i++) {
+        const motion_event_t *e=&m->event[i];
+        if(e->place==(track<<6|step) && e->param==(NV_BASE+item|MOTION_LOCK))
+            return (uint8_t)e->value;
+    }
+    return fallback;
+}
+static int nv_set(track_t *t, uint32_t step, uint32_t item, uint32_t value)
+{
+    if(step>=NSTEP || item>=NV_COUNT || value>127) return 1;
+    uint32_t id=NV_BASE+item;
+    if(!value) {motion_delete_event(t,step,id);return 0;}
+    uint32_t f=motion_guard(),i,place=trk_index(t)<<6|step;
+    for(i=0;i<motion.count;i++) if(motion.event[i].place==place && MOTION_ID(&motion.event[i])==id)break;
+    if(i>=MOTION_MAX) {motion_unguard(f);return 2;}
+    motion.event[i]=(motion_event_t){(uint8_t)place,(uint8_t)(id|MOTION_LOCK),(int8_t)value};
+    RING_PUBLISH();if(i==motion.count)motion.count++;
+    motion_unguard(f);return 0;
+}
+static void nv_clear(track_t *t,uint32_t step)
+{
+    uint32_t f=motion_guard(),place=trk_index(t)<<6|step,n=0;
+    for(uint32_t i=0;i<motion.count;i++)
+        if(motion.event[i].place!=place || !nv_id(MOTION_ID(&motion.event[i])))motion.event[n++]=motion.event[i];
+    memset(motion.event+n,0,(MOTION_MAX-n)*sizeof motion.event[0]);
+    motion.count=(uint8_t)n;motion_unguard(f);
+}
+
+static void nv_remove_note(track_t *t,uint32_t step,uint32_t note)
+{
+    uint32_t f=motion_guard(),place=trk_index(t)<<6|step,n=0;
+    for(uint32_t i=0;i<motion.count;i++) {
+        motion_event_t e=motion.event[i];uint32_t id=MOTION_ID(&e);
+        if(e.place==place && id>=NV_BASE && id<NV_BASE+4) {
+            if(id==NV_BASE+note)continue;
+            if(id>NV_BASE+note)e.param--;
+        }
+        motion.event[n++]=e;
+    }
+    memset(motion.event+n,0,(MOTION_MAX-n)*sizeof motion.event[0]);motion.count=(uint8_t)n;motion_unguard(f);
+}
+
+/* Clearing sound automation must not erase the notes' dynamics. */
+static void motion_clear_automation(track_t *t)
+{
+    uint32_t f=motion_guard(),k=trk_index(t),n=0;
+    motion_restore(t);
+    for(uint32_t i=0;i<motion.count;i++)
+        if((motion.event[i].place>>6)!=k || nv_id(MOTION_ID(&motion.event[i])))motion.event[n++]=motion.event[i];
+    memset(motion.event+n,0,(MOTION_MAX-n)*sizeof motion.event[0]);motion.count=(uint8_t)n;
+    motion.on&=(uint8_t)~(1u<<k);motion_rebase(t);motion_full=0;motion_unguard(f);
 }
