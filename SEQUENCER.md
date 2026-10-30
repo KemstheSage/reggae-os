@@ -160,3 +160,37 @@ patterns. Mono sounds and drum kits retain their existing behaviour.
 This is a local nearest-inversion choice, not a progression planner; it does
 not predict future chords or apply classical counterpoint rules. The existing
 four-note chord limit and shared voice pool still apply.
+
+## Individual note velocities (UI 0.7.3)
+
+Tap **SEQ** to reach **NOTE VELOCITY** (after AUTOMATION).
+
+| Knob | Action |
+| --- | --- |
+| K1 — STEP | Choose a step; PRESETS also moves the cursor. |
+| K2 — NOTE / DRUM | Choose one chord note or one drum sound. The selected bar is gold. |
+| K3 — VEL | Set that note/hit to 1–127. Other notes and tracks keep their values. |
+| K4 — SOURCE | Turn left for STEP (inherit the shared velocity/accent); right for NOTE (an explicit individual value). |
+
+NOTE values override step and drum accents. STEP restores the previous shared
+velocity behaviour. Empty steps/hits show `--` and cannot receive a velocity edit.
+The DETAIL page’s VEL still sets the shared step value; explicit NOTE values
+remain unchanged. Turning automation playback off or clearing sound automation
+does not remove individual velocities. SAVE held undoes the edit.
+
+Save through **SAVE → PROJECT**. Individual edits survive project recall and
+arrangement playback, and travel with pattern doubling/whole-pattern reversal. Deleting a note
+removes its edit; remaining chord notes retain theirs. Clear/replacement gestures
+remove the replaced notes’ edits. Existing note-entry/recording velocity behaviour
+is unchanged; this update adds manual individual editing.
+
+Each explicit velocity uses one of the shared **128 automation/lock entries per
+project**, across all four tracks. When full, a new edit is refused with
+`VELOCITY / LOCKS FULL`; existing values remain editable. Choosing STEP frees
+that entry. Identical shared velocities need no individual entries.
+
+Projects containing individual velocities use **FUNB**, a versioned extension
+within the existing flash-sector size. Earlier projects still load. Firmware
+before UI 0.7.3 cannot load a FUNB project: export/keep older projects before
+returning to an older release. User sound presets do not carry these edits;
+use PROJECT to preserve the complete pattern and its dynamics.

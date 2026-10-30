@@ -948,6 +948,18 @@
     ]
   },
   {
+    "id": "page-45-00",
+    "title": "VELOCITY",
+    "group": "Pages",
+    "engine": "ANALOG",
+    "knobs": [
+      "STEP",
+      "NOTE",
+      "LENGTH",
+      "FEEL"
+    ]
+  },
+  {
     "id": "drum-grid",
     "title": "RIDDIM GRID",
     "group": "Sequencer",
