@@ -1,0 +1,1 @@
+REGGAE-OS UI 0.7.7 DEV. Source commit c2ea63b. Separate browser save area; starts fresh. Punch-in first, FX SENDS next, selected drum-hit velocity on K4. EQ/compressor and independent lengths/repeats not yet implemented. Existing public guide describes the stable release. Not hardware tested.
