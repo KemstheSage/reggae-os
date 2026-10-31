@@ -33,7 +33,10 @@ Tap **SEQ** for NOTE PATTERN or RIDDIM GRID. The instrument name and track numbe
 appear above the editor. The four knobs are labelled below it:
 
 - Notes: step, pitch, note length/time, accent/slide.
-- Drums: step, drum lane, hit on/off, accent on/off.
+- Drums (0.7.7 DEV): step, drum lane, hit on/off, selected-hit velocity.
+  K4 changes only the selected hit (1–127); add a hit with K3 first.
+  The existing black-key accent gesture remains available.
+  Melodic notes still use the NOTE VELOCITY page for individual velocities.
 
 ### Edit the selected note step (transport stopped)
 
@@ -227,3 +230,29 @@ project-sector packing, arrangement sources, per-part DSP state and UI all need
 review. The eight-voice audio budget is shared across tracks; eight tracks would
 not automatically mean eight independent polyphonic instruments. No eight-track
 change is made while hardware reliability is being established.
+
+## Development effects workflow (0.7.7 DEV; not installed)
+
+From HOME, tap **FX** to enter the persistent **PUNCH-IN** page. Tap FX again
+for **FX SENDS**, then continue tapping through the effect settings. HOME exits.
+Use **ALGORITHM** to choose the track receiving these edits.
+
+| FX SENDS knob | Action |
+| --- | --- |
+| K1 DRIVE | Saturates the selected track directly; this is not a send bus. |
+| K2 CHORUS | Sends this track to the shared chorus. |
+| K3 DLY | Sends this track to the shared delay. |
+| K4 REV | Sends this track to the shared reverb. |
+
+Raise a send above zero to hear that effect. The DLY, REVERB and CHORUS pages
+adjust the shared effects themselves, so those settings affect every track sent
+to that effect. Save the project to retain routing and settings.
+
+SLICER is now **CHOPPER** under EDIT: it rhythmically gates a sustained sound
+using its pattern, rate and depth. It is not needed to route audio to effects.
+Its existing settings and sound processing are preserved.
+
+Requested next: EQ and compression on each track and the master, individual
+note lengths/repeats, and a consolidated note editor. These are not implemented
+in this development build. Current step length and ratchet controls affect the
+step as a whole; they cannot independently roll a hi-hat over a single kick.

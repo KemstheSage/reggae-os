@@ -25,8 +25,8 @@ page(2,'Add repeating movement to the selected sound.', 'Modulation speed|Modula
 page(3,'Choose how the LFO starts and follows the beat.', 'Free-running or tempo-synchronised timing|Note-trigger/restart behaviour|Positive-only or bipolar movement|Unused')
 page(4,'Decide what the LFO moves. Start with small amounts.', 'Pitch modulation depth (vibrato)|Filter modulation depth|Engine-specific timbre modulation depth|Amplitude modulation depth (tremolo)')
 page(5,'Connect a modulation source to a sound parameter.', 'Select a modulation slot|Select the source|Select the destination|Amount and direction of the modulation')
-page(6,'Set the selected track’s distortion and effect sends.', 'Distortion amount|Chorus send|Delay send|Reverb send', 'Raise a send to hear its effect. The later delay, reverb and chorus pages set the shared effects for all tracks.')
-page(7,'Chop a sustained sound into rhythmic pulses.', 'Slicer mode|Rhythm pattern|Chopping speed|Chopping depth')
+page(6,'Set the selected track’s distortion and effect sends.', 'Distortion amount|Chorus send|Delay send|Reverb send', 'Tap FX from HOME for PUNCH-IN; tap again for FX SENDS. ALGORITHM selects the track. K1 is direct drive, not a send. Raise K2–K4 to send this track to the shared chorus, delay or reverb; later FX pages set their shared character.')
+page(7,'Chop a sustained sound into rhythmic pulses.', 'Chopper mode|Rhythm pattern|Chopping speed|Chopping depth')
 page(8,'Process the selected track through an insert effect.', 'Choose OFF, SOFT, HARD, FOLD, FUZZ, CRUSH, PHASR, FLANG or CHOR|Drive for distortion; bit depth for CRUSH; speed for swept effects|Tone for distortion; sample rate for CRUSH; depth for swept effects|Output level for distortion; low-pass cutoff for CRUSH; feedback for swept effects', 'The labels change with the effect type. OFF leaves A/B/C inactive. Use INSERT 2 to blend the result.')
 page(9,'Blend the track’s insert effect with its original sound.', 'Dry/wet mix|Unused|Unused|Unused')
 page(10,'Set the shared dub delay.', 'Delay-time division|Repeat feedback|Repeat tone/colour|Delay return mix', 'Raise DLY on the track’s FX page to feed the delay. High feedback creates long tails; lower it to let the repeats die away.')
@@ -90,7 +90,7 @@ SOUNDS = [
 'Pitch envelope amount|Amplitude decay length|Delay send|Filter cutoff',
 'Pitch modulation range|Modulation rate|Delay send|Filter cutoff']
 SPECIAL = {
-'drum-grid': ('SEQ with a DRUM track selected', 'Program eight drum lanes in the pattern.', 'Step|Drum lane|Hit on/off|Accent on/off', 'Use PLAY to audition the loop. The grid replaces the melodic roll for the DRUM engine.'),
+'drum-grid': ('SEQ with a DRUM track selected', 'Program eight drum lanes in the pattern.', 'Step|Drum lane|Hit on/off|Selected hit velocity (1–127)', 'Use PLAY to audition the loop. The grid replaces the melodic roll for the DRUM engine.'),
 'mixer-pan': ('HOME → MIXER, then D5', 'Place each track left or right.', 'Track 1 pan|Track 2 pan|Track 3 pan|Track 4 pan', 'C5 returns the knobs to volume; E5 switches them to reverb sends.'),
 'mixer-reverb': ('HOME → MIXER, then E5', 'Send each track to the shared reverb.', 'Track 1 reverb send|Track 2 reverb send|Track 3 reverb send|Track 4 reverb send', 'C5 returns to volume; D5 switches to pan. Set the reverb character on FX → REVERB.'),
 'held-0': ('Hold EDIT outside the stopped melodic STEP page', 'Select an engine and its factory sound.', 'Engine|Preset number|Favourite control|Unused', 'On stopped STEP, hold EDIT is deliberately reserved for adding notes.'),

@@ -1113,8 +1113,8 @@ static void setup(int s)
     case S_LFO: go_title("LFO"); break;
     case S_MOD: TSEL->p[P_M1SRC] = 1; TSEL->p[P_M1DST] = 2; TSEL->p[P_M1AMT] = 40; TSEL->p[P_M2SRC] = 6;
         TSEL->p[P_M2DST] = 14; TSEL->p[P_M2AMT] = -64; mod_ui_slot = 1; go_title("MOD"); break;
-    case S_FX: go_title("FX"); break;
-    case S_SLICER: TSEL->p[P_SLCR] = 1; go_title("SLICER"); break;
+    case S_FX: go_title("FX SENDS"); break;
+    case S_SLICER: TSEL->p[P_SLCR] = 1; go_title("CHOPPER"); break;
     case S_DLY: go_title("DLY"); break;
     case S_SCL: TSEL->p[P_SCALE] = 2; go_title("SCL"); break;
     case S_CHORD:                                    /* A minor DIA7, the last chord on B: Bm7b5 */

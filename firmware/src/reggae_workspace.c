@@ -187,6 +187,7 @@ static void rg_workspace_page(void)
     str_cpy(hint,"ALGORITHM: PAGE / HOME: PLAY",sizeof hint);
     if(ui.layer)str_cpy(hint,ui.layer==LAYER_EDIT?"WHITE: ENGINE / BLACK: ACTION":"KEYS: SELECT / OCT-: UNDO",sizeof hint);
     else if(act_cols()) {char a[16],b[16];foot_hint(a,b);str_cpy(hint,a,sizeof hint);str_cpy(hint+str_len(hint)," / ",sizeof hint-str_len(hint));str_cpy(hint+str_len(hint),b,sizeof hint-str_len(hint));}
+    if(!ui.layer && cur_page()->graph==GR_FX)str_cpy(hint,"ALGO: TRACK / K2-4: SEND",sizeof hint);
     if(ui.ml.on)ml_line(hint);
     rg_caption(16,46,204,ui.msg_t?ui.msg:hint,RG_INK);cv_blit(0,180);
 }
@@ -207,7 +208,7 @@ static void rg_settings(void)
     if(ui.menu==2){cv_scroll=1;rg_credits(-(int)ui.menu_scroll,1);cv_scroll=0;}
     else if(ui.menu==3){
         info_sig();static const char *const usbname[]={"OFF","WAIT","BUS","ENUM","MIDI"};
-        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.6 TEST",1,1);
+        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.7 DEV",1,1);
         rg_sleeve(1,"USB",usbname[info_usb()],0,usb.up);
         fmt_int(b,info.cpu);str_cpy(b+str_len(b)," % AUDIO CPU",sizeof b-str_len(b));rg_sleeve(2,"PROCESSING",b,0,1);
     } else {

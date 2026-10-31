@@ -82,3 +82,6 @@ build/reggae/pressure-hal
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/pressure-filter tests/reggae_pressure_filter.c -lm
 build/reggae/pressure-filter
+
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/workflow tests/reggae_workflow.c -lm
+build/reggae/workflow

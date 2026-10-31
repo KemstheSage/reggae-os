@@ -54,7 +54,7 @@ static struct {
 
 static int reggae_fxscreen(void)
 {
-    return !ui.home && (str_eq(cur_page()->title,"FX") || str_eq(cur_page()->title,"DLY") || str_eq(cur_page()->title,"REVERB"));
+    return !ui.home && (cur_page()->graph==GR_FX || str_eq(cur_page()->title,"DLY") || str_eq(cur_page()->title,"REVERB"));
 }
 static int reggae_screen(void)
 {
@@ -419,7 +419,7 @@ static void reggae_draw(void)
     }
     cv_text_in(0,48,240,&AF_S,rg_rec_wait?"READY: PLAY NOTE / PLAY TO START":
         rg_live_rec && song.rec?"RECORDING / REC: FINISH":
-        ui.msg_t?ui.msg:fx?"FX: PAGE / HOME: PLAY":song.playing?"LOOP PLAYING / REC: LAYER":"REC: RECORD / ALGORITHM: TRACK",RG_INK,RG_BG);
+        ui.msg_t?ui.msg:fx?(cur_page()->graph==GR_FX?"ALGO: TRACK / K1: DRIVE / K2-4: SEND":"FX: PAGE / HOME: PLAY"):song.playing?"LOOP PLAYING / REC: LAYER":"REC: RECORD / ALGORITHM: TRACK",RG_INK,RG_BG);
     cv_blit(0,180);
     if(ui.hot_t)ui.hot_t--;if(ui.msg_t)ui.msg_t--;
     ux.mono=old_mono;ux.light=old_light;ux.gen++;ui.force=0;

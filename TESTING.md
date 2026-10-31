@@ -554,3 +554,27 @@ MASTER/battery accuracy and electrical behaviour remain hardware untested.
 DSP, spectral attenuation at three pressure levels, tempo independence, easing,
 digital fallback and HPF. The PUNCH-IN screenshot also checks the restored map
 and per-key pressure display. See [retest](docs/reports/ui-0.7.6-pressure.md).
+
+
+## UI 0.7.7 DEV workflow foundation (31 October 2026)
+
+Final FM-1 and WASM builds passed. Hardware image 550212 bytes; static RAM
+61768/73728 bytes; pool 328896/368640 bytes. This is compile/link evidence, not a
+physical FM-1 timing or interaction test. Nothing was flashed or published.
+
+- `reggae_workflow.c` ASAN PASS: full FX cycle, animated send-screen dispatch,
+  track send control, selected kick velocity independent of hat, project recall.
+- `reggae_graphics.c` ASAN PASS: parameter-linked illustrations, animation disable,
+  effect artwork and framebuffer primitives.
+- Feedback, note-velocity and pressure-input focused regressions PASS.
+- Final `emu_test.mjs` PASS: real firmware audio, controls, deterministic rendering
+  and persistence; heavy-song peak 0.283. Host timing is not hardware CPU evidence.
+- Final `reggae_project_wasm.mjs` PASS: fresh WASM instances recall distinct audible
+  A/B beats (energy 8.04248 / 7.93091). The full upstream suite was not run.
+
+Logs: `build/reggae/workflow-{hardware,wasm,emu-test,project-wasm,test,graphics}.log`.
+Firmware SHA-256: `e9f7d149e5e0eb37cda25bb0bb0e404a4c46b102edd32313315fc90c69df0c67`.
+WASM SHA-256: `71c1e99ac20f74aa1880e239f91df3d2b0353ef7385e4b896bd18ec1d984f9af`.
+
+This slice does **not** implement the requested EQ, compressor, per-note lengths
+or per-note repeats. See [scope and limitations](docs/reports/ui-0.7.7-workflow.md).

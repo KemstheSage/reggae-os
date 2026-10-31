@@ -53,7 +53,7 @@ int main(void) {
     cv_begin(240,124,RG_BG);reggae_effect_art(0,0,6000);cv_blit(0,56);assert(a==art_hash());
     /* Capture real firmware FX pages, including model-specific reverb bodies. */
     ui_prefs&=~PREF_ANIM_OFF;ui.home=0;rg_focus.valid=0;
-    for(unsigned n=0;n<NPAGES;n++)if(str_eq(PAGES[n].title,"FX") || str_eq(PAGES[n].title,"DLY") || str_eq(PAGES[n].title,"REVERB")) {
+    for(unsigned n=0;n<NPAGES;n++)if(PAGES[n].graph==GR_FX || str_eq(PAGES[n].title,"DLY") || str_eq(PAGES[n].title,"REVERB")) {
         char path[100];ui.page=n;ui.force=1;TSEL->peak=6000;reggae_draw();
         snprintf(path,sizeof path,"build/reggae/character-%s.ppm",PAGES[n].title);picture(path);
         if(str_eq(PAGES[n].title,"REVERB"))for(unsigned model=0;model<3;model++) {

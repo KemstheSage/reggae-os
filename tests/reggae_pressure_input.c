@@ -30,7 +30,8 @@ int main(void){
  samples(0,500);keyboard_block();assert(perf_pressure[PF_ETHR]>32000);
  web_keys(0);advance(50);assert(!(perf_pressure_valid&PF_BIT(PF_ETHR)));
  ui.force=1;advance(150);picture("build/reggae/pressure-punch-screen.ppm");
- tap(B_FX);assert(cur_page()->graph==GR_PRESSURE);pressure_status="CALIBRATED";
+ for(unsigned i=0;i<NPAGES&&cur_page()->graph!=GR_PRESSURE;i++)tap(B_FX);
+ assert(cur_page()->graph==GR_PRESSURE);pressure_status="CALIBRATED";
  ui.force=1;advance(150);picture("build/reggae/pressure-screen.ppm");
  edit_param(0,-2);assert(!pressure_mode);keyboard_block();assert(!perf_pressure_valid);
  assert(perf_key(0)==PF_ETHR); /* OFF also preserves user assignments */

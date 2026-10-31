@@ -665,7 +665,18 @@ static void page_go(int32_t d)
     cursor_move((int32_t)(b * 16u + ui.cursor % 16u < len ? b * 16u + ui.cursor % 16u : len - 1u));
 }
 
-/* the grid's knobs: 1 STEP (the cursor), 2 LANE, 3 HIT and 4 ACC of the lane at the cursor (right on, left off) */
+/* Direct selected-hit velocity; same persistent per-note records as VELOCITY. */
+static void grid_velocity(int32_t delta)
+{
+    track_t *t=TSEL;step_t *st=&t->step[ui.cursor];uint32_t item=4u+ui.lane;
+    if(!nv_present(st,item)){ui_message("ADD A HIT FIRST");return;}
+    step_undo_take(t,0x7000u|ui.cursor<<4|item);
+    uint32_t old=nv_get(&motion,song.sel,ui.cursor,item,nv_fallback(st,item));
+    uint32_t value=clamp((int32_t)old+accel(EN_K4,delta,126),1,127);
+    if(nv_set(t,ui.cursor,item,value)==2)ui_message("VELOCITY / LOCKS FULL");
+    motion_undo_done(t);
+}
+/* Grid: STEP, LANE, HIT, individual VELOCITY. Accent remains on the existing key gesture. */
 static void grid_edit(uint32_t slot, int32_t steps)
 {
     if (slot == 0u)
@@ -675,7 +686,7 @@ static void grid_edit(uint32_t slot, int32_t steps)
     else if (slot == 2u)
         grid_hit(TSEL, ui.cursor, ui.lane, steps > 0);
     else
-        grid_acc(TSEL, ui.cursor, ui.lane, steps > 0);
+        grid_velocity(steps);
 }
 
 /* the keys on the grid (presses): a white key toggles the selected lane at its step of the page (its accent

@@ -118,3 +118,18 @@ HOME cycle is MIXER → CLOCK → instrument. Mute/solo remain available through
   page and continuous punch-in depth mapping. Keep OFF default and stable release
   separate. Physical signal quality, ISR overhead and musical feel are still to
   be measured on the FM-1 before considering this a general-release feature.
+
+
+### 31 October: workflow and processing request
+
+0.7.7 DEV: punch-in first in FX, FX SENDS next, CHOPPER moved to EDIT;
+drum-grid K4 edits the selected hit velocity. No saved page IDs or project format
+changed. Not deployed or flashed.
+
+Accepted remaining scope: parametric EQ and compression on all four tracks **and
+master**; per-note length, velocity and repeats within the grid; consolidate
+editing pages. The existing 3840-byte project payload has insufficient spare
+space for the full requested processing state. A versioned storage extension
+must preserve existing projects, survive interrupted writes and explicitly reject
+capacity overflow before any slot is replaced. Individual note scheduling needs
+tests for overlapping notes, retriggers, stop, section changes and hat/kick independence.

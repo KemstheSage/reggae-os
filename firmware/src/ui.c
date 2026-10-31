@@ -785,7 +785,17 @@ static void note_name(char *b, uint32_t n)
  * and SYSTEM in 1.2), or not shown for this track, gives the family's first */
 static void open_family(uint32_t fam)
 {
-    if (!ui.home && cur_page()->fam == fam) {          /* same button again: next page */
+    if(fam==FAM_FX){
+        /* Keep page IDs stable for saved UI settings; order the FX family here.
+         * Always enter via performance, then sends, then processors. */
+        uint8_t ring[NPAGES];uint32_t count=0,pos=0;
+        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].graph==GR_PUNCH)ring[count++]=i;
+        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].fam==fam && PAGES[i].graph!=GR_PUNCH && page_visible(i))ring[count++]=i;
+        if(!ui.home && cur_page()->fam==fam){
+            for(uint32_t i=0;i<count;i++)if(ring[i]==ui.page){pos=(i+1)%count;break;}
+        }
+        ui.page=ring[pos];
+    } else if (!ui.home && cur_page()->fam == fam) {          /* same button again: next page */
         uint32_t n, i = ui.page;
         for (n = 0; n < NPAGES; n++) {
             i = (i + 1u) % NPAGES;

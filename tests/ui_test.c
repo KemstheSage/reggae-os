@@ -3097,7 +3097,7 @@ static int test_layer(void)
     bad += check("FX tap: nothing on press, the FX page when let go", ok && !ui.home && cur_page()->fam == FAM_FX);
     frames(320);                                       /* (not a double tap: #83) */
     press(B_FX);
-    bad += check("  a second tap: the next page of the family (SLICER)", str_eq(cur_page()->title, "SLICER"));
+    bad += check("  a second tap: track effect sends", cur_page()->graph == GR_FX);
     ui_power_on();
     btn_down(B_FX);
     for (flash = 0, i = 0; i < 22u; i++) { frame(); flash |= ui.layer; }      /* 0.35 s */

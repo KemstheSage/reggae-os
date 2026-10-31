@@ -292,10 +292,10 @@ static void reggae_seq_draw(void)
         const step_t *st=&seq_steps(TSEL)[ui.cursor];
         label[0]="STEP";fmt_int(v[0],ui.cursor+1);
         if(drum_track(TSEL)) {
-            label[1]="DRUM";label[2]="HIT";label[3]="ACCENT";
+            label[1]="DRUM";label[2]="HIT";label[3]="VELOCITY";
             str_cpy(v[1],drum_lane_name(TSEL,ui.lane),16);
             str_cpy(v[2],step_lanes(st)&(1u<<ui.lane)?"ON":"OFF",16);
-            str_cpy(v[3],step_accents(st)&(1u<<ui.lane)?"ON":"OFF",16);
+            if(step_lanes(st)&(1u<<ui.lane))fmt_int(v[3],nv_get(chain_motion(TSEL),song.sel,ui.cursor,4u+ui.lane,nv_fallback(st,4u+ui.lane)));else str_cpy(v[3],"--",16);
         } else {
             label[1]="NOTE";label[2]=step_on(st)?"LENGTH":"TIME";label[3]="FEEL";
             if(st->n)note_name(v[1],st->note[0]);else str_cpy(v[1],"--",16);

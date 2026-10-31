@@ -1280,9 +1280,9 @@ static void draw_columns(void)
         }
         return;
     }
-    if (cur_page()->scope == SC_STEP && drum_track(TSEL)) {   /* the grid: STEP LANE HIT ACC */
+    if (cur_page()->scope == SC_STEP && drum_track(TSEL)) {   /* the grid: STEP LANE HIT VELOCITY */
         const step_t *st = &seq_steps(TSEL)[ui.cursor];
-        uint32_t b = 1u << ui.lane, on = (step_lanes(st) & b) != 0u, ac = (step_accents(st) & b) != 0u;
+        uint32_t b = 1u << ui.lane, on = (step_lanes(st) & b) != 0u;
         char sn[8], sl[8];
         fmt_int(sn, (int32_t)ui.cursor + 1);
         str_cpy(sl, "/", 8);
@@ -1290,7 +1290,8 @@ static void draw_columns(void)
         draw_column(0, "STEP", sn, sl, VAL(0u), -1, ICON_AUTO);
         draw_column(1, "LANE", drum_lane_name(TSEL, ui.lane), "", VAL(1u), -1, ICON_AUTO);
         draw_column(2, "HIT", on ? "ON" : "--", "", on ? VAL(2u) : T_DIM, -1, ICON_AUTO);
-        draw_column(3, "ACC", ac ? "ON" : "--", "", ac ? VAL(3u) : T_DIM, -1, ICON_AUTO);
+        uint32_t vel=nv_get(chain_motion(TSEL),song.sel,ui.cursor,4u+ui.lane,nv_fallback(st,4u+ui.lane));
+        fmt_int(val,vel);draw_column(3, "VELOCITY", on ? val : "--", "", on ? VAL(3u) : T_DIM, vel*1000/127, ICON_AUTO);
         return;
     }
     if (cur_page()->scope == SC_STEP) {
