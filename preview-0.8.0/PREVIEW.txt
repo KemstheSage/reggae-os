@@ -1,0 +1,5 @@
+Riddim OS 0.8.0 preview
+Source commit 3646194
+24 curated instruments, finite wind samples, 3-second startup.
+Isolated browser saves; existing beats unchanged. No hardware flashed.
+Guide includes original firmware auditions. GPL source and credits included.
