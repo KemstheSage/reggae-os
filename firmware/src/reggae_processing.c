@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
-/* One fully parametric bell and stereo-linked feed-forward peak compressor per
+/* Four fully parametric bells and stereo-linked feed-forward peak compressor per
  * track and master. Fixed-point sample loop; bounded DF1/Q28 biquad with int64
  * accumulator. RBJ peaking coefficients. Config changes fade EQ out before
  * replacing coefficients/states, then fade in. No heap or browser dependencies. */
@@ -13,8 +13,11 @@ static const int32_t RP_MAKE[] = {32768,36766,41252,46286,51934,58271,65381,7335
 
 typedef struct {int32_t x1,x2,y1,y2;} rp_hist_t;
 typedef struct {
- int32_t b[5];rp_hist_t h[2];reggae_proc_config_t applied;
- int32_t wet,env,gain,goal;uint32_t phase;uint16_t reduction;
+ int32_t b[5];rp_hist_t h[2];int16_t applied[3];int32_t wet;
+} rp_band_state_t;
+typedef struct {
+ rp_band_state_t eq[4];
+ int32_t env,gain,goal;uint32_t phase;uint16_t reduction;
 } rp_state_t;
 static rp_state_t rp_state[NTRK+1] __attribute__((section(".pool")));
 static void rp_reset(void){memset(rp_state,0,sizeof rp_state);for(unsigned i=0;i<NTRK+1;i++)rp_state[i].gain=32768;}
@@ -31,39 +34,46 @@ static int32_t rp_div(int64_t numerator,uint32_t denominator){
  for(int bit=30;bit>=0;bit--){uint64_t d=(uint64_t)denominator<<bit;if(n>=d){n-=d;q|=1u<<bit;}}
  return negative?-(int32_t)q:(int32_t)q;
 }
-static void rp_coeff(rp_state_t *s,const reggae_proc_config_t *c){
- uint32_t ph=(uint64_t)RP_HZ[c->v[RP_FREQ]]*(1ULL<<32)/FS;
+static void rp_coeff(rp_band_state_t *s,const int16_t *v){
+ uint32_t ph=(uint64_t)RP_HZ[v[RP_FREQ]]*(1ULL<<32)/FS;
  int64_t sn=sine_i(ph),cs=sine_i(ph+(1u<<30));
- int64_t a=RP_A[c->v[RP_GAIN]+12],alpha=(int32_t)(sn*100*16)/RP_Q100[c->v[RP_Q]];
+ int64_t a=RP_A[v[RP_GAIN]+12],alpha=(int32_t)(sn*100*16)/RP_Q100[v[RP_Q]];
  /* sin is Q15; alpha Q20. Q20 intermediate coefficients. */
  int64_t aa=alpha*a/(1<<20),ad=rp_div(alpha*(1<<20),(uint32_t)a),den=(1<<20)+ad;
- int64_t v[5]={(1<<20)+aa,-cs*64,(1<<20)-aa,-cs*64,(1<<20)-ad};
- for(unsigned j=0;j<5;j++)s->b[j]=rp_div(v[j]*(1LL<<28),(uint32_t)den);
- memset(s->h,0,sizeof s->h);s->applied=*c;
+ int64_t coef[5]={(1<<20)+aa,-cs*64,(1<<20)-aa,-cs*64,(1<<20)-ad};
+ for(unsigned j=0;j<5;j++)s->b[j]=rp_div(coef[j]*(1LL<<28),(uint32_t)den);
+ memset(s->h,0,sizeof s->h);memcpy(s->applied,v,sizeof s->applied);
 }
-static int32_t rp_eq(rp_state_t *s,unsigned side,int32_t x){
+static int32_t rp_eq(rp_band_state_t *s,unsigned side,int32_t x){
  rp_hist_t *h=&s->h[side];x*=256;int64_t y=(int64_t)s->b[0]*x+(int64_t)s->b[1]*h->x1+(int64_t)s->b[2]*h->x2-(int64_t)s->b[3]*h->y1-(int64_t)s->b[4]*h->y2;
- int32_t o=(int32_t)clamp((int32_t)(y/(1LL<<28)),-268435456,268435456);
+ int64_t scaled=y/(1LL<<28);
+ int32_t o=(int32_t)(scaled < -268435456 ? -268435456 : scaled > 268435456 ? 268435456 : scaled);
  h->x2=h->x1;h->x1=x;h->y2=h->y1;h->y1=o;return o/256;
 }
 /* side=1: L/R buffers, side=2: sum/difference (voice spread), side=0 mono.
  * A linked detector applies the same gain to both channels, preserving imaging. */
 static void rp_process(unsigned unit,int32_t *l,int32_t *r,unsigned n,unsigned side){
  rp_state_t *s=&rp_state[unit];reggae_proc_config_t c=rp_config[unit];
- int changed=memcmp(c.v,s->applied.v,3*sizeof(int16_t))!=0;
- if(changed&&!s->wet){rp_coeff(s,&c);changed=0;}
- int target=(!changed&&c.v[RP_GAIN])?32768:0;
+ int target[4],active=0;
+ for(unsigned band=0;band<4;band++){
+  rp_band_state_t *e=&s->eq[band];const int16_t *v=c.v+rp_eq_index(band);
+  int changed=memcmp(v,e->applied,sizeof e->applied)!=0;
+  if(changed&&!e->wet){rp_coeff(e,v);changed=0;}
+  target[band]=(!changed&&v[RP_GAIN])?32768:0;active|=target[band]|e->wet;
+ }
  unsigned ratio=c.v[RP_RATIO];
- if(!target&&!s->wet&&!ratio){s->env=0;s->gain=32768;s->reduction=0;return;}
+ if(!active&&!ratio){s->env=0;s->gain=32768;s->reduction=0;return;}
  int atk=c.v[RP_ATTACK]?c.v[RP_ATTACK]:10,rel=c.v[RP_RELEASE]?c.v[RP_RELEASE]:150;
  int ak=32768/(44*atk),rk=32768/(44*rel);if(!rk)rk=1;
  for(unsigned i=0;i<n;i++){
   int32_t x=l[i],y=side?r[i]:x;
   if(side==2){y=(x-y)/2;x=l[i]-y;}
   x=clamp(x,-1048576,1048576);y=clamp(y,-1048576,1048576);
-  s->wet+=clamp(target-s->wet,-256,256);
-  if(s->wet){int32_t a=rp_eq(s,0,x),b=side?rp_eq(s,1,y):a;
-   x+=(int32_t)((int64_t)(a-x)*s->wet/32768);y+=(int32_t)((int64_t)(b-y)*s->wet/32768);}
+  for(unsigned band=0;band<4;band++){
+   rp_band_state_t *e=&s->eq[band];e->wet+=clamp(target[band]-e->wet,-256,256);
+   if(e->wet){int32_t a=rp_eq(e,0,x),b=side?rp_eq(e,1,y):a;
+    x+=(int32_t)((int64_t)(a-x)*e->wet/32768);y+=(int32_t)((int64_t)(b-y)*e->wet/32768);}
+  }
   if(ratio){
    int32_t pk=x<0?-x:x,pr=y<0?-y:y;if(pr>pk)pk=pr;
    int32_t diff=pk-s->env;s->env+=(int32_t)((int64_t)diff*(diff>0?ak:rk)/32768);

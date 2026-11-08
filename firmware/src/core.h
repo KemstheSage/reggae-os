@@ -13,15 +13,18 @@
 #define NTRK NPART               /* tracks (the formats and the protocol count these): every track is a part */
 #define NSTEP 64
 /* Project-owned processing, separate from synth parameter/MIDI IDs. Zero is bypass. */
-enum { RP_FREQ, RP_GAIN, RP_Q, RP_THRESH, RP_RATIO, RP_MAKEUP, RP_ATTACK, RP_RELEASE, RP_COUNT };
+enum { RP_FREQ, RP_GAIN, RP_Q, RP_THRESH, RP_RATIO, RP_MAKEUP, RP_ATTACK, RP_RELEASE, RP_B2_FREQ, RP_B2_GAIN, RP_B2_Q, RP_B3_FREQ, RP_B3_GAIN, RP_B3_Q, RP_B4_FREQ, RP_B4_GAIN, RP_B4_Q, RP_COUNT };
 typedef struct { int16_t v[RP_COUNT]; } reggae_proc_config_t;
 static reggae_proc_config_t rp_config[NTRK+1];
-static const int16_t RP_MAX[RP_COUNT]={31,12,6,48,5,12,100,1000};
+static const int16_t RP_MAX[RP_COUNT]={31,12,6,48,5,12,100,1000,31,12,6,31,12,6,31,12,6};
 static int rp_valid(const reggae_proc_config_t *c) {
- for(unsigned i=0;i<RP_COUNT;i++)if(c->v[i]<(i==RP_GAIN?-12:0)||c->v[i]>RP_MAX[i])return 0;
+ for(unsigned i=0;i<RP_COUNT;i++)if(c->v[i]<((i==RP_GAIN || (i>=8 && (i-8)%3==1))?-12:0)||c->v[i]>RP_MAX[i])return 0;
  return 1;
 }
 static uint32_t nt_generation[NTRK][128] __attribute__((section(".pool")));
+static unsigned rp_eq_index(unsigned band){return band?8+(band-1)*3:0;}
+static int rp_eq_active(const reggae_proc_config_t *c){return c->v[1]||c->v[9]||c->v[12]||c->v[15];}
+static int16_t rp_band,rp_eq_select;
 static int16_t rp_target; /* UI: T1..T4, MASTER; not a sound parameter */
 
 #define HALF_FRAMES 128          /* I2S half buffer: 2.9 ms at 44.1 kHz (a key waits 0..1 half, then plays 1 half later) */

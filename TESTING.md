@@ -4,6 +4,24 @@ Development host: macOS x86-64; Apple Clang 16; Emscripten 4.0.15; JieLi pi32v2
 compiler through a Linux Docker container. Source baseline: Felucca v1.6.1
 (`a53ecf4`), engines `c46e0086f69bdc26df1cd144dca9e683cc4531dd`.
 
+## UI 0.7.9 four-band EQ (2026-11-08)
+
+- Native ASAN: all 20 band responses, four cascaded bands, extreme boosts/cuts
+  and silence decay, four-band save/recall, old 0.7.8 FUNC import, linked compression,
+  hidden pages and FX/SELECT navigation order pass. Historical project suite passes.
+- Final shared WASM: emulator suite, original A/B saved-slot regression, processing
+  and per-note timing recall pass. Dry baseline hash remains -1326464490.
+- Heavy song with all 20 bands and five compressors: 98.50 ms per second of audio
+  on the development host; peak 0.1604. Not a physical-device CPU measurement.
+- Hardware build passes: image 556320 bytes, static RAM 61960/73728,
+  pool 338124/368640, firmware package 610090 bytes. No device flashed or tested.
+- Native screenshots inspected at 240×240: clean band label, 2/10 EQ page number.
+- WASM (841311 bytes) SHA256: `004b2dba06f463b459482415c2028f939d16c7290d5a1a26127431773ed5b566`.
+- Package SHA256: `15435c608c06560ee5158b349856bbc9378dff5c8f4f9f0758630f67ff108bef`.
+- Preview 0.7.9 has isolated saves; FUNC imports, FUNE writes require 0.7.9.
+  Fixed-slot capacity/refused-overflow limitations remain; see
+  `docs/reports/ui-0.7.9-eq.md`.
+
 ## UI 0.7.8 preview — final validation (2026-11-08)
 
 - Shared WASM build: 840650 bytes. `emu_test.mjs`, project A/B persistence and

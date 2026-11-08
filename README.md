@@ -4,14 +4,15 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
-**0.7.8 emulator preview:** per-track/master parametric bell EQ and linked
-compression; individual note length, velocity and repeats in one grid editor.
-[Open preview](https://kemsthesage.github.io/reggae-os/preview-0.7.8/) ·
-[Preview controls](docs/preview-0.7.8/index.html) ·
-[Implementation, storage compatibility and limits](docs/reports/ui-0.7.8-processing.md).
-New-format projects require 0.7.8; previous projects load with processing bypassed.
-Physical validation and installation are pending. The stable root emulator remains
-0.7.4; previews use separate browser saves.
+**0.7.9 emulator preview:** four parametric bell bands per track and master,
+plus linked compression. FX order: punch-in, EQ, compressor/timing, standard FX.
+Slicer/chopper and pressure-test pages are hidden. Individual note editing and
+velocity colours remain available.
+[Open preview](https://kemsthesage.github.io/reggae-os/preview-0.7.9/) ·
+[Preview controls](docs/preview-0.7.9/index.html).
+0.7.8 projects import with the original EQ in band 1; new processing saves require
+0.7.9. Hardware cross-build and physical validation are separate; no flashing has
+been performed. Each preview uses separate browser saves.
 
 **Earlier 0.7.6 TEST candidate:** opt-in contact-pressure reader and calibration page,
 direct pressure-controlled filters and an unchanged FX key layout. Sensing OFF at boot.

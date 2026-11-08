@@ -272,3 +272,17 @@ MSTR. Settings persist through PROJECT saves. Old projects remain readable;
 new-format saves require 0.7.8. No flash layout change was made.
 
 See [complete preview controls and limitations](docs/reports/ui-0.7.8-processing.md).
+
+## UI 0.7.9: four-band EQ and FX navigation
+
+FX cycles PUNCH-IN → 4-BAND EQ → COMPRESSOR → COMP TIMING → FX SENDS →
+INSERT → INSERT 2 → DELAY → REVERB → CHORUS. SELECT page navigation uses the
+same order. Chopper/slicer and pressure diagnostic pages are hidden; saved IDs
+and existing DSP are retained for project compatibility.
+
+EQ K1 selects track and band together (T1 B1–B4 … M B1–B4); K2 frequency,
+K3 gain, K4 Q. Each of the 20 bands has independent state and settings. Zero gain
+bypasses one band. The curve depicts the selected band, not the summed spectrum.
+Compressor controls are unchanged. Old 0.7.8 processing loads into band 1;
+additional bands are bypassed. New FUNE saves keep all four bands and require
+0.7.9. The fixed flash-slot size and bounded-save refusal remain unchanged.

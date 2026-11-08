@@ -500,7 +500,7 @@ static const page_t PAGES[] = {
     {"VELOCITY", FAM_SEQ, SC_STEP, GR_ROLL, {0, 1, 2, 3}},
     {"PUNCH-IN", FAM_FX, SC_TRACK, GR_PUNCH, {0xFF, 0xFF, 0xFF, 0xFF}},
     {"PRESSURE", FAM_FX, SC_TRACK, GR_PRESSURE, {0xFF, 0xFF, 0xFF, 0xFF}},
-    {"BELL EQ", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_FREQ, RP_GAIN, RP_Q}},
+    {"4-BAND EQ", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_FREQ, RP_GAIN, RP_Q}},
     {"COMPRESSOR", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_THRESH, RP_RATIO, RP_MAKEUP}},
     {"COMP TIMING", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_ATTACK, RP_RELEASE, RP_RATIO}},
 };
@@ -517,6 +517,8 @@ static const char *const RP_FREQ_NAMES[]={"40","49","59","71","87","105","128","
 static const char *const RP_TARGET_NAMES[]={"T1","T2","T3","T4","MSTR"};
 static const char *const RP_Q_NAMES[]={"0.5","0.7","1.0","1.4","2.0","3.0","4.0"};
 static const char *const RP_RATIO_NAMES[]={"OFF","2:1","3:1","4:1","8:1","20:1"};
+static const char *const RP_EQ_NAMES[]={"T1 B1","T1 B2","T1 B3","T1 B4","T2 B1","T2 B2","T2 B3","T2 B4","T3 B1","T3 B2","T3 B3","T3 B4","T4 B1","T4 B2","T4 B3","T4 B4","M B1","M B2","M B3","M B4"};
+static const param_desc_t RP_EQ_DESC=PE("TRACK/BAND",RP_EQ_NAMES,0);
 static const param_desc_t RP_TARGET_DESC=PE("TARGET",RP_TARGET_NAMES,0);
 static const param_desc_t RP_DESC[RP_COUNT]={
  PE("FREQ Hz",RP_FREQ_NAMES,0), PD("GAIN dB",F_INT,-12,12,0), PE("WIDTH Q",RP_Q_NAMES,0),
@@ -527,8 +529,11 @@ static const param_desc_t RP_DESC[RP_COUNT]={
 static const param_desc_t *page_desc(const page_t *pg, uint32_t slot, int16_t **valp)
 {
     uint32_t id = pg->id[slot];
-    if(pg->scope==SC_PROCESS){if(!slot){*valp=&rp_target;return &RP_TARGET_DESC;}
-        *valp=&rp_config[rp_target].v[id];return &RP_DESC[id];}
+    if(pg->scope==SC_PROCESS){
+        int eq=pg->id[1]==RP_FREQ;
+        if(!slot){if(eq){rp_eq_select=rp_target*4+rp_band;*valp=&rp_eq_select;return &RP_EQ_DESC;}
+            *valp=&rp_target;return &RP_TARGET_DESC;}
+        *valp=&rp_config[rp_target].v[id+(eq?rp_eq_index(rp_band):0)];return &RP_DESC[id];}
     if (id == 0xFFu) {
         *valp = 0;
         return 0;

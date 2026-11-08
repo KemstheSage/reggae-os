@@ -892,9 +892,9 @@ static void mix_part(track_t *t, uint32_t n SM_DECL)
 #else
     if (track_render(t, b, n))
 #endif
-        t->tail = rp_config[t-trk].v[RP_GAIN] ? 128 : t->p[P_ITYPE] ? 64 : 16;              /* blocks of DIST / INSERT state to run out after the last
+        t->tail = rp_eq_active(&rp_config[t-trk]) ? 128 : t->p[P_ITYPE] ? 64 : 16;              /* blocks of DIST / INSERT state to run out after the last
                                                          * voice (the INSERT's: 46 ms, a flanger's feedback) */
-    else if ((!t->tail || !(t->p[P_DIST] | t->p[P_ITYPE] | rp_config[t-trk].v[RP_GAIN]) || !--t->tail) && !slicer_busy(t)) {
+    else if ((!t->tail || !(t->p[P_DIST] | t->p[P_ITYPE] | rp_eq_active(&rp_config[t-trk])) || !--t->tail) && !slicer_busy(t)) {
         rp_state[t-trk].env=0;rp_state[t-trk].gain=32768;rp_state[t-trk].reduction=0;
         slicer_track(t, 0, n);                          /* (the SLICER's step clock runs on) */
         if (t->ins_run && !t->p[P_ITYPE])

@@ -425,6 +425,7 @@ static uint32_t layer_btn(void);
  * track's (its patch's operators, ui_fm6op.c) */
 static int page_visible(uint32_t i)
 {
+    if(PAGES[i].graph==GR_SLCR || PAGES[i].graph==GR_SLICES || PAGES[i].graph==GR_PRESSURE)return 0;
     if(str_eq(PAGES[i].title,"VELOCITY"))return 0; /* consolidated in STEP */
     if (PAGES[i].scope == SC_TRACK && PAGES[i].id[0] >= P_LN0 && PAGES[i].id[0] <= P_LN7)
         return TSEL->eng_req % NENGINES == ENGI_DRUM;
@@ -801,14 +802,20 @@ static void note_name(char *b, uint32_t n)
  * to 1.4.1 the last); HOME: home_tap). From another
  * family the family's page shown last (SAVE: USER); one that is not the family's any more (a page that moved, as GLOBAL
  * and SYSTEM in 1.2), or not shown for this track, gives the family's first */
+static unsigned fx_ring(uint8_t *ring){
+ unsigned count=0;
+        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].graph==GR_PUNCH)ring[count++]=i;
+        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].scope==SC_PROCESS && page_visible(i))ring[count++]=i;
+        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].fam==FAM_FX && PAGES[i].graph!=GR_PUNCH && PAGES[i].scope!=SC_PROCESS && page_visible(i))ring[count++]=i;
+ return count;
+}
 static void open_family(uint32_t fam)
 {
     if(fam==FAM_FX){
         /* Keep page IDs stable for saved UI settings; order the FX family here.
-         * Always enter via performance, then sends, then processors. */
+         * Performance, EQ/compression, then standard effects. */
         uint8_t ring[NPAGES];uint32_t count=0,pos=0;
-        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].graph==GR_PUNCH)ring[count++]=i;
-        for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].fam==fam && PAGES[i].graph!=GR_PUNCH && page_visible(i))ring[count++]=i;
+        count=fx_ring(ring);
         if(!ui.home && cur_page()->fam==fam){
             for(uint32_t i=0;i<count;i++)if(ring[i]==ui.page){pos=(i+1)%count;break;}
         }
@@ -877,6 +884,7 @@ static void page_turn(int32_t dir)
                 at = m;
             ring[m++] = (uint8_t)i;
         }
+    if(fam==FAM_FX){m=fx_ring(ring);for(unsigned n=0;n<m;n++)if(ring[n]==ui.page)at=n;}
     if (m < 2u)
         return;
     i = ring[(at + (dir > 0 ? 1u : m - 1u)) % m];

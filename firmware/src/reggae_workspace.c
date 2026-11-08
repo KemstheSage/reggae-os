@@ -131,16 +131,17 @@ static void rg_chorus(void)
 /* Parameter response sketch (not a measured FFT); live gain reduction meter. */
 static void rg_processor(void){
  unsigned target=rp_target;const reggae_proc_config_t *c=&rp_config[target];
- char text[32];rg_caption(14,7,210,target==NTRK?"MASTER":RP_TARGET_NAMES[target],RG_GOLD);
+ char text[32];rg_caption(14,7,210,cur_page()->id[1]==RP_FREQ?RP_EQ_NAMES[target*4+rp_band]:target==NTRK?"MASTER":RP_TARGET_NAMES[target],RG_GOLD);
  if(cur_page()->id[1]==RP_FREQ){
-  int freq=c->v[RP_FREQ],gain=c->v[RP_GAIN],q=c->v[RP_Q];
+  unsigned bi=rp_eq_index(rp_band);
+  int freq=c->v[bi+RP_FREQ],gain=c->v[bi+RP_GAIN],q=c->v[bi+RP_Q];
   int last=64;cv_rect(15,64,210,1,RG_WOOD);
   for(int x=16;x<224;x++){
    int d=x-(16+freq*207/31),width=48-q*6;
    int y=64-gain*3*width*width/(width*width+d*d);
    cv_line(x-1,last,x,y,RG_GREEN);last=y;
   }
-  rg_caption(14,104,210,gain?"BELL EQ / 0 dB: BYPASS":"BYPASSED / TURN GAIN",RG_INK);
+  rg_caption(14,104,210,gain?"BAND / 0 dB: BYPASS":"BYPASSED / TURN GAIN",RG_INK);
  }else{
   unsigned reduction=rp_state[target].reduction;int width=clamp(reduction*190/2400,0,190);
   cv_frame(20,42,194,24,RG_WOOD);cv_rect(22,44,width,20,RG_RED);
@@ -209,7 +210,7 @@ static void rg_workspace_page(void)
     if(ui.layer)str_cpy(hint,ui.layer==LAYER_EDIT?"WHITE: ENGINE / BLACK: ACTION":"KEYS: SELECT / OCT-: UNDO",sizeof hint);
     else if(act_cols()) {char a[16],b[16];foot_hint(a,b);str_cpy(hint,a,sizeof hint);str_cpy(hint+str_len(hint)," / ",sizeof hint-str_len(hint));str_cpy(hint+str_len(hint),b,sizeof hint-str_len(hint));}
     if(!ui.layer && cur_page()->graph==GR_FX)str_cpy(hint,"ALGO: TRACK / K2-4: SEND",sizeof hint);
-    if(!ui.layer && cur_page()->scope==SC_PROCESS)str_cpy(hint,"K1: T1-T4 / MASTER | SAVE PROJECT",sizeof hint);
+    if(!ui.layer && cur_page()->scope==SC_PROCESS)str_cpy(hint,cur_page()->id[1]==RP_FREQ?"K1: TRACK + BAND / SAVE: PROJECT":"K1: T1-T4 / MASTER | SAVE PROJECT",sizeof hint);
     if(ui.ml.on)ml_line(hint);
     rg_caption(16,46,204,ui.msg_t?ui.msg:hint,RG_INK);cv_blit(0,180);
 }
@@ -230,7 +231,7 @@ static void rg_settings(void)
     if(ui.menu==2){cv_scroll=1;rg_credits(-(int)ui.menu_scroll,1);cv_scroll=0;}
     else if(ui.menu==3){
         info_sig();static const char *const usbname[]={"OFF","WAIT","BUS","ENUM","MIDI"};
-        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.8 PREVIEW",1,1);
+        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.9 PREVIEW",1,1);
         rg_sleeve(1,"USB",usbname[info_usb()],0,usb.up);
         fmt_int(b,info.cpu);str_cpy(b+str_len(b)," % AUDIO CPU",sizeof b-str_len(b));rg_sleeve(2,"PROCESSING",b,0,1);
     } else {

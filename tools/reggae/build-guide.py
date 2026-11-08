@@ -60,7 +60,7 @@ page(42,'Edit per-step locks and recorded parameter movement.', 'Select row|Sele
 page(43,'Mix all four tracks from one persistent page.', 'Track 1 level|Track 2 level|Track 3 level|Track 4 level', 'C5 selects LEVEL, D5 PAN, E5 REVERB: all four knobs then edit that property for T1–T4. Vertical faders always show volume. First four black keys toggle mute; hold F3/G3/A3/B3 to solo T1/T2/T3/T4. No held button is needed to stay here.')
 page(44,'Set the shared transport timing.', 'Tempo in BPM|Global swing|Internal or external clock source|Unused', 'Use internal clock for standalone play. External clock requires a source sending MIDI clock/transport.')
 page(47,'Inspect and calibrate experimental hardware key pressure.', 'OFF/TEST/LIVE|Physical key|Capture light touch|Capture firm touch', 'Hardware-only sensing; calibration is not saved.')
-page(48,'Shape one frequency region on a track or master.', 'Target T1–T4 or MSTR|Centre frequency Hz|Gain dB; zero bypasses|Q; higher is narrower', 'One parametric bell per target. Save through PROJECT.')
+page(48,'Shape four frequency regions on a track or master.', 'Track and band: T1 B1–B4 through M B1–B4|Selected band centre frequency Hz|Band gain dB; zero bypasses this band|Q; higher is narrower', 'Four independent bells per target; display shows selected band. Save through PROJECT.')
 page(49,'Control dynamics on a track or master.', 'Target T1–T4 or MSTR|Threshold below full scale in dB|Ratio; OFF bypasses|Makeup gain dB', 'Use COMP TIMING for attack/release. Save through PROJECT.')
 page(50,'Set the compressor response times.', 'Target T1–T4 or MSTR|Attack ms; 0 defaults to 10|Release ms; 0 defaults to 150|Ratio; OFF bypasses', 'Same compressor as the previous page.')
 E = {

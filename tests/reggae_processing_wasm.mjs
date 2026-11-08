@@ -19,9 +19,9 @@ const a=await device();
 a.tap(9);a.e.web_buttons(1<<11);a.advance(70);a.e.web_keys(1);a.advance(100);a.e.web_keys(0);a.e.web_buttons(0);a.advance(500);
 function save(delta){a.tap(7);if(delta)a.turn(3,delta);a.turn(6,1);a.tap(13);a.tap(13);}
 save(0);const original=a.nor().slice(0x97000,0x99000);
-a.tap(6);for(let i=0;i<9;i++)a.tap(0); // EQ, after pressure
+a.tap(6);for(let i=0;i<2;i++)a.tap(0); // punch-in then EQ
 // MASTER: 880-ish Hz bell +9 dB, then 4:1 compression at -24 dBFS.
-a.turn(3,4);a.turn(4,16);a.turn(5,9);a.tap(0);a.turn(4,24);a.turn(5,3);
+a.turn(3,16);a.turn(4,16);a.turn(5,9);a.tap(0);a.turn(4,24);a.turn(5,3);
 save(1);assert.deepEqual(a.nor().slice(0x97000,0x99000),original);
 a.tap(6);a.tap(9);a.turn(5,1);a.turn(6,8);a.turn(5,1);a.turn(6,4);save(1);
 const saved=storeSectors(a.nor());
@@ -39,8 +39,9 @@ console.log('PASS shared WASM: UI edits EQ/compression + note length/repeats, au
 // Real audio workload with EQ and compression enabled on all five targets.
 const stress=await device();stress.e.web_test_heavy();
 for(let target=0;target<5;target++){
- stress.tap(6);for(let i=0;i<9;i++)stress.tap(0);
- stress.turn(3,target===0?-4:1);stress.turn(4,16);stress.turn(5,6);
+ stress.tap(6);for(let i=0;i<2;i++)stress.tap(0);
+ stress.turn(3,-20);stress.turn(3,target*4);
+ for(let band=0;band<4;band++){if(band)stress.turn(3,1);stress.turn(4,8+band*6);stress.turn(5,3);}
  stress.tap(0);stress.turn(4,18);stress.turn(5,3);
 }
 stress.tap(10);stress.advance(1000);const started=performance.now();

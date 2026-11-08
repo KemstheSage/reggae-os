@@ -143,3 +143,11 @@ FUNC compression extends persistence without reallocating flash; old format
 imports default new controls to bypass. Audio and persistence tests cover the
 shared firmware. Physical listening, CPU/timing validation and installation are
 pending the musician returning home. Multi-band EQ is not implemented.
+
+## UI 0.7.9 preview
+
+- Implemented: 4 parametric bell bands on each track and master, edited from one page.
+- Implemented: punch-in → EQ → compressor/timing → standard FX navigation, including SELECT.
+- Removed slicer/chopper and pressure diagnostic pages from navigation; underlying saved settings retained.
+- 0.7.8 FUNC imports into band 1; new FUNE saves carry four bands with bounded slot writes.
+- Physical CPU/listening validation remains pending; no device flashing in this update.

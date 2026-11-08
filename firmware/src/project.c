@@ -95,6 +95,7 @@
  * Built on the Mac too (tests/project_test.c, -DPROJ_HOST): the part above the #ifndef
  * PROJ_HOST needs core.h, params.c (TP) and engines.c. */
 #define PROJ_MAGIC_TIMING 0x46554E44u /* FUND inner record: independent note timing */
+#define PROJ_MAGIC_EQ4 0x46554E45u /* FUNE: four-band processors */
 #define PROJ_MAGIC_EXT 0x46554E43u /* FUNC: bounded RLE legacy record plus processor state */
 #define PROJ_MAGIC_NV 0x46554E42u /* FUNB: FUNA layout, reserved per-note velocity records */
 #define PROJ_MAGIC 0x46554E41u                 /* "FUNA" (FUN10): 104 (1.5: 111) parameters, 128 motion records, nudges */
@@ -511,7 +512,7 @@ static int proj_import(project_t *q, const void *b, int n)
 }
 static int proj_import_any(project_t *q, const void *b, int n)
 {
-    if (n == PROJ_STORE_SIZE && (((const uint32_t *)b)[0] == PROJ_MAGIC || ((const uint32_t *)b)[0] == PROJ_MAGIC_NV || ((const uint32_t *)b)[0] == PROJ_MAGIC_EXT))
+    if (n == PROJ_STORE_SIZE && (((const uint32_t *)b)[0] == PROJ_MAGIC || ((const uint32_t *)b)[0] == PROJ_MAGIC_NV || ((const uint32_t *)b)[0] == PROJ_MAGIC_EXT || ((const uint32_t *)b)[0] == PROJ_MAGIC_EQ4))
         return proj_unpack(q, b, PROJ_STORE_SIZE);
     if (n == PROJ_STORE_SIZE && ((const uint32_t *)b)[1] >= 8u && ((const uint32_t *)b)[1] < PROJ_STORE_SIZE)
         n = (int)((const uint32_t *)b)[1];      /* a retained slot holding an older, shorter record: its own size
@@ -815,21 +816,25 @@ static int proj_pack(project_store_t *out,const project_t *q){
  memcpy(&proj_codec,out,sizeof proj_codec);memset(out,0,sizeof *out);
  uint32_t n=proj_rle(out->raw+PROJ_EXT_OFF,PROJ_STORE_SIZE-PROJ_EXT_OFF-4,proj_codec.raw,PROJ_STORE_SIZE);
  if(!n)return 0;
- uint32_t magic=PROJ_MAGIC_EXT,size=PROJ_STORE_SIZE;uint16_t bytes=n;
+ uint32_t magic=PROJ_MAGIC_EQ4,size=PROJ_STORE_SIZE;uint16_t bytes=n;
  memcpy(out->raw,&magic,4);memcpy(out->raw+4,&size,4);memcpy(out->raw+8,&bytes,2);
  memcpy(out->raw+16,q->processing,sizeof q->processing);
  uint32_t sum=proj_hash(out->raw,PROJ_STORE_SIZE-4);memcpy(out->raw+PROJ_STORE_SIZE-4,&sum,4);return 1;
 }
 static int proj_unpack(project_t *q,const uint8_t *b,uint32_t st){
  uint32_t magic;memcpy(&magic,b,4);
- if(magic!=PROJ_MAGIC_EXT)return proj_unpack_legacy(q,b,st);
+ if(magic!=PROJ_MAGIC_EXT && magic!=PROJ_MAGIC_EQ4)return proj_unpack_legacy(q,b,st);
  if(st!=PROJ_STORE_SIZE)return 0;
  uint32_t size,sum;uint16_t n;memcpy(&size,b+4,4);memcpy(&n,b+8,2);memcpy(&sum,b+st-4,4);
- if(size!=st||n>st-PROJ_EXT_OFF-4||sum!=proj_hash(b,st-4))return 0;
+ unsigned off=magic==PROJ_MAGIC_EXT?96:PROJ_EXT_OFF;
+ if(size!=st||n>st-off-4||sum!=proj_hash(b,st-4))return 0;
  for(unsigned i=10;i<16;i++)if(b[i])return 0;
- if(!proj_unrle(proj_codec.raw,PROJ_STORE_SIZE,b+PROJ_EXT_OFF,n))return 0;
+ if(!proj_unrle(proj_codec.raw,PROJ_STORE_SIZE,b+off,n))return 0;
  if(!proj_unpack_legacy(q,proj_codec.raw,PROJ_STORE_SIZE))return 0;
- memcpy(q->processing,b+16,sizeof q->processing);
+ if(magic==PROJ_MAGIC_EXT){
+  memset(q->processing,0,sizeof q->processing);
+  for(unsigned t=0;t<NTRK+1;t++)memcpy(q->processing[t].v,b+16+t*16,16);
+ }else memcpy(q->processing,b+16,sizeof q->processing);
  for(unsigned t=0;t<NTRK+1;t++)if(!rp_valid(&q->processing[t]))return 0;
  q->sum=proj_sum(q);return 1;
 }

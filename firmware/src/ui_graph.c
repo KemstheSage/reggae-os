@@ -297,7 +297,7 @@ static void graph_grid(const track_t *t, uint16_t c)
     for (l = 0; l < NLANE; l++) {
         int32_t y = y0 + 4 + (int32_t)l * 14;
         int sel = l == ui.lane, mu = (mute >> l) & 1u;
-        uint16_t row = sel ? T_RAISE : T_SURF, hc = mu ? T_DIM : c, ac = mu ? T_DIM : T_ACCENT;
+        uint16_t row = sel ? T_RAISE : T_SURF;
         if (sel) {
             GFX_HOOK_ALIGN(0, 0, 240, 0, AL_H | AL_CELLS, "drum lane fill centred");
             cv_rrect(6, y, 228, 14, 3, T_RAISE, T_SURF);   /* (6 .. 234, as a list row; the hits 40 .. 230) */
@@ -1180,6 +1180,7 @@ static void page_title(char *ti)
             if (i == ui.page)
                 k = n;
         }
+    if(pg->fam==FAM_FX){uint8_t ring[NPAGES];n=fx_ring(ring);for(unsigned j=0;j<n;j++)if(ring[j]==ui.page)k=j+1;}
     str_cpy(ti, pt ? pt : grid_on() && !detail_on() ? "GRID" : pg->title, 12);
     if (n > 1) {
         str_cpy(ti + str_len(ti), " ", 4);

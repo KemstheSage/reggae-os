@@ -945,7 +945,9 @@ static void edit_param(uint32_t slot, int32_t steps)
     int32_t v;
     if(pg->scope==SC_PROCESS){
         d=page_desc(pg,slot,&vp);
-        *vp=(int16_t)param_turn(d,*vp,steps);ui.force=1;return;
+        *vp=(int16_t)param_turn(d,*vp,steps);
+        if(!slot && pg->id[1]==RP_FREQ){rp_target=rp_eq_select/4;rp_band=rp_eq_select%4;}
+        ui.force=1;return;
     }
     if(pg->graph==GR_PRESSURE){
         if(slot==0){
