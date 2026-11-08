@@ -256,3 +256,19 @@ Requested next: EQ and compression on each track and the master, individual
 note lengths/repeats, and a consolidated note editor. These are not implemented
 in this development build. Current step length and ratchet controls affect the
 step as a whole; they cannot independently roll a hi-hat over a single kick.
+
+
+## 0.7.8 preview: new main grid and processors
+
+The current preview supersedes the earlier knob layouts above. On the main SEQ
+page: K1 STEP, K2 NOTE/DRUM, K3 EDIT FIELD, K4 VALUE. Fields are VELOCITY,
+LENGTH, REPEAT and PITCH/HIT. All apply to the selected note/hit. The separate
+velocity page is no longer in the navigation cycle. DETAIL still edits whole-step
+settings. Length is measured in steps; STEP inherits existing timing. Repeats
+fit inside one step, independently for each note or drum hit.
+
+FX includes BELL EQ, COMPRESSOR and COMP TIMING. K1 on each selects T1–T4 or
+MSTR. Settings persist through PROJECT saves. Old projects remain readable;
+new-format saves require 0.7.8. No flash layout change was made.
+
+See [complete preview controls and limitations](docs/reports/ui-0.7.8-processing.md).

@@ -431,10 +431,10 @@ static void param_format(const param_desc_t *d, int32_t v, char *val, const char
 /* ------------------------------------------------------------ pages --- */
 enum { FAM_HOME, FAM_ENV, FAM_LFO, FAM_FX, FAM_SCL, FAM_EDIT, FAM_GLO, FAM_SAVE, FAM_ARP, FAM_SEQ, FAM_TRK,
        FAM_COUNT };
-enum { SC_TRACK, SC_GLOBAL, SC_ENGINE, SC_STEP, SC_TRK };   /* SC_TRK: the TRACKS page (ui_input.c tracks_edit) */
+enum { SC_TRACK, SC_GLOBAL, SC_ENGINE, SC_STEP, SC_TRK, SC_PROCESS };   /* SC_TRK: the TRACKS page (ui_input.c tracks_edit) */
 enum { GR_NONE, GR_ADSR, GR_LFO, GR_STEPS, GR_ARP, GR_SCALE, GR_FX, GR_ROLL, GR_BROWSE, GR_SLOTS, GR_USER, GR_TRK,
        GR_SLCR, GR_MOD, GR_PATS, GR_SONG, GR_TOOLS, GR_CHORD, GR_SLICES, GR_EVENTS,
-       GR_FMOP, GR_FMOP2, GR_FMENV, GR_INS, GR_MIX4, GR_PUNCH, GR_PRESSURE };   /* (GR_STEPS: SEQ TOOLS' knobs; GR_FMOP..: FM6's operator pages, ui_fm6op.c) */
+       GR_FMOP, GR_FMOP2, GR_FMENV, GR_INS, GR_MIX4, GR_PUNCH, GR_PRESSURE, GR_PROCESS };   /* (GR_STEPS: SEQ TOOLS' knobs; GR_FMOP..: FM6's operator pages, ui_fm6op.c) */
 
 typedef struct {
     const char *title;
@@ -500,6 +500,9 @@ static const page_t PAGES[] = {
     {"VELOCITY", FAM_SEQ, SC_STEP, GR_ROLL, {0, 1, 2, 3}},
     {"PUNCH-IN", FAM_FX, SC_TRACK, GR_PUNCH, {0xFF, 0xFF, 0xFF, 0xFF}},
     {"PRESSURE", FAM_FX, SC_TRACK, GR_PRESSURE, {0xFF, 0xFF, 0xFF, 0xFF}},
+    {"BELL EQ", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_FREQ, RP_GAIN, RP_Q}},
+    {"COMPRESSOR", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_THRESH, RP_RATIO, RP_MAKEUP}},
+    {"COMP TIMING", FAM_FX, SC_PROCESS, GR_PROCESS, {0xFE, RP_ATTACK, RP_RELEASE, RP_RATIO}},
 };
 #define NPAGES (sizeof(PAGES) / sizeof(PAGES[0]))
 /* Mixer knob assignment is UI state, never part of a sound or project. */
@@ -510,9 +513,22 @@ static uint32_t reggae_mix_param(void) {
 }
 static uint8_t mod_ui_slot;      /* the MOD page: the matrix slot (0..3) KNOB 2..4 edit */
 
+static const char *const RP_FREQ_NAMES[]={"40","49","59","71","87","105","128","155","188","228","276","335","407","493","599","726","881","1069","1297","1574","1909","2316","2810","3409","4136","5018","6087","7385","8960","10870","13188","16000"};
+static const char *const RP_TARGET_NAMES[]={"T1","T2","T3","T4","MSTR"};
+static const char *const RP_Q_NAMES[]={"0.5","0.7","1.0","1.4","2.0","3.0","4.0"};
+static const char *const RP_RATIO_NAMES[]={"OFF","2:1","3:1","4:1","8:1","20:1"};
+static const param_desc_t RP_TARGET_DESC=PE("TARGET",RP_TARGET_NAMES,0);
+static const param_desc_t RP_DESC[RP_COUNT]={
+ PE("FREQ Hz",RP_FREQ_NAMES,0), PD("GAIN dB",F_INT,-12,12,0), PE("WIDTH Q",RP_Q_NAMES,0),
+ PD("THR -dB",F_INT,0,48,0), PE("RATIO",RP_RATIO_NAMES,0),PD("MAKE dB",F_INT,0,12,0),
+ PD("ATK ms",F_INT,0,100,0),PD("REL ms",F_INT,0,1000,0)
+};
+
 static const param_desc_t *page_desc(const page_t *pg, uint32_t slot, int16_t **valp)
 {
     uint32_t id = pg->id[slot];
+    if(pg->scope==SC_PROCESS){if(!slot){*valp=&rp_target;return &RP_TARGET_DESC;}
+        *valp=&rp_config[rp_target].v[id];return &RP_DESC[id];}
     if (id == 0xFFu) {
         *valp = 0;
         return 0;

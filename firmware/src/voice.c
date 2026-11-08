@@ -397,6 +397,7 @@ static void trk_note_on(track_t *t, uint32_t note, uint32_t vel)
     uint32_t any = 0, i, mode = trk_vmode(t);
     if (t->p[P_MUTE])
         return;
+    nt_generation[t-trk][note&127]++;
     if (t->xf_on || t->eng_req != t->engine) {          /* engine switch under way: after the fade */
         for (i = 0; i < t->xp_n && t->xp_note[i] != note; i++)
             ;
@@ -475,6 +476,7 @@ static void trk_note_off(track_t *t, uint32_t note)
 static void trk_all_off(track_t *t)
 {
     uint32_t i;
+    for(i=0;i<128;i++)nt_generation[t-trk][i]++;
     for (i = 0; i < NVOICE; i++) {
         t->v[i].gate = 0;
         t->v[i].stage = t->v[i].active ? 3 : 0;
@@ -520,8 +522,11 @@ static void engine_block(track_t *t)
         {
             uint32_t n = t->xp_n;
             t->xp_n = 0;
-            for (i = 0; i < n; i++)
+            for (i = 0; i < n; i++) {
+                uint32_t generation=nt_generation[t-trk][t->xp_note[i]];
                 trk_note_on(t, t->xp_note[i], t->xp_vel[i]);
+                nt_generation[t-trk][t->xp_note[i]]=generation; /* replay, not a new owner */
+            }
         }
     }
     eng_mem_claim(t);                                   /* (an engine set directly: power-on, a test) */

@@ -2,6 +2,7 @@
  * Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
 /* Effects: per-track DIST and INSERT (1.5), then sends into three
  * shared buses (chorus, tempo delay, reverb). Mono buses, stereo dry mix. */
+#include "reggae_processing.c"
 #define DLY_LEN 65536u           /* 1.49 s: 1/4 fits from 41 BPM, 1/4D from 61, 1/2 from 81 */
 #define CHO_LEN 2048u
 static int16_t dly_buf[DLY_LEN] __attribute__((section(".pool")));
@@ -838,6 +839,7 @@ static __attribute__((noinline)) void mix_spread(track_t *t, int32_t *b, uint32_
     track_dist(t, b, n);
     if (t->p[P_ITYPE] | t->ins_run)
         track_insert(t, b, n);                          /* (the mono sum, as DIST) */
+    rp_process(t-trk,b,d,n,2);
     slicer_track_sd(t, b, d, n);
     if ((pf.mute >> (t - trk)) & 1u)
         perf_mute_sd((uint32_t)(t - trk), b, d, n);
@@ -890,9 +892,10 @@ static void mix_part(track_t *t, uint32_t n SM_DECL)
 #else
     if (track_render(t, b, n))
 #endif
-        t->tail = t->p[P_ITYPE] ? 64 : 16;              /* blocks of DIST / INSERT state to run out after the last
+        t->tail = rp_config[t-trk].v[RP_GAIN] ? 128 : t->p[P_ITYPE] ? 64 : 16;              /* blocks of DIST / INSERT state to run out after the last
                                                          * voice (the INSERT's: 46 ms, a flanger's feedback) */
-    else if ((!t->tail || !(t->p[P_DIST] | t->p[P_ITYPE]) || !--t->tail) && !slicer_busy(t)) {
+    else if ((!t->tail || !(t->p[P_DIST] | t->p[P_ITYPE] | rp_config[t-trk].v[RP_GAIN]) || !--t->tail) && !slicer_busy(t)) {
+        rp_state[t-trk].env=0;rp_state[t-trk].gain=32768;rp_state[t-trk].reduction=0;
         slicer_track(t, 0, n);                          /* (the SLICER's step clock runs on) */
         if (t->ins_run && !t->p[P_ITYPE])
             ins_rest(t);                                /* TYPE OFF while silent: no fade-out left for the next note */
@@ -906,6 +909,7 @@ static void mix_part(track_t *t, uint32_t n SM_DECL)
         track_dist(t, b, n);
         if (t->p[P_ITYPE] | t->ins_run)
             track_insert(t, b, n);                      /* the INSERT (1.5): off, nothing */
+        rp_process(t-trk,b,0,n,0);
         slicer_track(t, b, n);                          /* slicer.c: before the level, pan and sends */
         if ((pf.mute >> (t - trk)) & 1u)
             perf_mute((uint32_t)(t - trk), b, n);       /* perform.c: a black key in the FX layer */
@@ -959,9 +963,11 @@ static __attribute__((noinline)) void perf_master(int32_t *out, uint32_t n)
 {
     uint32_t i;
     int32_t mg = fx_usb_fixed ? MASTER_FULL : (int32_t)song.master_q12;   /* (USB LEVEL FIXED: MASTER after) */
+    for(i=0;i<n;i++){mix_l[i]+=wet[i];mix_r[i]+=wet[i];}
+    rp_process(NTRK,mix_l,mix_r,n,1);
     for (i = 0; i < n; i++) {
-        mix_l[i] = (((mix_l[i] + wet[i]) >> 2) * mg) >> 10;
-        mix_r[i] = (((mix_r[i] + wet[i]) >> 2) * mg) >> 10;
+        mix_l[i] = ((mix_l[i] >> 2) * mg) >> 10;
+        mix_r[i] = ((mix_r[i] >> 2) * mg) >> 10;
     }
     perf_block(mix_l, mix_r, n);
     for (i = 0; i < n; i++) {
@@ -1074,9 +1080,11 @@ static void mix_block(int32_t *out, uint32_t n)
         perf_master(out, n);
         return;
     }
+    for(i=0;i<n;i++){mix_l[i]+=wet[i];mix_r[i]+=wet[i];}
+    rp_process(NTRK,mix_l,mix_r,n,1);
     for (i = 0; i < n; i++) {
-        int32_t l = (((mix_l[i] + wet[i]) >> 2) * mg) >> 10;
-        int32_t r = (((mix_r[i] + wet[i]) >> 2) * mg) >> 10;
+        int32_t l = ((mix_l[i] >> 2) * mg) >> 10;
+        int32_t r = ((mix_r[i] >> 2) * mg) >> 10;
         master_out(&l, &r);
         out[2u * i] = l;
         out[2u * i + 1u] = r;

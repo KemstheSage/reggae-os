@@ -54,11 +54,15 @@ page(36,'Keep all four parts, sounds, chord settings and arrangement together.',
 page(37,'Clear or initialise parts of a project.', 'Clear selected track’s pattern|Initialise selected track’s sound|Remove arrangement section|Clear arrangement', 'Select an action and read its confirmation before OCT+. OCT− cancels. Hold SAVE to undo supported edits.')
 page(38,'Turn held notes into a repeating arpeggio.', 'Arpeggio mode; OFF disables it|Note rate|Octave range|Note gate length', 'Hold a chord and press PLAY if required by the clock/transport setup. Use short gates for separated notes.')
 page(39,'Add variation to the arpeggio.', 'Swing|Probability of playing a note|Latch/hold notes after key release|Note order')
-page(40,'Write notes and chords into a pattern, one step at a time.', 'Choose step|Pitch of the selected note|Note duration; TIME when selecting REST/TIE|Normal, accent or slide feel', 'Stopped: hold EDIT and play keys to add notes; hold REC and play keys to replace them. Hold EDIT+REC to clear one step. Hold EDIT, then SEQ for one second to clear the entire roll. Hold SAVE to undo. Tap REC to arm step entry; PLAY starts/stops playback. Up to four notes per step and 64 steps per track.')
+page(40,'Write notes and chords into a pattern, one step at a time.', 'Choose step|Select individual note|Choose velocity, length, repeat or pitch|Edit selected note value', 'Stopped: hold EDIT and play keys to add notes; hold REC and play keys to replace them. Hold EDIT+REC to clear one step. Hold EDIT, then SEQ for one second to clear the entire roll. Hold SAVE to undo. Tap REC to arm step entry; PLAY starts/stops playback. Up to four notes per step and 64 steps per track.')
 page(41,'Add variation to the selected sequencer step.', 'Play probability, then conditional triggers above 100%|Number of repeated hits within the step|Timing offset (requires quantisation OFF to hear)|Step velocity', 'PRESETS selects the step. Accent can override the velocity; ratchets and quantisation can override nudge. The screen shows these conditions.')
 page(42,'Edit per-step locks and recorded parameter movement.', 'Select row|Select/move event’s step (where applicable)|Select parameter/type (where applicable)|Edit row value; PLAY row toggles automation', 'Labels change with the row. + ADD: choose step/type, then OCT+ to add. On a record OCT+ switches LOCK (one step) and AUTO (until changed). EDIT deletes/reset the row. QUANTIZE row K4 enables/disables timing quantisation; PLAY row OCT+ asks to clear automation. The four tracks share 128 automation records.')
 page(43,'Mix all four tracks from one persistent page.', 'Track 1 level|Track 2 level|Track 3 level|Track 4 level', 'C5 selects LEVEL, D5 PAN, E5 REVERB: all four knobs then edit that property for T1–T4. Vertical faders always show volume. First four black keys toggle mute; hold F3/G3/A3/B3 to solo T1/T2/T3/T4. No held button is needed to stay here.')
 page(44,'Set the shared transport timing.', 'Tempo in BPM|Global swing|Internal or external clock source|Unused', 'Use internal clock for standalone play. External clock requires a source sending MIDI clock/transport.')
+page(47,'Inspect and calibrate experimental hardware key pressure.', 'OFF/TEST/LIVE|Physical key|Capture light touch|Capture firm touch', 'Hardware-only sensing; calibration is not saved.')
+page(48,'Shape one frequency region on a track or master.', 'Target T1–T4 or MSTR|Centre frequency Hz|Gain dB; zero bypasses|Q; higher is narrower', 'One parametric bell per target. Save through PROJECT.')
+page(49,'Control dynamics on a track or master.', 'Target T1–T4 or MSTR|Threshold below full scale in dB|Ratio; OFF bypasses|Makeup gain dB', 'Use COMP TIMING for attack/release. Save through PROJECT.')
+page(50,'Set the compressor response times.', 'Target T1–T4 or MSTR|Attack ms; 0 defaults to 10|Release ms; 0 defaults to 150|Ratio; OFF bypasses', 'Same compressor as the previous page.')
 E = {
 'ANALOG': ('Oscillators and noise.|Waveform|Oscillator detune|Oscillator balance|Noise level', 'Filter and drive.|Filter cutoff|Resonance|Saturation drive|Filter key tracking'),
 'PHASE': ('Phase-distortion oscillators.|First waveform|Second waveform|Phase-distortion amount|Envelope influence on distortion', 'Shape the oscillator combination.|Detune|Mix or ring-modulate the two lines|Sub-oscillator level|Wavefolding amount'),
@@ -90,7 +94,7 @@ SOUNDS = [
 'Pitch envelope amount|Amplitude decay length|Delay send|Filter cutoff',
 'Pitch modulation range|Modulation rate|Delay send|Filter cutoff']
 SPECIAL = {
-'drum-grid': ('SEQ with a DRUM track selected', 'Program eight drum lanes in the pattern.', 'Step|Drum lane|Hit on/off|Selected hit velocity (1–127)', 'Use PLAY to audition the loop. The grid replaces the melodic roll for the DRUM engine.'),
+'drum-grid': ('SEQ with a DRUM track selected', 'Program eight drum lanes in the pattern.', 'Step|Drum lane|Choose velocity, length, repeat or hit|Edit selected hit value', 'Use PLAY to audition the loop. The grid replaces the melodic roll for the DRUM engine.'),
 'mixer-pan': ('HOME → MIXER, then D5', 'Place each track left or right.', 'Track 1 pan|Track 2 pan|Track 3 pan|Track 4 pan', 'C5 returns the knobs to volume; E5 switches them to reverb sends.'),
 'mixer-reverb': ('HOME → MIXER, then E5', 'Send each track to the shared reverb.', 'Track 1 reverb send|Track 2 reverb send|Track 3 reverb send|Track 4 reverb send', 'C5 returns to volume; D5 switches to pan. Set the reverb character on FX → REVERB.'),
 'held-0': ('Hold EDIT outside the stopped melodic STEP page', 'Select an engine and its factory sound.', 'Engine|Preset number|Favourite control|Unused', 'On stopped STEP, hold EDIT is deliberately reserved for adding notes.'),
@@ -121,7 +125,7 @@ def describe(r):
         return ('HOME, then choose a track with ALGORITHM and sound with PRESETS', 'Play the selected instrument and use its four performance controls.', SOUNDS[int(key[-2:])].split('|'), 'Tap HOME through MIXER and CLOCK to return here. T4’s curated browser stays on drums; advanced EDIT pages can change its engine. These controls edit the sound you hear; save the project or a user sound to keep changes.')
     if key.startswith('page-'):
         n = int(key[5:7])
-        family = 'ENV' if n<2 else 'LFO' if n<6 else 'FX' if n<13 else 'SCL' if n<15 else 'EDIT' if n<32 else 'GLO' if n==32 else 'SAVE' if n<38 else 'ARP' if n<40 else 'SEQ' if n<43 else 'HOME'
+        family = 'FX' if n>=46 else 'EDIT' if n==7 else 'ENV' if n<2 else 'LFO' if n<6 else 'FX' if n<13 else 'SCL' if n<15 else 'EDIT' if n<32 else 'GLO' if n==32 else 'SAVE' if n<38 else 'ARP' if n<40 else 'SEQ' if n<43 else 'HOME'
         reach = f'Tap {family} to enter its pages; tap again to cycle to {r["title"].split(" / ")[0]}'
         if n in (15,16):
             text, *knobs = E[r['engine']][n-15].split('|')

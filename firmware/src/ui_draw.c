@@ -1280,6 +1280,14 @@ static void draw_columns(void)
         }
         return;
     }
+    if(cur_page()->scope==SC_STEP && !detail_on() && !nv_on()){
+        const step_t *s=&seq_steps(TSEL)[ui.cursor];char b[24];fmt_int(b,ui.cursor+1);
+        draw_column(0,"STEP",b,"",VAL(0u),-1,ICON_AUTO);
+        if(drum_track(TSEL))str_cpy(b,drum_lane_name(TSEL,ui.lane),sizeof b);else if(s->n)note_name(b,s->note[nv_item()]);else str_cpy(b,"--",sizeof b);
+        draw_column(1,drum_track(TSEL)?"DRUM":"NOTE",b,"",VAL(1u),-1,ICON_AUTO);
+        draw_column(2,"EDIT",note_field_label(),"",VAL(2u),-1,ICON_AUTO);
+        note_grid_value(b,sizeof b);draw_column(3,note_field_label(),b,"",VAL(3u),-1,ICON_AUTO);return;
+    }
     if (cur_page()->scope == SC_STEP && drum_track(TSEL)) {   /* the grid: STEP LANE HIT VELOCITY */
         const step_t *st = &seq_steps(TSEL)[ui.cursor];
         uint32_t b = 1u << ui.lane, on = (step_lanes(st) & b) != 0u;

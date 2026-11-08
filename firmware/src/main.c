@@ -104,6 +104,8 @@ static const uint8_t REGGAE_BOOT[NPART][2] = {{7, 5}, {0, 12}, {4, 6}, {10, 4}};
 static void felucca_init(void)
 {
     uint32_t i;
+    memset(rp_config,0,sizeof rp_config);rp_reset();
+    memset(nt_events,0,sizeof nt_events);memset(nt_generation,0,sizeof nt_generation);memset(nt_clock,0,sizeof nt_clock);
     chain_defaults(&chain_config);
     for (i = 0; i < G_COUNT; i++)
         song.g[i] = GP[i].def;

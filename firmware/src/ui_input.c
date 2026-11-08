@@ -665,29 +665,25 @@ static void page_go(int32_t d)
     cursor_move((int32_t)(b * 16u + ui.cursor % 16u < len ? b * 16u + ui.cursor % 16u : len - 1u));
 }
 
-/* Direct selected-hit velocity; same persistent per-note records as VELOCITY. */
-static void grid_velocity(int32_t delta)
-{
-    track_t *t=TSEL;step_t *st=&t->step[ui.cursor];uint32_t item=4u+ui.lane;
-    if(!nv_present(st,item)){ui_message("ADD A HIT FIRST");return;}
-    step_undo_take(t,0x7000u|ui.cursor<<4|item);
-    uint32_t old=nv_get(&motion,song.sel,ui.cursor,item,nv_fallback(st,item));
-    uint32_t value=clamp((int32_t)old+accel(EN_K4,delta,126),1,127);
-    if(nv_set(t,ui.cursor,item,value)==2)ui_message("VELOCITY / LOCKS FULL");
-    motion_undo_done(t);
+static void note_grid_edit(unsigned slot,int32_t delta){
+ track_t *t=TSEL;step_t *st=&t->step[ui.cursor];
+ if(!slot){cursor_move(ui.cursor+delta);return;}
+ follow_hold();
+ if(slot==1){if(drum_track(t))ui.lane=clamp((int)ui.lane+delta,0,NLANE-1);
+  else nv_selected[song.sel]=clamp((int)nv_selected[song.sel]+delta,0,st->n?st->n-1:0);return;}
+ if(slot==2){note_field=clamp((int)note_field+delta,0,3);return;}
+ unsigned item=nv_item();if(note_field==3&&drum_track(t)){grid_hit(t,ui.cursor,ui.lane,delta>0);return;}
+ if(!nv_present(st,item)){ui_message("ADD NOTE / HIT FIRST");return;}
+ step_undo_take(t,0x7000u|ui.cursor<<4|item);
+ unsigned attr=nt_get(&motion,song.sel,ui.cursor,item),value;int rc=0;
+ if(!note_field){value=nv_get(&motion,song.sel,ui.cursor,item,nv_fallback(st,item));rc=nv_set(t,ui.cursor,item,clamp((int)value+delta,0,127));}
+ else if(note_field==1){value=clamp((int)(attr&31)+delta,0,31);rc=nt_set(t,ui.cursor,item,(attr&224)|value);}
+ else if(note_field==2){value=clamp((int)(attr>>5)+delta,0,7);rc=nt_set(t,ui.cursor,item,(attr&31)|(value<<5));}
+ else st->note[item]=clamp((int)st->note[item]+delta,1,127);
+ if(rc==2)ui_message("NOTE / LOCK MEMORY FULL");motion_undo_done(t);
 }
 /* Grid: STEP, LANE, HIT, individual VELOCITY. Accent remains on the existing key gesture. */
-static void grid_edit(uint32_t slot, int32_t steps)
-{
-    if (slot == 0u)
-        cursor_move(ui.cursor + steps);
-    else if (slot == 1u)
-        ui.lane = (uint8_t)clamp((int32_t)ui.lane + (steps > 0 ? 1 : -1), 0, NLANE - 1);
-    else if (slot == 2u)
-        grid_hit(TSEL, ui.cursor, ui.lane, steps > 0);
-    else
-        grid_velocity(steps);
-}
+static void grid_edit(uint32_t slot,int32_t steps){note_grid_edit(slot,steps);}
 
 /* the keys on the grid (presses): a white key toggles the selected lane at its step of the page (its accent
  * while ACC is held) and puts the cursor there; a lane key selects the lane (seq.c plays it); the page keys */
@@ -935,57 +931,10 @@ static void nv_turn(uint32_t slot,int32_t delta)
     motion_undo_done(t);
 }
 
-static void step_edit(uint32_t slot, int32_t steps)
-{
-    step_t *st = &TSEL->step[ui.cursor];
-    uint32_t i;
-    if(nv_on()){follow_hold();nv_turn(slot,steps);return;}
-    if (detail_on()) {                                    /* DETAIL (1.5.1): CHANCE RATCH NUDGE VEL */
-        follow_hold();
-        sd_turn(slot, steps);
-        return;
-    }
-    if (drum_track(TSEL)) {
-        grid_edit(slot, steps);
-        return;
-    }
-    if (slot)
-        follow_hold();                                    /* (1.6, #242: editing the cursor's step: it stays on the screen) */
-    switch (slot) {
-    case 0:                                               /* STEP: the cursor */
-        cursor_move(ui.cursor + steps);
-        break;
-    case 1:                                               /* NOTE: transpose the step */
-        if (!st->n) {
-            st->note[0] = last_note;
-            st->n = 1;
-            st->time = ST_NOTE;
-            break;
-        }
-        for (i = 0; i < st->n; i++)
-            st->note[i] = (uint8_t)clamp(st->note[i] + steps, 1, 127);
-        st->time = ST_NOTE;
-        last_note = st->note[0];
-        break;
-    case 2:                                               /* TIME; a note's LEN (1.5: ui.c note_set_len) */
-        if (step_on(st)) {
-            uint32_t was = note_len(TSEL, ui.cursor), n;
-            step_undo_take(TSEL, 0x2000u);                /* (a knob turned on: one undo, SAVE held) */
-            n = note_set_len(TSEL, ui.cursor, (uint32_t)clamp((int32_t)was + steps, 1, NSTEP));
-            motion_undo_done(TSEL);
-            if (steps > 0 && n == was)
-                ui_message(ui.cursor + n < (uint32_t)clamp(TSEL->p[P_SLEN], 1, NSTEP) ? "NOTE AHEAD" : "END OF PATTERN");
-            break;
-        }
-        st->time = (uint8_t)clamp((int32_t)st->time + (steps > 0 ? 1 : -1), ST_NOTE, ST_REST);
-        break;
-    default: {                                            /* FLAG: - / ACC / SLD / A+S */
-        uint32_t f = (st->flags & SF_ACCENT ? 1u : 0u) | (st->flags & SF_SLIDE ? 2u : 0u);
-        f = (uint32_t)clamp((int32_t)f + (steps > 0 ? 1 : -1), 0, 3);
-        st->flags = (uint8_t)((st->flags & ~(SF_ACCENT | SF_SLIDE)) | (f & 1u ? SF_ACCENT : 0u) | (f & 2u ? SF_SLIDE : 0u));
-        break;
-    }
-    }
+static void step_edit(uint32_t slot,int32_t steps){
+ if(nv_on()){follow_hold();nv_turn(slot,steps);return;}
+ if(detail_on()){follow_hold();sd_turn(slot,steps);return;}
+ note_grid_edit(slot,steps);
 }
 
 static void edit_param(uint32_t slot, int32_t steps)
@@ -994,6 +943,10 @@ static void edit_param(uint32_t slot, int32_t steps)
     const page_t *pg = cur_page();
     const param_desc_t *d;
     int32_t v;
+    if(pg->scope==SC_PROCESS){
+        d=page_desc(pg,slot,&vp);
+        *vp=(int16_t)param_turn(d,*vp,steps);ui.force=1;return;
+    }
     if(pg->graph==GR_PRESSURE){
         if(slot==0){
             int mode=clamp((int)pressure_mode+steps,0,2);

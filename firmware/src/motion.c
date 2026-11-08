@@ -50,10 +50,10 @@ static int motion_valid(const motion_store_t *m)
     for (i = 0; i < m->count; i++) {
         const motion_event_t *e = &m->event[i];
         if (nv_id(MOTION_ID(e))) {
-            if (!(e->param & MOTION_LOCK) || e->value < 1) return 0;
+            if ((e->param & MOTION_LOCK) ? e->value < 1 : !(uint8_t)e->value) return 0;
         } else if (!motion_param(MOTION_ID(e)) || e->value < -64 || e->value > 127) return 0;
         for (j = 0; j < i; j++)
-            if (m->event[j].place == e->place && MOTION_ID(&m->event[j]) == MOTION_ID(e)) return 0;
+            if (m->event[j].place == e->place && MOTION_ID(&m->event[j]) == MOTION_ID(e) && (!nv_id(MOTION_ID(e)) || m->event[j].param==e->param)) return 0;
     }
     return 1;
 }
@@ -407,17 +407,27 @@ static uint32_t nv_get(const motion_store_t *m, uint32_t track, uint32_t step, u
     }
     return fallback;
 }
-static int nv_set(track_t *t, uint32_t step, uint32_t item, uint32_t value)
-{
-    if(step>=NSTEP || item>=NV_COUNT || value>127) return 1;
-    uint32_t id=NV_BASE+item;
-    if(!value) {motion_delete_event(t,step,id);return 0;}
-    uint32_t f=motion_guard(),i,place=trk_index(t)<<6|step;
-    for(i=0;i<motion.count;i++) if(motion.event[i].place==place && MOTION_ID(&motion.event[i])==id)break;
-    if(i>=MOTION_MAX) {motion_unguard(f);return 2;}
-    motion.event[i]=(motion_event_t){(uint8_t)place,(uint8_t)(id|MOTION_LOCK),(int8_t)value};
-    RING_PUBLISH();if(i==motion.count)motion.count++;
-    motion_unguard(f);return 0;
+/* Unlocked reserved IDs encode length (low 5 bits) + repeats (high 3).
+ * Locked IDs remain velocity. Both move/delete/copy with their note. */
+static uint32_t nt_get(const motion_store_t *m,unsigned track,unsigned step,unsigned item){
+ if(m)for(unsigned i=0;i<m->count;i++)if(m->event[i].place==(track<<6|step)&&m->event[i].param==NV_BASE+item)return (uint8_t)m->event[i].value;
+ return 0;
+}
+static int note_record_set(track_t *t,unsigned step,unsigned item,unsigned value,unsigned kind){
+ if(step>=NSTEP||item>=NV_COUNT||value>(kind?127:255))return 1;
+ unsigned f=motion_guard(),i,place=trk_index(t)<<6|step,id=(NV_BASE+item)|kind;
+ for(i=0;i<motion.count;i++)if(motion.event[i].place==place&&motion.event[i].param==id)break;
+ if(!value){if(i<motion.count){for(unsigned j=i+1;j<motion.count;j++)motion.event[j-1]=motion.event[j];motion.count--;memset(&motion.event[motion.count],0,sizeof motion.event[0]);}motion_unguard(f);return 0;}
+ if(i>=MOTION_MAX){motion_unguard(f);return 2;}
+ motion.event[i]=(motion_event_t){place,id,(int8_t)value};RING_PUBLISH();if(i==motion.count)motion.count++;
+ motion_unguard(f);return 0;
+}
+static int nv_set(track_t *t,unsigned step,unsigned item,unsigned value){return note_record_set(t,step,item,value,MOTION_LOCK);}
+static int nt_set(track_t *t,unsigned step,unsigned item,unsigned value){return note_record_set(t,step,item,value,0);}
+static const uint8_t NT_REPEATS[8]={0,1,2,3,4,6,8,16};
+static unsigned nt_quarters(unsigned length){
+ static const uint8_t long_steps[]={16,20,24,32,40,48,64};
+ return length<=16?length:length<=24?(length-12)*4:long_steps[length-25]*4;
 }
 static void nv_clear(track_t *t,uint32_t step)
 {

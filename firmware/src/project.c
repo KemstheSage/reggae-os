@@ -94,6 +94,8 @@
  *
  * Built on the Mac too (tests/project_test.c, -DPROJ_HOST): the part above the #ifndef
  * PROJ_HOST needs core.h, params.c (TP) and engines.c. */
+#define PROJ_MAGIC_TIMING 0x46554E44u /* FUND inner record: independent note timing */
+#define PROJ_MAGIC_EXT 0x46554E43u /* FUNC: bounded RLE legacy record plus processor state */
 #define PROJ_MAGIC_NV 0x46554E42u /* FUNB: FUNA layout, reserved per-note velocity records */
 #define PROJ_MAGIC 0x46554E41u                 /* "FUNA" (FUN10): 104 (1.5: 111) parameters, 128 motion records, nudges */
 #define PROJ_MAGIC_V9 0x46554E39u              /* "FUN9": FUN8, 64 bytes longer (the DRUM lane levels, 99 parameters) */
@@ -130,6 +132,7 @@ typedef struct {
     uint8_t fm6[NTRK][FM6_PACKED];             /* each track's FM6 patch, packed (eng_fm6.c) */
     uint8_t mch[NTRK];                         /* 1.5.5: MIDI IN TRACK's channels, as song.mch (PROJ_MIDI_OFF) */
     char name[PROJ_NAME_LEN];                  /* the project's name: upper-case ASCII 32..126, 0-padded; "" = none */
+    reggae_proc_config_t processing[NTRK+1];
     uint32_t sum;
 } project_t;
 /* Historical FUN5/6 types are frozen, independent of today's P_COUNT/step_t. */
@@ -508,7 +511,7 @@ static int proj_import(project_t *q, const void *b, int n)
 }
 static int proj_import_any(project_t *q, const void *b, int n)
 {
-    if (n == PROJ_STORE_SIZE && (((const uint32_t *)b)[0] == PROJ_MAGIC || ((const uint32_t *)b)[0] == PROJ_MAGIC_NV))
+    if (n == PROJ_STORE_SIZE && (((const uint32_t *)b)[0] == PROJ_MAGIC || ((const uint32_t *)b)[0] == PROJ_MAGIC_NV || ((const uint32_t *)b)[0] == PROJ_MAGIC_EXT))
         return proj_unpack(q, b, PROJ_STORE_SIZE);
     if (n == PROJ_STORE_SIZE && ((const uint32_t *)b)[1] >= 8u && ((const uint32_t *)b)[1] < PROJ_STORE_SIZE)
         n = (int)((const uint32_t *)b)[1];      /* a retained slot holding an older, shorter record: its own size
@@ -618,7 +621,7 @@ static void proj_midi_unpack(project_t *q, const uint8_t *b)
 
 /* A stable serialized schema: first header retains FUN6's fields; at byte66
  * np, format flags, then four byte-param tracks and nine-byte steps; FUN8: the patches at PROJ_FM6_OFF. */
-static int proj_pack(project_store_t *out, const project_t *q)
+static int proj_pack_legacy(project_store_t *out, const project_t *q)
 {
     uint8_t *b = out->raw; uint32_t pos = 68u, t, i; uint32_t magic = PROJ_MAGIC, size = PROJ_STORE_SIZE, sum;
     for (t = 0; t < NTRK; t++)
@@ -626,6 +629,7 @@ static int proj_pack(project_store_t *out, const project_t *q)
             if (q->fm6[t][i] > 127u) return 0;
     if (!chain_valid(&q->chain) || !motion_valid(&q->motion) || P_COUNT > 127u) return 0;
     for(i=0;i<q->motion.count;i++) if(nv_id(MOTION_ID(&q->motion.event[i]))) magic=PROJ_MAGIC_NV;
+    for(i=0;i<q->motion.count;i++)if(nv_id(MOTION_ID(&q->motion.event[i]))&&!(q->motion.event[i].param&MOTION_LOCK))magic=PROJ_MAGIC_TIMING;
     memset(out, 0, sizeof *out); memcpy(b, &magic, 4); memcpy(b + 4, &size, 4);
     memcpy(b + 8, q->g, sizeof q->g); b[62] = q->sel; b[63] = q->parts; b[64] = q->phys; b[66] = P_COUNT;
     for (t = 0; t < NTRK; t++) {
@@ -701,13 +705,13 @@ static int proj_motion_v9(motion_store_t *m, const uint8_t *b)
 }
 /* a stored FUN10 (st = PROJ_STORE_SIZE), FUN9 (PROJ_STORE_V9: 64 motion records of 4 bytes, no nudges), FUN8
  * (PROJ_STORE_V8: FUN9 with its tail 64 bytes shorter) or FUN7 (PROJ_STORE_V7: no patches, the init one) */
-static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
+static int proj_unpack_legacy(project_t *q, const uint8_t *b, uint32_t st)
 {
     uint32_t pos = 68u, t, i, magic, size, sum, np = b[66], v7 = st == PROJ_STORE_V7, v10 = st == PROJ_STORE_SIZE;
     uint32_t name_off = st - 4u - PROJ_NAME_LEN, end = v7 ? name_off : name_off - NTRK * FM6_PACKED;
     uint32_t mot = v10 ? sizeof q->motion : PROJ_MOTION_V9, chn = v10 ? sizeof q->chain : sizeof(chain_v9_t);
     memcpy(&magic, b, 4); memcpy(&size, b + 4, 4); memcpy(&sum, b + st - 4u, 4);
-    if ((magic != (v7 ? PROJ_MAGIC_V7 : st == PROJ_STORE_V8 ? PROJ_MAGIC_V8 : st == PROJ_STORE_V9 ? PROJ_MAGIC_V9 : PROJ_MAGIC) && !(v10 && magic == PROJ_MAGIC_NV)) ||
+    if ((magic != (v7 ? PROJ_MAGIC_V7 : st == PROJ_STORE_V8 ? PROJ_MAGIC_V8 : st == PROJ_STORE_V9 ? PROJ_MAGIC_V9 : PROJ_MAGIC) && !(v10 && (magic == PROJ_MAGIC_NV || magic==PROJ_MAGIC_TIMING))) ||
         size != st || sum != proj_hash(b, st - 4u) ||
         np < 8u || np > P_COUNT || 68u + NTRK * (np + 2u + NSTEP * 9u) + chn + mot > end)
         return 0;
@@ -753,7 +757,8 @@ static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
     else if (!proj_motion_v9(&q->motion, b + pos))
         return 0;
     for(i=0;i<q->motion.count && i<MOTION_MAX;i++)
-        if(nv_id(MOTION_ID(&q->motion.event[i])) && magic!=PROJ_MAGIC_NV) return 0;
+        if(nv_id(MOTION_ID(&q->motion.event[i])) && magic!=PROJ_MAGIC_NV && magic!=PROJ_MAGIC_TIMING) return 0;
+    for(i=0;i<q->motion.count && i<MOTION_MAX;i++)if(nv_id(MOTION_ID(&q->motion.event[i]))&&!(q->motion.event[i].param&MOTION_LOCK)&&magic!=PROJ_MAGIC_TIMING)return 0;
     if (!proj_motion_ids(&q->motion, np) || !chain_valid(&q->chain) || !motion_valid(&q->motion)) return 0;
     if (v10)
         proj_midi_unpack(q, b);                         /* (1.5.5: 0 in every FUN10 before, FUN9..FUN7 have none) */
@@ -770,6 +775,63 @@ static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
     }
     q->sum = proj_sum(q); proj_drums_to_part(q); proj_phys(q);
     return 1;
+}
+
+/* Fixed-size flash envelope; no sectors reassigned. The legacy checksum and
+ * outer checksum must both validate. Overflow is refused before st_save touches
+ * the existing A/B slot. Main-loop only; scratch never aliases proj_wire. */
+static project_store_t proj_codec __attribute__((section(".pool")));
+#define PROJ_EXT_OFF (16u + sizeof(((project_t *)0)->processing))
+static uint32_t proj_rle(uint8_t *dst,uint32_t cap,const uint8_t *src,uint32_t n){
+ uint32_t i=0,o=0;
+ while(i<n){
+  uint32_t run=1;while(i+run<n&&run<130&&src[i+run]==src[i])run++;
+  if(run>=3){if(o+2>cap)return 0;dst[o++]=128+run-3;dst[o++]=src[i];i+=run;}
+  else {
+   uint32_t start=i;i+=run;
+   while(i<n&&i-start<128){if(i+2<n&&src[i]==src[i+1]&&src[i]==src[i+2])break;i++;}
+   uint32_t len=i-start;if(o+1+len>cap)return 0;dst[o++]=len-1;memcpy(dst+o,src+start,len);o+=len;
+  }
+ }
+ return o;
+}
+static int proj_unrle(uint8_t *dst,uint32_t cap,const uint8_t *src,uint32_t n){
+ uint32_t i=0,o=0;
+ while(i<n){uint32_t tag=src[i++],len=(tag&127)+(tag&128?3:1);
+  if(len>cap-o)return 0;
+  if(tag&128){if(i>=n)return 0;memset(dst+o,src[i++],len);}
+  else{if(len>n-i)return 0;memcpy(dst+o,src+i,len);i+=len;}o+=len;
+ }
+ return o==cap;
+}
+static int proj_pack(project_store_t *out,const project_t *q){
+ int used=0;for(unsigned t=0;t<NTRK+1;t++){
+  if(!rp_valid(&q->processing[t]))return 0;
+  for(unsigned j=0;j<RP_COUNT;j++)used|=q->processing[t].v[j];
+ }
+ for(unsigned i=0;i<q->motion.count;i++)if(nv_id(MOTION_ID(&q->motion.event[i]))&&!(q->motion.event[i].param&MOTION_LOCK))used=1;
+ if(!proj_pack_legacy(out,q))return 0;
+ if(!used)return 1; /* unchanged projects retain their previous compatible format */
+ memcpy(&proj_codec,out,sizeof proj_codec);memset(out,0,sizeof *out);
+ uint32_t n=proj_rle(out->raw+PROJ_EXT_OFF,PROJ_STORE_SIZE-PROJ_EXT_OFF-4,proj_codec.raw,PROJ_STORE_SIZE);
+ if(!n)return 0;
+ uint32_t magic=PROJ_MAGIC_EXT,size=PROJ_STORE_SIZE;uint16_t bytes=n;
+ memcpy(out->raw,&magic,4);memcpy(out->raw+4,&size,4);memcpy(out->raw+8,&bytes,2);
+ memcpy(out->raw+16,q->processing,sizeof q->processing);
+ uint32_t sum=proj_hash(out->raw,PROJ_STORE_SIZE-4);memcpy(out->raw+PROJ_STORE_SIZE-4,&sum,4);return 1;
+}
+static int proj_unpack(project_t *q,const uint8_t *b,uint32_t st){
+ uint32_t magic;memcpy(&magic,b,4);
+ if(magic!=PROJ_MAGIC_EXT)return proj_unpack_legacy(q,b,st);
+ if(st!=PROJ_STORE_SIZE)return 0;
+ uint32_t size,sum;uint16_t n;memcpy(&size,b+4,4);memcpy(&n,b+8,2);memcpy(&sum,b+st-4,4);
+ if(size!=st||n>st-PROJ_EXT_OFF-4||sum!=proj_hash(b,st-4))return 0;
+ for(unsigned i=10;i<16;i++)if(b[i])return 0;
+ if(!proj_unrle(proj_codec.raw,PROJ_STORE_SIZE,b+PROJ_EXT_OFF,n))return 0;
+ if(!proj_unpack_legacy(q,proj_codec.raw,PROJ_STORE_SIZE))return 0;
+ memcpy(q->processing,b+16,sizeof q->processing);
+ for(unsigned t=0;t<NTRK+1;t++)if(!rp_valid(&q->processing[t]))return 0;
+ q->sum=proj_sum(q);return 1;
 }
 
 #ifndef PROJ_HOST
@@ -881,6 +943,7 @@ static void project_capture(project_t *p)
         fm6_pack(fm6_patch[i], p->fm6[i]);
     }
     p->motion = motion;
+    memcpy(p->processing,rp_config,sizeof rp_config);
     memcpy(p->mch, song.mch, sizeof p->mch);
     motion_unguard(f);
     memcpy(p->name, proj_name, str_len(proj_name));
@@ -902,7 +965,7 @@ static int project_save_as(uint32_t slot, const char *name)
         memcpy(p->name, name, str_len(name) < PROJ_NAME_LEN ? str_len(name) : PROJ_NAME_LEN);
     }
     proj_wire_gen++;
-    if (!proj_pack(&proj_wire, p)) { ui_message("SAVE FORMAT ERROR"); return 2; }
+    if (!proj_pack(&proj_wire, p)) { ui_message("SAVE FULL / INVALID DATA"); return 2; }
 
 #if FELUCCA_FLASH
     if (flash_ok) {
@@ -997,7 +1060,7 @@ static int project_rename(uint32_t slot, const char *name)
     memset(p->name, 0, sizeof p->name);
     memcpy(p->name, name, str_len(name) < PROJ_NAME_LEN ? str_len(name) : PROJ_NAME_LEN);
     proj_wire_gen++;
-    if (!proj_pack(&proj_wire, p)) { ui_message("SAVE FORMAT ERROR"); return 2; }
+    if (!proj_pack(&proj_wire, p)) { ui_message("SAVE FULL / INVALID DATA"); return 2; }
 #if FELUCCA_FLASH
     if (flash_ok && st_save(OBJ_PROJECT0 + (slot & 3u), &proj_wire, sizeof proj_wire)) {
         ui_message("SAVE ERROR");
@@ -1074,6 +1137,7 @@ static int project_restore_runtime(const project_t *input)
     transport_req = 0;
     chain_config = p->chain;
     motion = p->motion;
+    memcpy(rp_config,p->processing,sizeof rp_config);rp_reset();
     memset(motion_active, 0, sizeof motion_active);
     motion_base_valid = 0;
     ui.song_row = 0;

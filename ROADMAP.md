@@ -133,3 +133,13 @@ space for the full requested processing state. A versioned storage extension
 must preserve existing projects, survive interrupted writes and explicitly reject
 capacity overflow before any slot is replaced. Individual note scheduling needs
 tests for overlapping notes, retriggers, stop, section changes and hat/kick independence.
+
+
+### 0.7.8 emulator-first preview
+
+Implemented a parametric bell and linked compressor for T1–T4/master, independent
+note lengths/repeats, and consolidated velocity/length/repeat/pitch grid editing.
+FUNC compression extends persistence without reallocating flash; old format
+imports default new controls to bypass. Audio and persistence tests cover the
+shared firmware. Physical listening, CPU/timing validation and installation are
+pending the musician returning home. Multi-band EQ is not implemented.

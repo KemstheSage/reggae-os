@@ -4,6 +4,32 @@ Development host: macOS x86-64; Apple Clang 16; Emscripten 4.0.15; JieLi pi32v2
 compiler through a Linux Docker container. Source baseline: Felucca v1.6.1
 (`a53ecf4`), engines `c46e0086f69bdc26df1cd144dca9e683cc4531dd`.
 
+## UI 0.7.8 preview — final validation (2026-11-08)
+
+- Shared WASM build: 840650 bytes. `emu_test.mjs`, project A/B persistence and
+  `reggae_processing_wasm.mjs` pass on this final artifact. Dry, processed and
+  independently repeated-note audio remains non-silent and distinct after fresh
+  flash reload. The dry baseline hash remains unchanged.
+- All five processors with the heavy song: 48.18 ms per second of audio on the
+  development host, peak 0.121. This is not an FM-1 CPU measurement or a mobile
+  Safari performance claim.
+- Native ASAN focused tests pass: processor response and bypass, compressor
+  stereo linking, numerical extremes, independent gates/repeats, panic/stop,
+  velocity editing, project compatibility and invalid-data rejection.
+  Historical project and torn-write/oversize storage tests also pass.
+- Final native framebuffer test confirms green, yellow and red notes survive
+  the 240×240 grid inset, including selected notes. Captures are in
+  `docs/preview-0.7.8/`. Muted drums remain dim.
+- FM-1 cross-build passes linker, RAM/pool and register-access checks:
+  image 554808 bytes; static RAM 61864/73728; pool 337116/368640;
+  packaged firmware 610090 bytes. Two unused-local warnings in the grid renderer
+  are non-fatal. No physical installation or hardware audio/CPU test performed.
+- WASM SHA256: `e81e4fd037ecbf31d3d4eaf9fe7ac412c96ac071807bc12bf1754f38c3b34908`.
+- Firmware package SHA256: `71715f479603d8e6a20cb2d4b263d8638ae7221530ceaa5a85819507c028b78c`.
+- Preview uses its own browser flash key. Earlier emulator saves are unchanged.
+  Processing/timing projects require the new format; older firmware cannot load
+  those saves. See `docs/reports/ui-0.7.8-processing.md` for bounded storage limits.
+
 ## Confirmed baseline
 
 - Original firmware application and `.fwsc` package built; upstream linker/MMIO checks passed.

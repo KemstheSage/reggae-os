@@ -85,3 +85,8 @@ build/reggae/pressure-filter
 
 ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/workflow tests/reggae_workflow.c -lm
 build/reggae/workflow
+
+for name in reggae_processing reggae_note_timing; do
+  ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o "build/reggae/$name" "tests/$name.c" -lm
+  "build/reggae/$name"
+done

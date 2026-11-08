@@ -128,9 +128,30 @@ static void rg_chorus(void)
 }
 /* Technical graphs retain their mathematical meaning, in the new workbench.
  * Curves/algorithms are data visualisations; their former page layout is gone. */
+/* Parameter response sketch (not a measured FFT); live gain reduction meter. */
+static void rg_processor(void){
+ unsigned target=rp_target;const reggae_proc_config_t *c=&rp_config[target];
+ char text[32];rg_caption(14,7,210,target==NTRK?"MASTER":RP_TARGET_NAMES[target],RG_GOLD);
+ if(cur_page()->id[1]==RP_FREQ){
+  int freq=c->v[RP_FREQ],gain=c->v[RP_GAIN],q=c->v[RP_Q];
+  int last=64;cv_rect(15,64,210,1,RG_WOOD);
+  for(int x=16;x<224;x++){
+   int d=x-(16+freq*207/31),width=48-q*6;
+   int y=64-gain*3*width*width/(width*width+d*d);
+   cv_line(x-1,last,x,y,RG_GREEN);last=y;
+  }
+  rg_caption(14,104,210,gain?"BELL EQ / 0 dB: BYPASS":"BYPASSED / TURN GAIN",RG_INK);
+ }else{
+  unsigned reduction=rp_state[target].reduction;int width=clamp(reduction*190/2400,0,190);
+  cv_frame(20,42,194,24,RG_WOOD);cv_rect(22,44,width,20,RG_RED);
+  fmt_int(text,reduction/100);str_cpy(text+str_len(text)," dB REDUCTION",sizeof text-str_len(text));rg_caption(20,76,196,text,RG_GOLD);
+  rg_caption(14,104,210,c->v[RP_RATIO]?"LINKED PEAK COMPRESSION":"BYPASSED / RATIO: OFF",RG_INK);
+ }
+}
 static void rg_editor_panel(void)
 {
     const page_t *pg=cur_page();track_t *t=TSEL;unsigned g=pg->graph;
+    if(!ui.home && pg->scope==SC_PROCESS){rg_processor();return;}
     if(ui.layer==LAYER_EDIT){rg_engine_keys();return;}
     if(ui.layer==LAYER_SCL){rg_scale_keys();return;}
     if(ui.layer==LAYER_REC){rg_record_keys();return;}
@@ -188,6 +209,7 @@ static void rg_workspace_page(void)
     if(ui.layer)str_cpy(hint,ui.layer==LAYER_EDIT?"WHITE: ENGINE / BLACK: ACTION":"KEYS: SELECT / OCT-: UNDO",sizeof hint);
     else if(act_cols()) {char a[16],b[16];foot_hint(a,b);str_cpy(hint,a,sizeof hint);str_cpy(hint+str_len(hint)," / ",sizeof hint-str_len(hint));str_cpy(hint+str_len(hint),b,sizeof hint-str_len(hint));}
     if(!ui.layer && cur_page()->graph==GR_FX)str_cpy(hint,"ALGO: TRACK / K2-4: SEND",sizeof hint);
+    if(!ui.layer && cur_page()->scope==SC_PROCESS)str_cpy(hint,"K1: T1-T4 / MASTER | SAVE PROJECT",sizeof hint);
     if(ui.ml.on)ml_line(hint);
     rg_caption(16,46,204,ui.msg_t?ui.msg:hint,RG_INK);cv_blit(0,180);
 }
@@ -208,7 +230,7 @@ static void rg_settings(void)
     if(ui.menu==2){cv_scroll=1;rg_credits(-(int)ui.menu_scroll,1);cv_scroll=0;}
     else if(ui.menu==3){
         info_sig();static const char *const usbname[]={"OFF","WAIT","BUS","ENUM","MIDI"};
-        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.7 DEV",1,1);
+        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.8 PREVIEW",1,1);
         rg_sleeve(1,"USB",usbname[info_usb()],0,usb.up);
         fmt_int(b,info.cpu);str_cpy(b+str_len(b)," % AUDIO CPU",sizeof b-str_len(b));rg_sleeve(2,"PROCESSING",b,0,1);
     } else {

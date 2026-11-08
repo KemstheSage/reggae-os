@@ -425,6 +425,7 @@ static uint32_t layer_btn(void);
  * track's (its patch's operators, ui_fm6op.c) */
 static int page_visible(uint32_t i)
 {
+    if(str_eq(PAGES[i].title,"VELOCITY"))return 0; /* consolidated in STEP */
     if (PAGES[i].scope == SC_TRACK && PAGES[i].id[0] >= P_LN0 && PAGES[i].id[0] <= P_LN7)
         return TSEL->eng_req % NENGINES == ENGI_DRUM;
     if (PAGES[i].id[0] == P_FTYPE)                    /* FILTER (1.5, #104): ANALOG's */
@@ -612,6 +613,23 @@ static int nv_present(const step_t *s,uint32_t item) {
 static uint32_t nv_fallback(const step_t *s,uint32_t item) {
     return (s->flags&SF_ACCENT) || (item>=4 && ((s->acc>>(item-4))&1u)) ? 127 : s->vel?s->vel:96;
 }
+/* Main grid: STEP / NOTE / FIELD / VALUE. Note attributes share the existing
+ * bounded motion store and its undo, copy, clear and project operations. */
+static void note_name(char *b,uint32_t n);
+static uint8_t note_field;
+static const char *const NOTE_FIELDS[]={"VELOCITY","LENGTH","REPEAT","PITCH"};
+static const char *note_field_label(void){return note_field==3&&drum_track(TSEL)?"HIT":NOTE_FIELDS[note_field];}
+static void note_grid_value(char *b,unsigned cap){
+ const step_t *st=&seq_steps(TSEL)[ui.cursor];unsigned item=nv_item();
+ if(!nv_present(st,item)){str_cpy(b,note_field==3&&drum_track(TSEL)?"OFF":"--",cap);return;}
+ unsigned a=nt_get(chain_motion(TSEL),song.sel,ui.cursor,item),len=a&31,rep=a>>5;
+ if(!note_field)fmt_int(b,nv_get(chain_motion(TSEL),song.sel,ui.cursor,item,nv_fallback(st,item)));
+ else if(note_field==1){
+  if(!len)str_cpy(b,"STEP",cap);
+  else {unsigned q=nt_quarters(len);fmt_int(b,q/4);str_cpy(b+str_len(b),(const char*[]){"",".25",".5",".75"}[q%4],cap-str_len(b));}
+ }else if(note_field==2){if(!rep)str_cpy(b,"STEP",cap);else{str_cpy(b,"x",cap);fmt_int(b+1,NT_REPEATS[rep]);}}
+ else if(drum_track(TSEL))str_cpy(b,"ON",cap);else note_name(b,st->note[item]);
+}
 /* GLO > SONG (1.2): the white keys A B C D (A3 B3 C4 D4, white places 2..5: seq.c song_key) set the selected cell's slot;
  * they do not sound there, the other keys play as anywhere (seq.c keyboard_block: song.grid 3) */
 static int song_keys_on(void) { return !ui.home && !ui.menu && !ui.confirm && !ui.layer && cur_page()->graph == GR_SONG; }
@@ -659,7 +677,7 @@ static void grid_hit(track_t *t, uint32_t i, uint32_t l, uint32_t on)
     if (on) {
         s->hit |= (uint8_t)b;
     } else {
-        nv_set(t,i%NSTEP,4u+l%NLANE,0);
+        nv_set(t,i%NSTEP,4u+l%NLANE,0);nt_set(t,i%NSTEP,4u+l%NLANE,0);
         s->hit &= (uint8_t)~b;
         s->acc &= (uint8_t)~b;
         if (!s->n && !s->hit)

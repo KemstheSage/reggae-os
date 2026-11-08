@@ -1,6 +1,13 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
 #define REGGAE_NO_MAIN 1
 #include "reggae_test.c"
+static void velocity_pixels(void){
+ /* Count only the note area of the final 240x240 display (after native inset). */
+ unsigned count[3]={0};uint16_t colors[]={RGB(83,143,112),RGB(235,172,47),RGB(207,73,47)};
+ for(unsigned y=62;y<178;y++)for(unsigned x=50;x<220;x++)for(unsigned k=0;k<3;k++)
+  count[k]+=web_fb[y*240+x]==swap16(colors[k]);
+ assert(count[0]>0&&count[1]>0&&count[2]>0);
+}
 static void tap(unsigned k){web_buttons(1u<<k);advance(70);web_buttons(0);advance(400);}
 int main(void){
  web_nor_erase();web_boot();advance(1000);track_t *t=TSEL;
@@ -25,12 +32,15 @@ int main(void){
 
  nv_clear(t,0);project_load(0);assert(nv_get(&motion,0,0,2,0)==120);
  /* UI: select exactly one note and edit without changing its neighbours. */
- for(unsigned n=0;n<6&&!nv_on();n++)tap(B_SEQ);assert(nv_on());ui.cursor=0;
+ tap(B_SEQ);assert(cur_page()->graph==GR_ROLL);ui.cursor=0;note_field=0;
  web_enc(EN_K2,1);advance(150);assert(nv_item()==1);
- web_enc(EN_K3,-1);advance(150);assert(nv_get(&motion,0,0,1,0)<70);
+ web_enc(EN_K4,-1);advance(150);assert(nv_get(&motion,0,0,1,0)<70);
  assert(nv_get(&motion,0,0,0,0)==25&&nv_get(&motion,0,0,2,0)==120);
- ui.msg_t=0;ui.force=1;advance(150);picture("build/reggae/note-velocity.ppm");
- web_enc(EN_K4,-1);advance(150);assert(nv_get(&motion,0,0,1,0)==0);
+ ui.msg_t=0;ui.force=1;advance(150);picture("build/reggae/note-velocity.ppm");velocity_pixels();
+ assert(note_grid_color(t,&t->step[0],0,0)==RGB(83,143,112));
+ assert(note_grid_color(t,&t->step[0],0,1)==RGB(235,172,47));
+ assert(note_grid_color(t,&t->step[0],0,2)==RGB(207,73,47));
+ web_enc(EN_K4,-127);advance(150);assert(nv_get(&motion,0,0,1,0)==0);
  /* Removing the low note carries the upper notes' overrides with them. */
  step_toggle(t,&t->step[0],(uint8_t[]){60},1);
  assert(t->step[0].note[0]==64&&nv_get(&motion,0,0,0,0)==0&&nv_get(&motion,0,0,1,0)==120);

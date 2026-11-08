@@ -159,6 +159,9 @@ static int32_t pr_row_y(int32_t n) { return PR_Y0 + ((int32_t)proll.lo + PR_ROWS
 /* a bar w px wide in `hits` equal parts, 1 px apart (a RATCH step; 1: the bar) */
 static void pr_split(int32_t x, int32_t y, int32_t w, int32_t h, uint16_t c, uint32_t hits)
 {
+    if(w<1)return;
+    if(hits>(uint32_t)(w+1)/2)hits=(w+1)/2;
+    if(!hits)hits=1;
     int32_t k, pw = (w - (int32_t)hits + 1) / (int32_t)hits;
     if (hits < 2u) {
         cv_rect(x, y, w, h, c);
@@ -169,13 +172,30 @@ static void pr_split(int32_t x, int32_t y, int32_t w, int32_t h, uint16_t c, uin
 }
 /* the bars of step s in column x (in its RATCH parts, hits; a TIE's carried bars: 1): a 1 px edge mark for a note
  * out of view; first: row y of the step's first note */
-static void pr_bars(const step_t *st, int32_t x, int32_t w, uint16_t c, int acc_all, int32_t *first, uint32_t hits)
+/* Use the played velocity, including inherited step/accent and note overrides.
+ * Literal native palette colours also survive the tabletop grid inset. */
+static uint16_t note_velocity_color(unsigned velocity)
+{
+    return velocity <= 42 ? RGB(83,143,112) : velocity <= 84 ? RGB(235,172,47) : RGB(207,73,47);
+}
+static uint16_t note_grid_color(const track_t *t,const step_t *st,unsigned index,unsigned item)
+{
+    unsigned accent=(st->flags&SF_ACCENT)||(item>=4 && ((st->acc>>(item-4))&1));
+    unsigned vel=accent?127:(st->vel?st->vel:96);
+    return note_velocity_color(nv_get(chain_motion(t),trk_index(t),index,item,vel));
+}
+static void pr_bars(const track_t *t,int onset,const step_t *st, int32_t x, int32_t w, uint16_t c, int acc_all, int32_t *first, uint32_t hits)
 {
     uint32_t j;
     int32_t ybot = PR_Y0 + PR_ROWS * PR_RH;
     for (j = 0; j < 4u + NLANE; j++) {
         int32_t n = pr_note(st, j), y;
-        int acc;
+        int acc;int width=w;unsigned rhits=hits;uint16_t color=c;
+        unsigned index=(unsigned)(st-seq_steps(t)),attr=nt_get(chain_motion(t),trk_index(t),index,j),length=attr&31,repeat=attr>>5;
+        if(!onset&&length)continue;
+        if(repeat)rhits=NT_REPEATS[repeat];
+        if(length&&rhits==1)width=clamp((int)(nt_quarters(length)*PR_CW/4)-2,1,237-x);
+        color=note_grid_color(t,st,index,j);
         if (n < 0)
             continue;
         acc = acc_all || (j >= 4u && ((st->acc >> (j - 4u)) & 1u));
@@ -183,13 +203,15 @@ static void pr_bars(const step_t *st, int32_t x, int32_t w, uint16_t c, int acc_
         if (*first < -1000)
             *first = y;
         if (y < PR_Y0)
-            pr_split(x, PR_Y0, w, 1, c, hits);
+            pr_split(x, PR_Y0, width, 1, color, rhits);
         else if (y >= ybot)
-            pr_split(x, ybot - 1, w, 1, c, hits);
+            pr_split(x, ybot - 1, width, 1, color, rhits);
         else if (acc)
-            pr_split(x, y, w, PR_RH, c == T_ACCENT ? c : T_TEXT, hits);
+            pr_split(x, y, width, PR_RH, color, rhits);
         else
-            pr_split(x, y + 1, w, PR_RH - 2, c, hits);
+            pr_split(x, y + 1, width, PR_RH - 2, color, rhits);
+        if(index==ui.cursor&&j==nv_item()&&y>=PR_Y0&&y<ybot)
+            cv_frame(x-1,y-1,width+2,PR_RH+2,T_TEXT);
     }
 }
 static void graph_roll(const track_t *t, uint16_t c)
@@ -246,9 +268,9 @@ static void graph_roll(const track_t *t, uint16_t c)
         st = &seq_steps(t)[s];
         col = s == ui.cursor || si == ui.cursor ? T_ACCENT : c;
         if (s == si)
-            pr_bars(st, x + 2, 9, col, (st->flags & SF_ACCENT) != 0u, &y, step_ratchet(st));
+            pr_bars(t,1,st, x + 2, 9, col, (st->flags & SF_ACCENT) != 0u, &y, step_ratchet(st));
         else                                          /* a TIE: the bars on through the gap before */
-            pr_bars(st, x - 1, 12, col, (st->flags & SF_ACCENT) != 0u, &y, 1u);
+            pr_bars(t,0,st, x - 1, 12, col, (st->flags & SF_ACCENT) != 0u, &y, 1u);
         if ((st->flags & SF_SLIDE) && step_ratchet(st) == 1u &&   /* (a ratcheted step never slides out) */
             ns->time == ST_NOTE && ns->n && y >= PR_Y0 && y < ybot) {
             int32_t ny = clamp(pr_row_y(ns->note[0]), PR_Y0, ybot - PR_RH);
@@ -290,10 +312,13 @@ static void graph_grid(const track_t *t, uint16_t c)
             const step_t *st = &seq_steps(t)[base + i];
             uint32_t b = 1u << l;
             int32_t x = 40 + (int32_t)i * 12;
-            if ((step_lanes(st) & b) && step_ratchet(st) > 1u)
-                pr_split(x, y + 2, 10, 10, (step_accents(st) & b) ? ac : hc, step_ratchet(st));
+            unsigned attr=nt_get(chain_motion(t),trk_index(t),base+i,4u+l);
+            unsigned repeats=(attr>>5)?NT_REPEATS[attr>>5]:step_ratchet(st);
+            uint16_t hit_color=mu?T_DIM:note_grid_color(t,st,base+i,4u+l);
+            if ((step_lanes(st) & b) && repeats > 1u)
+                pr_split(x, y + 2, 10, 10, hit_color, repeats);
             else if (step_lanes(st) & b)
-                cv_rrect(x, y + 2, 10, 10, 2, (step_accents(st) & b) ? ac : hc, row);
+                cv_rrect(x, y + 2, 10, 10, 2, hit_color, row);
             else
                 cv_rect(x + 4, y + 6, 2, 2, i % 4u == 0u || sel ? T_MID : T_DIM);
             if (sel && base + i == ui.cursor)          /* the cursor: a 1 px frame */

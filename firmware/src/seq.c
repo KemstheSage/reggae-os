@@ -872,7 +872,8 @@ static void seq_start(void)
     perf_start();                                  /* perform.c: its 1/16 grid too */
 }
 
-static void seq_release(track_t *t)
+#include "reggae_note_timing.c"
+static void seq_release_legacy(track_t *t)
 {
     uint32_t i;
     for (i = 0; i < t->seq_n; i++)
@@ -881,6 +882,8 @@ static void seq_release(track_t *t)
     t->seq_hold = 0;
     t->slide_glide = 0;                             /* live MONO / LEG keys must not glide after it */
 }
+
+static void seq_release(track_t *t){seq_release_legacy(t);nt_clear(t);}
 
 static void seq_stop(void)
 {
@@ -955,7 +958,7 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
     uint32_t len = t->p[P_SLEN] ? (uint32_t)t->p[P_SLEN] : 1u;
     uint32_t next_tie = seq_steps(t)[(idx + 1u) % len].time == ST_TIE;
     uint32_t hits = step_ratchet(s);
-    uint8_t nn[4 + NLANE], vv[4 + NLANE];           /* the notes it plays: its notes, then its hits */
+    uint8_t nn[4 + NLANE], vv[4 + NLANE], attr[4+NLANE];           /* the notes it plays: its notes, then its hits */
     uint32_t m = 0, sk = 0;
     /* QNT SEQ: the step's notes (not the lane hits) snap to the scale as they play; never on a drum kit, the slices
      * or another engine that maps the keys itself. SEQ+T (#218): moved by TRN first, as the keys are. seq_notes keeps
@@ -966,7 +969,7 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
     if (!(skip & SEQ_REP)) {
         t->rat_left = 0;
         if ((skip & SEQ_MISS) || (!(skip & SEQ_ROLLED) && seq_miss(t, s, idx))) {
-            seq_release(t);
+            seq_release_legacy(t);
             return;
         }
     }
@@ -978,7 +981,7 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
         return;
     }
     if (s->time == ST_REST || (!s->n && !s->hit)) {
-        seq_release(t);
+        seq_release_legacy(t);
         return;
     }
     if (hits > 1u) {                                /* RATCH: the gate of a part, no slide or tie out */
@@ -995,6 +998,7 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
             if (j < m)
                 continue;
         }
+        attr[m]=nt_get(chain_motion(t),trk_index(t),idx,drum_track(t)?4u+drum_lane(x):i);
         nn[m] = (uint8_t)x;
         vv[m] = (uint8_t)nv_get(chain_motion(t),trk_index(t),idx,drum_track(t)?4u+drum_lane(x):i,vel);
         sk |= ((skip >> i) & 1u) << m;
@@ -1002,14 +1006,31 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
     }
     for (i = 0; i < NLANE; i++)
         if ((s->hit >> i) & 1u) {
+            attr[m]=nt_get(chain_motion(t),trk_index(t),idx,4u+i);
             nn[m] = DRUM_LANE_NOTE[i];
             vv[m] = (uint8_t)nv_get(chain_motion(t),trk_index(t),idx,4u+i,(s->acc >> i) & 1u ? 127u : vel);
             sk |= ((skip >> (8u + i)) & 1u) << m;
             m++;
         }
+    unsigned timed=0;for(i=0;i<m;i++)timed|=attr[i];
+    if(timed && !(skip&SEQ_REP)){
+        seq_release_legacy(t);t->rat_left=0;
+        unsigned span=step_samples(t,period,idx);
+        for(i=0;i<m;i++)if(!((sk>>i)&1u)){
+            unsigned length=attr[i]&31,repeat=attr[i]>>5;
+            unsigned reps=repeat?NT_REPEATS[repeat]:hits,interval=span/reps;
+            unsigned duration=length?nt_quarters(length)*period/4:interval*(unsigned)t->p[P_SGATE]/128;
+            if(!length && reps==1 && next_tie){
+                for(unsigned k=1;k<len&&seq_steps(t)[(idx+k)%len].time==ST_TIE;k++)duration+=step_samples(t,period,(idx+k)%len);
+            }
+            if(!duration)duration=1;
+            nt_add(t,nn[i],vv[i],duration,interval?interval:1,reps,length!=0);
+        }
+        return;
+    }
     t->slide_glide = (uint8_t)slide_in;
     if (!slide_in)
-        seq_release(t);
+        seq_release_legacy(t);
     for (i = 0; i < m; i++)
         if (!((sk >> i) & 1u))
             trk_note_on(t, nn[i], vv[i]);
@@ -1189,10 +1210,11 @@ static __attribute__((noinline)) void seq_enter(track_t *t, uint32_t top, uint32
 
 static void seq_tick(track_t *t, uint32_t n)
 {
+    nt_tick(t,n);
     uint32_t period, len, top;
     if (t->seq_n && !t->seq_hold) {
         if (t->seq_off <= n)
-            seq_release(t);
+            seq_release_legacy(t);
         else
             t->seq_off -= n;
     }

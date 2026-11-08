@@ -291,25 +291,17 @@ static void reggae_seq_draw(void)
     } else {
         const step_t *st=&seq_steps(TSEL)[ui.cursor];
         label[0]="STEP";fmt_int(v[0],ui.cursor+1);
-        if(drum_track(TSEL)) {
-            label[1]="DRUM";label[2]="HIT";label[3]="VELOCITY";
-            str_cpy(v[1],drum_lane_name(TSEL,ui.lane),16);
-            str_cpy(v[2],step_lanes(st)&(1u<<ui.lane)?"ON":"OFF",16);
-            if(step_lanes(st)&(1u<<ui.lane))fmt_int(v[3],nv_get(chain_motion(TSEL),song.sel,ui.cursor,4u+ui.lane,nv_fallback(st,4u+ui.lane)));else str_cpy(v[3],"--",16);
-        } else {
-            label[1]="NOTE";label[2]=step_on(st)?"LENGTH":"TIME";label[3]="FEEL";
-            if(st->n)note_name(v[1],st->note[0]);else str_cpy(v[1],"--",16);
-            if(step_on(st))fmt_int(v[2],note_len(TSEL,ui.cursor));
-            else str_cpy(v[2],st->time==ST_TIE?"TIE":st->time==ST_REST?"REST":"NOTE",16);
-            str_cpy(v[3],st->flags&SF_ACCENT?st->flags&SF_SLIDE?"A+SL":"ACC":st->flags&SF_SLIDE?"SLIDE":"NORM",16);
-        }
+        label[1]=drum_track(TSEL)?"DRUM":"NOTE";label[2]="EDIT";label[3]=note_field_label();
+        if(drum_track(TSEL))str_cpy(v[1],drum_lane_name(TSEL,ui.lane),16);
+        else if(st->n)note_name(v[1],st->note[nv_item()]);else str_cpy(v[1],"--",16);
+        str_cpy(v[2],note_field_label(),16);note_grid_value(v[3],16);
     }
     if(advanced) {
         seq_card_draw=reggae_seq_formatted_card;
         if(tools||live)layer_cards(mixer?LAYER_GLO:ui.layer);else draw_columns();
         seq_card_draw=0;
     } else for(unsigned k=0;k<4;k++)reggae_seq_card(k,label[k],v[k]);
-    const char *hint=drum_track(TSEL)?"SEQ: DETAIL  GLO: SONG":"HOLD EDIT+SEQ: CLEAR";
+    const char *hint="K3: FIELD / K4: VALUE";
     if(velocity)hint="K2: NOTE  K3: VEL  K4: INHERIT";
     else if(arrange) {
         hint=chain.running?"PLAY: STOP / SONG RUNNING":"PLAY: SONG / SAVE: PROJECT";
