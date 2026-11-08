@@ -1,0 +1,5 @@
+REGGAE-OS UI 0.7.9 preview
+Source commit 1e78a6e
+Four-band EQ per track and master; punch-in, EQ, compression then standard FX. Slicer/chopper and pressure diagnostics hidden.
+Isolated browser saves; starts fresh. No hardware flashed.
+Older FUNC projects import into band 1; FUNE writes require 0.7.9. See guide/.

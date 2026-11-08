@@ -1,0 +1,35 @@
+{
+  "bytes": 44637,
+  "sounds": [
+    {
+      "name": "rim",
+      "note": 53,
+      "seconds": 0.2415873015873016,
+      "peak": 30000
+    },
+    {
+      "name": "conga",
+      "note": 55,
+      "seconds": 0.7931065759637188,
+      "peak": 30000
+    },
+    {
+      "name": "claves",
+      "note": 57,
+      "seconds": 1.0867573696145125,
+      "peak": 30000
+    },
+    {
+      "name": "shaker",
+      "note": 59,
+      "seconds": 0.2652607709750567,
+      "peak": 30000
+    },
+    {
+      "name": "tambourine",
+      "note": 60,
+      "seconds": 1.661859410430839,
+      "peak": 30000
+    }
+  ]
+}
