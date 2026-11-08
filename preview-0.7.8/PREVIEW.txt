@@ -1,0 +1,5 @@
+REGGAE-OS UI 0.7.8 preview
+Source commit a19f172
+Track/master bell EQ and compressor; individual note velocity, length and repeats; native velocity colours.
+Isolated browser saves; starts fresh. Hardware not flashed.
+New processing/timing saves require 0.7.8. See guide/ for controls and limits.
