@@ -12,7 +12,7 @@ async function device(saved){
  const advance=ms=>{for(let n=0;n<ms*44.1;n+=128)e.web_render(128);};
  const tap=k=>{e.web_buttons(1<<k);advance(70);e.web_buttons(0);advance(400);};
  const turn=(k,n)=>{e.web_enc(k,n);advance(200);};
- advance(1000);return {e,nor,advance,tap,turn};
+ advance(3500);return {e,nor,advance,tap,turn};
 }
 const a=await device();
 function writeNote(key){

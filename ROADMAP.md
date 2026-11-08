@@ -151,3 +151,10 @@ pending the musician returning home. Multi-band EQ is not implemented.
 - Removed slicer/chopper and pressure diagnostic pages from navigation; underlying saved settings retained.
 - 0.7.8 FUNC imports into band 1; new FUNE saves carry four bands with bounded slot writes.
 - Physical CPU/listening validation remains pending; no device flashing in this update.
+
+## Riddim OS 0.8.0
+
+- Renamed runtime branding and startup; three-second shared splash duration.
+- 24 curated instruments; nine broader synth, wind and mallet additions.
+- Replaced repetitive built-in trumpet/flute/sax sustain loops with finite faded samples.
+- No hardware flashing; new bank awaits musician evaluation and physical CPU testing.

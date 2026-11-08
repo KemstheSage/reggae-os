@@ -24,6 +24,11 @@ static const preset_t REGGAE_ANALOG_PRESETS[] = {
     {"DUB WAIL", {3, 0, 0, 0, 100, 0, 3, 0}, {6, 64, 127, 36}, 0, 1, FX(0, 0, 38, 8), PAT(0)},
     {"JUNGLE SIGNAL", {1, 0, 0, 0, 88, 0, 3, 0}, {0, 86, 0, 24}, 0, 1, FX(0, 0, 28, 0), PAT(0)},
     {"FAST ALARM", {1, 0, 0, 0, 77, 0, 2, 0}, {3, 64, 127, 22}, 0, 1, FX(0, 0, 24, 0), PAT(0)},
+    {"VELVET PAD", {4, 13, 56, 0, 61, 8, 2, 56}, {66, 100, 108, 82}, 14, 0, FX(0, 28, 0, 24), PAT(0)},
+    {"GLASS PLUCK", {3, 5, 24, 0, 91, 12, 0, 78}, {0, 71, 0, 38}, 18, 0, FX(0, 12, 18, 10), PAT(0)},
+    {"PULSE LEAD", {1, 8, 32, 0, 82, 18, 6, 68}, {8, 86, 100, 30}, 16, 1, FX(0, 8, 15, 8), PAT(0)},
+    {"SOFT KEYS", {2, 7, 34, 0, 74, 5, 0, 76}, {5, 89, 24, 48}, 12, 0, FX(0, 20, 0, 18), PAT(0)},
+
 };
 
 static const engine_t ENG_ANALOG = {
@@ -89,7 +94,10 @@ static const preset_t REGGAE_SAMPLE_PRESETS[] = {
     {"SAX", {3, 0, 0, 1, 127, 0, 0, 0}, {12, 80, 120, 60}, 0, 0},
     {"PIANO", {0, 0, 0, 1, 127, 0, 0, 0}, {0, 127, 127, 70}, 0, 0},
     {"PIANO CHOP", {0, 0, 0, 0, 105, 0, 7, 0}, {0, 82, 64, 25}, 0, 0, FX(0, 0, 0, 8), PAT(0)},
-    {"ROOTS TRUMPET", {SMP_BRASS_ID, 0, 0, 1, 113, 0, 0, 0}, {0, 76, 104, 28}, 0, 0, FX(0, 0, 0, 7), PAT(0)},
+    {"ROOTS TRUMPET", {SMP_BRASS_ID, 0, 0, 0, 113, 0, 0, 0}, {0, 76, 104, 28}, 0, 0, FX(0, 0, 0, 7), PAT(0)},
+    {"AIR FLUTE", {2, 0, 0, 0, 118, 0, 0, 0}, {8, 100, 112, 30}, 0, 0, FX(0, 0, 0, 12), PAT(0)},
+    {"TENOR REED", {3, 0, 0, 0, 106, 0, 0, 0}, {5, 95, 112, 28}, 0, 1, FX(0, 0, 0, 9), PAT(0)},
+
 };
 
 static const engine_t ENG_SAMPLE = {
@@ -115,7 +123,7 @@ static const engine_t ENG_SAMPLE = {
 
 /* Shared bank metadata: panel navigation, graphics and tests use the same IDs.
  * Existing factory indices stay put; new patches are appended only. */
-enum { RG_ORGAN, RG_BASS, RG_REED, RG_PIANO, RG_BRASS, RG_STRING, RG_SIREN, RG_DRUM };
+enum { RG_ORGAN, RG_BASS, RG_REED, RG_PIANO, RG_BRASS, RG_STRING, RG_SIREN, RG_DRUM, RG_SYNTH };
 typedef struct { uint8_t engine, preset, kind; const char *category; uint8_t knob[4]; } reggae_sound_t;
 static const reggae_sound_t REGGAE_BANK[] = {
     {7,5,RG_ORGAN,"ORGAN",{P_E0,P_E3,P_E7,P_E6}},
@@ -133,6 +141,16 @@ static const reggae_sound_t REGGAE_BANK[] = {
     {10,4,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
     {0,17,RG_SIREN,"SIREN",{P_ED_PIT,P_DEC,P_DLY,P_E4}},
     {0,18,RG_SIREN,"SIREN",{P_LD_PIT,P_LRATE,P_DLY,P_E4}},
+    {0,19,RG_SYNTH,"PAD",{P_E4,P_E1,P_ATK,P_REL}},
+    {0,20,RG_SYNTH,"PLUCK",{P_E4,P_DEC,P_DLY,P_REL}},
+    {0,21,RG_SYNTH,"LEAD",{P_E4,P_E5,P_E1,P_REL}},
+    {0,22,RG_SYNTH,"KEYS",{P_E4,P_DEC,P_CHOR,P_REL}},
+    {0,15,RG_BRASS,"SYNTH BRASS",{P_E4,P_ATK,P_ED_FLT,P_REL}},
+    {4,7,RG_REED,"FLUTE",{P_E4,P_ATK,P_DLY,P_REL}},
+    {4,8,RG_REED,"TENOR",{P_E4,P_ATK,P_E6,P_REL}},
+    {9,10,RG_SYNTH,"MALLET",{P_E2,P_E3,P_E4,P_REL}},
+    {9,11,RG_SYNTH,"KALIMBA",{P_E1,P_E2,P_E3,P_REL}},
+
 };
 static int reggae_index(const track_t *t)
 {

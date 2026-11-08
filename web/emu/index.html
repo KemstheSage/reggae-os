@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>REGGAE-OS</title>
+<title>Riddim OS</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22/%3E%3Crect x=%224%22 y=%224%22 width=%228%22 height=%228%22 fill=%22%23fff%22/%3E%3C/svg%3E">
 <meta name="description" content="Felucca, the multi-engine synth firmware for the FM-1, running in your browser: the same code the instrument runs.">
 <style>
@@ -98,9 +98,9 @@ footer small { font-size: 11px; opacity: .8; }
 
 <p class="keys"><button id="percussion" disabled>Load CC0 percussion on selected track</button><br><small id="percussion-status" role="status"></small></p>
 <footer>
-  <small class="version">REGGAE-OS 0.1 · sound bank 0.5 / UI 0.7.9 PREVIEW (EQ / compressor / note editing) · Felucca @VERSION@@PREVIEW@</small><br>
+  <small class="version">Riddim OS · sound bank 0.6 / UI 0.8.0 PREVIEW (expanded instruments / four-band EQ) · Felucca @VERSION@@PREVIEW@</small><br>
   Felucca by Leo Kuroshita, Hügelton Instruments · <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a> · browser build after charlesvestal's <a href="https://github.com/charlesvestal/fm1-x0x">X0X</a> · DotGothic16 font, <a href="fonts/OFL.txt">SIL OFL 1.1</a><br>
-  <nav><a href="guide/">Screenshot quick guide</a> · <a href="SEQUENCER.md">Song-making guide</a> · <a href="reggae-os-source.tar.gz">REGGAE-OS source</a> · <a href="LICENSING.md">Licences</a> · <a href="https://github.com/hugelton/Felucca">Felucca upstream</a> · REGGAE-OS development build — hardware untested</nav>
+  <nav><a href="guide/">Screenshot quick guide</a> · <a href="SEQUENCER.md">Song-making guide</a> · <a href="reggae-os-source.tar.gz">Riddim OS source</a> · <a href="LICENSING.md">Licences</a> · <a href="https://github.com/hugelton/Felucca">Felucca upstream</a> · Riddim OS development build — hardware untested</nav>
   <small>M-VAVE and FM-1 are trademarks of their respective owners. Felucca is not affiliated with or endorsed by them.</small>
 </footer>
 </main>
@@ -496,8 +496,8 @@ async function switchOn() {
     const resumed = ac.resume(); // start in the physical Switch on gesture, before network awaits
     if (ac.sampleRate !== 44100) throw new Error("This emulator requires a 44.1 kHz audio context");
     const [wasm] = await Promise.all([
-      fetch("felucca.wasm?v=ui-0.7.9-preview").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
-      ac.audioWorklet.addModule("worklet.js?v=ui-0.7.9-preview")]);
+      fetch("felucca.wasm?v=ui-0.8.0-preview").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
+      ac.audioWorklet.addModule("worklet.js?v=ui-0.8.0-preview")]);
     node = new AudioWorkletNode(ac, "felucca", { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] });
     node.connect(ac.destination);
     let warned = false;

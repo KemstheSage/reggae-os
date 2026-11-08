@@ -100,8 +100,8 @@ ENV = {"wave":(5, 80, 100, 50), "kit": (0, 127, 127, 60), "multi": (0, 85, 0, 75
        "oneshot": (0, 127, 127, 70), "sus": (12, 80, 120, 60)}
 
 # PIANO's notes cut to 0.75 s (saves flash), faded out over the last SET_FADE s
-SET_KEEP = {"PIANO": 0.75}
-SET_FADE = {"PIANO": 0.15}
+SET_KEEP = {"PIANO": 0.75, "BRASS": 1.6, "FLUTE": 0.95, "SAX": 0.95}
+SET_FADE = {"PIANO": 0.15, "BRASS": 0.25, "FLUTE": 0.18, "SAX": 0.18}
 
 _wavs = {}
 
@@ -143,6 +143,9 @@ def octave_conv(files):
 
 def cc0_entries(setname, kind):
     """-> [(file name, int16 samples at TR, loop or None, root)]"""
+    # Preserve upstream preset metadata, but retire audible short sustain loops.
+    if setname in ("FLUTE", "SAX"):
+        kind = "oneshot"
     files = sorted((CC0 / setname).glob("*.wav"))
     out = []
     if kind != "kit":
@@ -464,7 +467,7 @@ def main(out):
     if have_cc0:
         if len(list((CC0 / "BRASS").glob("*.wav"))) != 3:
             raise SystemExit("REGGAE-OS needs the three licensed BRASS source WAVs; see assets/samples-cc0/BRASS/PROVENANCE.json")
-        b.cc0_set("BRASS", "sus")  # append data: existing sample and slice offsets remain stable
+        b.cc0_set("BRASS", "oneshot")  # append data: existing sample and slice offsets remain stable
     text = b.header()
     Path(out).write_text(text)
     CACHE.parent.mkdir(parents=True, exist_ok=True)

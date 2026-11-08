@@ -656,7 +656,7 @@ static void draw_column_tall(uint32_t c, const char *label, const char *val, con
  * the motion icon in place of its own, in the theme colour; a long label moves it left, up to the card's edge;
  * a label with no room for it at all (or FELUCCA_ICONS=0): the label in the theme colour.
  * vc: the value's colour (T_THEME, T_DIM inactive, T_ACCENT the knob just turned) */
-/* Optional shared card renderer for REGGAE-OS sequencer pages. Formatting and
+/* Optional shared card renderer for RIDDIM OS sequencer pages. Formatting and
  * parameter semantics stay in draw_columns/layer_cards. */
 static void (*seq_card_draw)(uint32_t,const char *,const char *,const char *,uint16_t,int32_t);
 static void draw_column(uint32_t c, const char *label, const char *val, const char *unit, uint16_t vc,
@@ -1383,7 +1383,7 @@ static void draw_columns(void)
 #define SPL_X0 ((240u - SPL_SQ) / 2u)               /* its top-left on the screen (x and y) */
 #define SPL_PAD 16                                  /* the text's inset: left (its ink), top and bottom (the capitals) */
 #define SPL_PITCH 20                                /* line to line */
-static const char *const SPLASH_LINES[] = {"REGGAE-OS", "0.1 / Felucca 1.6.1", "H\xFCgelton Instruments", "firmware foundation"};
+static const char *const SPLASH_LINES[] = {"RIDDIM OS", "0.8.0", "INSTRUMENT LAB", "PLAY / SHAPE / CREATE"};
 /* a band of two lines, h tall, at y on the screen: the first line's top at ly; the two lines' capitals declared
  * against al0..al1 (mode: AL_V the band centred there, AL_B the last baseline on al1) */
 static void splash_band(uint32_t y, uint32_t h, int32_t ly, const char *const *l, uint32_t mode, int32_t al0,
@@ -1403,7 +1403,7 @@ static void draw_splash(void)
     uint32_t k;
     ux.mono=0;ux.light=1;ux.gen++;
     cv_begin(240,120,paper);
-    cv_text(16,20,&AF_L,"REGGAE-OS",ink);
+    cv_text(16,20,&AF_L,"RIDDIM OS",ink);
     cv_text(18,62,&AF_M,"SOUND SYSTEM",ink);
     cv_text(18,83,&AF_M,"SYNTHESIZER",ink);
     cv_rect(18,110,43,5,RGB(83,143,112));cv_rect(61,110,43,5,RGB(235,172,47));cv_rect(104,110,43,5,red);
@@ -1411,8 +1411,8 @@ static void draw_splash(void)
     cv_begin(240,120,paper);
     for(k=0;k<48;k++) {int d=(int)k-24,w=24-(d*d)/25;cv_rect(178-w,13+k,w*2,1,red);}
     for(k=0;k<12;k++){int h=6+(k*17)%31;cv_rect(18+k*10,62-h,5,h,ink);}
-    cv_text(18,78,&AF_S,"0.3 / FELUCCA 1.6.1",ink);
-    cv_text(18,98,&AF_S,"HUGELTON FIRMWARE FOUNDATION",ink);
+    cv_text(18,78,&AF_S,"0.8.0 / INSTRUMENT LAB",ink);
+    cv_text(18,98,&AF_S,"PLAY / SHAPE / CREATE",ink);
     cv_blit(0,120);lcd_sync();
     ux.mono=mono;ux.light=light;ux.gen++;
 }

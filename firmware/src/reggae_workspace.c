@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-only
- * REGGAE-OS workspaces: shared firmware UI, not a browser overlay.
+ * RIDDIM OS workspaces: shared firmware UI, not a browser overlay.
  * Existing parameter, storage and input functions remain the source of truth.
  * Three <=124-row strips; no framebuffer allocation or audio callback work. */
 static void rg_caption(int x,int y,int w,const char *s,uint16_t ink)
@@ -216,7 +216,7 @@ static void rg_workspace_page(void)
 }
 static int32_t rg_credits(int y,int draw)
 {
-    y=menu_text("REGGAE-OS / GPL-3.0-only",y,RG_GOLD,draw)+8;
+    y=menu_text("RIDDIM OS / GPL-3.0-only",y,RG_GOLD,draw)+8;
     y=menu_text("Built on Felucca. Copyright 2026 Leo Kuroshita and Hugelton Instruments.",y,RG_INK,draw);
     y=menu_text("github.com/KemstheSage/reggae-os",y,RG_GREEN,draw)+8;
     for(unsigned i=0;i<NELEM(MENU_CREDITS);i++)
@@ -226,12 +226,12 @@ static int32_t rg_credits(int y,int draw)
 static void rg_settings(void)
 {
     char b[48];unsigned tab=menu_tab(),first=mtab_first(tab),count=mtab_rows(tab),sel=ui.menu_sel-first;
-    rg_heading(ui.menu==2?"LABEL CREDITS":ui.menu==3?"SYSTEM METERS":"SYSTEM DESK",ui.menu==1?MTAB_NAME[tab]:"REGGAE-OS");
+    rg_heading(ui.menu==2?"LABEL CREDITS":ui.menu==3?"SYSTEM METERS":"SYSTEM DESK",ui.menu==1?MTAB_NAME[tab]:"RIDDIM OS");
     rg_panel();
     if(ui.menu==2){cv_scroll=1;rg_credits(-(int)ui.menu_scroll,1);cv_scroll=0;}
     else if(ui.menu==3){
         info_sig();static const char *const usbname[]={"OFF","WAIT","BUS","ENUM","MIDI"};
-        rg_sleeve(0,"FIRMWARE","REGGAE-OS 0.7.9 PREVIEW",1,1);
+        rg_sleeve(0,"FIRMWARE","RIDDIM OS 0.8.0 PREVIEW",1,1);
         rg_sleeve(1,"USB",usbname[info_usb()],0,usb.up);
         fmt_int(b,info.cpu);str_cpy(b+str_len(b)," % AUDIO CPU",sizeof b-str_len(b));rg_sleeve(2,"PROCESSING",b,0,1);
     } else {
@@ -283,7 +283,7 @@ static void rg_name(void)
 static void rg_dialog(unsigned counting)
 {
     char a[24],b[24];
-    rg_heading(ui.uboot?"FIRMWARE UPDATE":counting?"COUNT-IN":"CHECK BEFORE CUT",song.rec?"RECORD ARMED":"REGGAE-OS");rg_panel();
+    rg_heading(ui.uboot?"FIRMWARE UPDATE":counting?"COUNT-IN":"CHECK BEFORE CUT",song.rec?"RECORD ARMED":"RIDDIM OS");rg_panel();
     if(ui.confirm){confirm_text(a,b);
         reggae_disc(120,31,22,RG_RED);reggae_eye(112,27,6,0,0);reggae_eye(128,27,6,0,0);
         cv_rect(114,39,13,2,RG_BG);rg_caption(10,66,220,a,RG_INK);rg_caption(10,88,220,b,RG_GOLD);

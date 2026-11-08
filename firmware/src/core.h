@@ -12,6 +12,9 @@
 #define NPART 4                  /* synth parts: tracks 1..4 */
 #define NTRK NPART               /* tracks (the formats and the protocol count these): every track is a part */
 #define NSTEP 64
+#ifndef RIDDIM_SPLASH_MS
+#define RIDDIM_SPLASH_MS 3000u
+#endif
 /* Project-owned processing, separate from synth parameter/MIDI IDs. Zero is bypass. */
 enum { RP_FREQ, RP_GAIN, RP_Q, RP_THRESH, RP_RATIO, RP_MAKEUP, RP_ATTACK, RP_RELEASE, RP_B2_FREQ, RP_B2_GAIN, RP_B2_Q, RP_B3_FREQ, RP_B3_GAIN, RP_B3_Q, RP_B4_FREQ, RP_B4_GAIN, RP_B4_Q, RP_COUNT };
 typedef struct { int16_t v[RP_COUNT]; } reggae_proc_config_t;

@@ -4,6 +4,30 @@ Development host: macOS x86-64; Apple Clang 16; Emscripten 4.0.15; JieLi pi32v2
 compiler through a Linux Docker container. Source baseline: Felucca v1.6.1
 (`a53ecf4`), engines `c46e0086f69bdc26df1cd144dca9e683cc4531dd`.
 
+## Riddim OS 0.8.0 instrument library
+
+- Native ASAN and shared WASM: revised trumpet plus all nine additions produce
+  finite, non-silent audio below clipping at the tested note/velocity; release
+  reaches silence. Held trumpet, flute and tenor end without looping; synth brass
+  remains audible while held. Auditions are 4-second held notes followed by release.
+- All 40 protected organ/piano/bass renders remain byte-for-byte identical.
+  The historical native audition harness retains its 400 ms UI hold to preserve
+  reference timing; the dedicated library/splash test uses production 3000 ms.
+- Production splash framebuffer is unchanged at 1500 ms and has transitioned to
+  HOME by 3500 ms. Native 240×240 startup/synth screenshots inspected.
+- WASM emulator, project A/B save/recall and EQ/compressor/note-timing tests pass.
+- Expanded-bank testing found a missing control-label entry; fixed with all nine
+  label sets and a compile-time bank/label-length assertion. Final ASAN runs pass.
+- Hardware build passes: image 578540 bytes, RAM 61960/73728,
+  pool 338124/368640; package 610090 bytes. Not physically flashed or tested.
+- WASM SHA256: `3e40e6190d6dfcce949e3f8aeb329fec69e6383e7b6331210765b3a759e39ff5`.
+- Package SHA256: `ce3477e251084a6571c59cda6040475892339a5554dfc0288593c4b09c9413ee`.
+- Sample duration varies with pitch. Faded one-shots deliberately trade indefinite
+  sustain for removal of audible repeated breath/vibrato. Musical quality still
+  needs player listening; no physical CPU or iPhone Safari stress claim.
+- Preview uses an isolated save key; existing emulator/physical beats untouched.
+  Project format remains compatible with 0.7.9; sample set and preset IDs stay put.
+
 ## UI 0.7.9 four-band EQ (2026-11-08)
 
 - Native ASAN: all 20 band responses, four cascaded bands, extreme boosts/cuts

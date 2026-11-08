@@ -234,6 +234,8 @@ static const preset_t PHYS_PRESETS[] = {
     {"DRONE STRING", {PM_SYMP, 127, 80, 88, 64, 100, 92, 0}, {0, 100, 127, 90}, 0, 0, FX(0, 10, 20, 50), PAT(3)},
     {"HARP", {PM_SYMP, 8, 62, 74, 60, 90, 0, 0}, {0, 100, 127, 80}, 0, 0, FX(0, 20, 20, 60), PAT(3)},
     {"MUTED SKANK", {PM_STRING, 32, 78, 42, 38, 52, 0, 6}, {0, 68, 28, 30}, 0, 0, FX(0, 0, 0, 5), PAT(0)},
+    {"WOOD MALLET", {PM_MODAL, 112, 44, 48, 32, 76, 0, 24}, {0, 90, 127, 44}, 0, 0, FX(0, 0, 0, 14), PAT(0)},
+    {"THUMB KEYS", {PM_MODAL, 30, 23, 62, 92, 78, 0, 40}, {0, 100, 127, 48}, 0, 0, FX(0, 8, 0, 12), PAT(0)},
 };
 
 static const engine_t ENG_PHYS = {

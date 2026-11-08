@@ -244,3 +244,25 @@ The exact-key map, source chain and hardware upload procedure are in
 `assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md`. GATE 1/16 and MONO are live
 master-bus effects; they do not rewrite patches. A gate can give hats/percussion
 rhythmic cuts; mono collapses stereo ambience for a contrasting throw/release.
+
+## Riddim OS 0.8.0: broader library and finite wind samples
+
+The curated bank has 24 entries, appending nine without moving existing IDs:
+Velvet Pad (slow PWM envelope, restrained chorus), Glass Pluck (sine-based,
+short envelope and echo), Pulse Lead (pulse oscillator, resonant filtering),
+Soft Keys (triangle-based decay), synthesized Brass Stabs, Air Flute and Tenor
+Reed (existing CC0 recordings), Wood Mallet and Thumb Keys (modal synthesis).
+Each has explicit oscillator/model, envelope and effect settings and four controls.
+
+The previous trumpet repeated a roughly half-second portion of a 0.95-second
+recording. Its recognisable breath/vibrato pattern repeated even when the seam
+was crossfaded. It now uses 1.6 seconds from each of the same three licensed CC0
+sources, with a 250 ms raised-cosine fade and no loop. Flute/sax use 0.95-second
+one-shots and 180 ms fades. They are finite articulations: sample transposition
+changes duration and very long held notes fall silent. Synth Brass provides
+sustained playing. Existing sample set numbers and piano bytes stay stable;
+previous brass/wind projects now use the revised samples. No commercial recording
+has been sampled. Attribution remains in assets/samples-cc0/ and CREDITS.md.
+
+Organ, piano and bass preset settings were not edited. New synth/mallet panels
+use an animated keyboard-box character; the existing family graphics remain.

@@ -1,8 +1,21 @@
-# REGGAE-OS
+# Riddim OS
 
 An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
+
+**0.8.0 / Riddim OS preview:** the library expands from 15 to 24 instruments.
+New pads, leads, plucks, mallets and winds broaden it beyond reggae. The trumpet
+now uses a 1.6-second source one-shot with a smooth fade; flute and sax use short
+one-shots instead of repetitive sustain loops. These sampled notes end naturally
+at their stored length (pitch shifts change duration); SYNTH BRASS sustains.
+Approved organ, piano and bass preset settings are unchanged.
+
+[Open Riddim OS](https://kemsthesage.github.io/reggae-os/preview-0.8.0/) ·
+[Guide and auditions](docs/preview-0.8.0/index.html).
+Startup displays Riddim OS for approximately three seconds. Felucca attribution
+remains in credits and licence documentation. Existing repository URLs and storage
+identities remain stable; each browser preview has isolated saves.
 
 **0.7.9 emulator preview:** four parametric bell bands per track and master,
 plus linked compression. FX order: punch-in, EQ, compressor/timing, standard FX.

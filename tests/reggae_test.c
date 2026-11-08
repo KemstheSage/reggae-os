@@ -1,6 +1,11 @@
 /* SPDX-License-Identifier: GPL-3.0-only
  * Exercise the actual emulated panel, audio ISR, UI and NOR-backed preset path.
  * Each invocation starts with fresh DSP state; run.sh compares knob variants. */
+/* Keep historical audition timing stable; the dedicated startup/library test
+ * explicitly uses the production 3000 ms interval. This only shortens UI hold. */
+#ifndef RIDDIM_SPLASH_MS
+#define RIDDIM_SPLASH_MS 400u
+#endif
 #include "../web/emu/felucca_web.c"
 #include <assert.h>
 static void advance(unsigned ms) { for (unsigned n=0; n<ms*441/10; n+=128) web_render(128); }

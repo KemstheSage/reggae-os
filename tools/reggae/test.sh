@@ -90,3 +90,9 @@ for name in reggae_processing reggae_note_timing; do
   ${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o "build/reggae/$name" "tests/$name.c" -lm
   "build/reggae/$name"
 done
+
+# Production-duration splash and the expanded Riddim OS bank.
+${CC:-cc} ${REGGAE_TEST_CFLAGS:--O1} -ffp-contract=off -w -Ibuild/gen -Ifirmware/src -o build/reggae/riddim-library tests/riddim_library.c -lm
+for preset in 7 15 16 17 18 19 20 21 22 23; do
+  build/reggae/riddim-library "$preset"
+done > build/reggae/riddim-library.log

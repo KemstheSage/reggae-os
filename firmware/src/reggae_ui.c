@@ -44,7 +44,17 @@ static const char *const RG_CONTROL_NAME[][4]={
     {"TIMBRE","ENV","RATIO","LEVEL"}, {"HARM","TONE","ROTOR","ECHO"},
     {"TONE","DECAY","SNAP","DRIVE"},
     {"FALL","LENGTH","ECHO","TONE"}, {"RANGE","RATE","ECHO","TONE"},
+    {"CUTOFF","DETUNE","ATTACK","RELEASE"},
+    {"CUTOFF","DECAY","ECHO","RELEASE"},
+    {"CUTOFF","RES","DETUNE","RELEASE"},
+    {"CUTOFF","DECAY","CHORUS","RELEASE"},
+    {"TONE","ATTACK","ENV","RELEASE"},
+    {"TONE","ATTACK","ECHO","RELEASE"},
+    {"TONE","ATTACK","DRIVE","RELEASE"},
+    {"BRIGHT","DAMP","STRIKE","RELEASE"},
+    {"BODY","BRIGHT","DAMP","RELEASE"},
 };
+_Static_assert(NELEM(RG_CONTROL_NAME)==NELEM(REGGAE_BANK), "Every instrument needs four control labels");
 static struct {
     uint32_t ms;
     int index;
@@ -275,6 +285,17 @@ static void reggae_art(track_t *t,int kind,int level,int motion)
             cv_rect(199+k*7,51,3,6,RG_INK);cv_rect(199+k*7,78,3,6,RG_INK);
         }
         cv_rect(191,59,3,17,RG_INK);
+    } else if(kind==RG_SYNTH) {
+        cv_rrect(24,22,192,83,-7,RG_WOOD,RG_BG);
+        cv_rrect(29,27,182,73,-5,RG_PANEL,RG_WOOD);
+        reggae_eye(73,47,15,0,0);reggae_eye(166,47,15,0,0);
+        for(k=0;k<140;k++){
+            int amp=motion?3+pulse:3;
+            int y=71+SINE[(k*20+ph)&1023]*amp/32768;
+            cv_rect(50+k,y,1,2,RG_GREEN);
+        }
+        reggae_keys(38,88,11,19,level);
+        reggae_disc(33,16,4,RG_RED);reggae_disc(207,16,4,RG_GOLD);
     } else if(kind==RG_SIREN) {
         int dy=motion?t->lfo_val*5/32768:0;
         cv_rrect(83,29,80,76,-7,RG_EDGE,RG_BG);

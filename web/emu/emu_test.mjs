@@ -20,7 +20,7 @@ const EN = { SELECT: 0, ALGO: 1, PRESETS: 2, K1: 3, K2: 4, K3: 5, K4: 6 };
 let fails = 0;
 const check = (what, ok) => { console.log(`emu: ${what.padEnd(76)} ${ok ? "ok" : "FAIL"}`); if (!ok) fails++; };
 
-async function device(saved) {
+async function device(saved, waitForHome = true) {
   const { instance } = await WebAssembly.instantiate(bytes, {});
   const ex = instance.exports, mem = ex.memory;
   ex._initialize();
@@ -48,12 +48,13 @@ async function device(saved) {
   d.turn = (role, n) => { for (let i = 0; i < Math.abs(n); i++) { ex.web_enc(role, Math.sign(n)); d.render(40); } };
   Object.defineProperty(d, "samples", { get: () => new Float32Array(d.kept) });
   d.screen = () => new Uint16Array(mem.buffer, ex.web_screen(), 240 * 240).slice();
+  if(waitForHome)d.render(3100); // Wait for the readable Riddim OS startup screen.
   return d;
 }
 const colours = (fb) => new Set(fb).size;
 
 // ---- boot, keys, screen, LEDs
-const a = await device(null);
+const a = await device(null, false);
 a.render(200);
 const splash = colours(a.screen());
 { // the power-on LED sweep (hal/fm1_led_anim.h) under the splash: at 200 ms its head on the middle of the keyboard, the
@@ -67,6 +68,8 @@ const splash = colours(a.screen());
 }
 a.render(800);
 check("  over by 1 s (~0.70 s)", a.ex.web_anim_levels() === 0);
+check("startup remains visible at 1 s", colours(a.screen()) === splash);
+a.render(2200);
 const home = a.screen();
 check(`boots: the splash, then HOME (${colours(home)} colours), the HOME LED lit`,
       splash > 1 && colours(home) > 4 && (a.ex.web_lit_buttons() >> B.HOME & 1) === 1);

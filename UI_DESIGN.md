@@ -278,3 +278,13 @@ rules. New workspaces use the fixed REGGAE palette, like existing instrument pag
 legacy COLOR choices remain stored, but do not switch the workspaces to a stock UI.
 Low-level bootloader and crash diagnostics remain separate from normal UI routing.
 See [the complete coverage report](docs/reports/ui-0.7.0.md).
+
+## Riddim OS 0.8.0 identity
+
+Runtime menus and startup use Riddim OS. Startup holds for about three seconds
+on hardware and the emulator. The native 240×240 splash carries version,
+INSTRUMENT LAB and PLAY / SHAPE / CREATE; upstream attribution remains in
+credits/licences, not the startup artwork. Synth/mallet additions use a keyboard
+box character whose waveform height responds to note activity and respects the
+existing reduced-animation setting. File, protocol and save identifiers are
+retained for compatibility rather than renamed wholesale.
