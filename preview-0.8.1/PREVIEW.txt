@@ -1,0 +1,1 @@
+Riddim OS 0.8.1; source 8324ca4. Isolated browser saves. Hardware candidate built but physically untested.

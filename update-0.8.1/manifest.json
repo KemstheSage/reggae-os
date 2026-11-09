@@ -1,0 +1,9 @@
+{
+  "version": "0.8.1",
+  "hardware_status": "COMPILES; HARDWARE UNTESTED",
+  "sha256": "e27243d90070e1efe7a1cd66334e79f73d1347e65e608c7501c35f2581e49d5f",
+  "package_bytes": 610090,
+  "source_commit": "8324ca44f0161de6d6a5698667a7efce63dd6e5b",
+  "working_tree_changes": false,
+  "package": "felucca-riddim-os-0.8.1.fwsc"
+}
