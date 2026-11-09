@@ -155,9 +155,12 @@ static const reggae_sound_t REGGAE_BANK[] = {
     {10,6,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
     {10,7,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
     {10,8,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
+    {10,9,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
+    {10,10,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
+    {10,11,RG_DRUM,"DRUM KIT",{P_E2,P_E3,P_E4,P_E7}},
 };
 /* Presentation order only. Never use this position as a stored preset ID. */
-static const uint8_t RIDDIM_ORDER[]={0,1,11,2,3,10,5,6,18,4,20,21,7,19,8,15,17,16,22,23,9,13,14,12,24,25,26,27};
+static const uint8_t RIDDIM_ORDER[]={0,1,11,2,3,10,5,6,18,4,20,21,7,19,8,15,17,16,22,23,9,13,14,12,28,29,30,24,25,26,27};
 _Static_assert(NELEM(RIDDIM_ORDER)==NELEM(REGGAE_BANK), "Every sound needs a browser position");
 static unsigned riddim_position(unsigned id) {
     for(unsigned i=0;i<NELEM(RIDDIM_ORDER);i++)if(RIDDIM_ORDER[i]==id)return i;
@@ -180,14 +183,17 @@ static void reggae_loaded(track_t *t)
     if(t->eng_req==0 && t->preset==16) { t->p[P_LRATE]=65; t->p[P_LD_PIT]=32; t->p[P_LWAVE]=1; }
     if(t->eng_req==0 && t->preset==17) { t->p[P_ED_PIT]=63; }
     if(t->eng_req==0 && t->preset==18) { t->p[P_LRATE]=96; t->p[P_LD_PIT]=32; t->p[P_LWAVE]=3; }
-    if(t->eng_req==10 && t->preset>=4 && t->preset<=8) {
+    if(t->eng_req==10 && t->preset>=4 && t->preset<=11) {
         /* Fresh factory loads only: saved projects retain their lane balances. */
-        static const int16_t levels[5][8]={
+        static const int16_t levels[8][8]={
             {120,116,85,89,83,105,116,81}, /* Roots: body, side-stick, restrained cymbals */
             {119,111,96,87,82,106,102,80}, /* Sub: long sine kick, metal hats */
             {115,116,102,91,84,104,104,85}, /* Circuit: clap and cymbal */
             {117,123,83,98,89,108,110,78}, /* Break: snare-forward, short tails */
             {112,110,90,86,80,120,119,88}, /* Hand: conga and claves */
+            {124,124,97,91,86,106,108,79},
+            {119,112,86,82,78,108,105,74},
+            {102,92,80,87,99,119,108,105},
         };
         for(unsigned i=0;i<8;i++)t->p[P_LN0+i]=levels[t->preset-4][i];
     }

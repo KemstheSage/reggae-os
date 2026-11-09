@@ -283,3 +283,8 @@ its differentiated kits and per-lane level calibration. This release reuses our
 existing Felucca drum DSP with original preset/balance settings; it does not import
 SLOOP's drum engine or sample library. Larger sample kits remain a separate storage
 and licensing task. Sound-quality approval still requires the musician's audition.
+
+## 0.8.2 acoustic drum candidate
+
+See [drum sound design, compatibility and validation](docs/drums-0.8.2.md).
+Four audition kits implemented; physical audition and installation remain pending.

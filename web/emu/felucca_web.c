@@ -500,6 +500,15 @@ EXPORT uint32_t web_sample_rate(void) { return FS; }
 
 /* Development sample upload shortcut: same NOR slot and SAMPLE renderer as USB
  * uploads on hardware. The caller only installs into an erased slot. */
+EXPORT uint32_t web_drums_select(uint32_t slot)
+{
+    if(slot>=SMP_USER_SLOTS)return 0;
+    smp_user_scan(slot);
+    if(usr_nz[slot]!=8)return 0;
+    preset_go(riddim_position(12));
+    ui.home=1;ui.force=1;web_flash_writes++;
+    return 1;
+}
 EXPORT uint32_t web_percussion_select(uint32_t slot)
 {
     if(slot>=SMP_USER_SLOTS)return 0;

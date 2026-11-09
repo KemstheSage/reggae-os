@@ -92,7 +92,7 @@ if (typeof registerProcessor === "function") {
       else if (m.type === "enc") ex.web_enc(m.role, m.n | 0);
       else if (m.type === "master") ex.web_master(m.value | 0);
       else if (m.type === "midi") ex.web_midi(m.data[0] | 0, m.data[1] | 0, m.data[2] | 0);
-      else if (m.type === "percussion") {
+      else if ((m.type === "percussion" || m.type === "drums")) {
         const data = new Uint8Array(m.data);
         const flash = new Uint8Array(ex.memory.buffer, ex.web_nor(), ex.web_nor_size());
         let slot = -1;
@@ -100,7 +100,7 @@ if (typeof registerProcessor === "function") {
         let crc = 0xFFFFFFFF;
         for (let i=512; i<data.length; i++) {crc ^= data[i];for(let b=0;b<8;b++)crc=(crc>>>1)^((crc&1)?0xEDB88320:0);}
         const valid = data.length >= 512 && data.length <= 0x14000 &&
-          view.getUint32(0,true) === 0x504D5346 && view.getUint16(4,true) === 1 && data[6] === 5 &&
+          view.getUint32(0,true) === 0x504D5346 && view.getUint16(4,true) === 1 && data[6] === (m.type === "drums" ? 8 : 5) &&
           view.getUint32(16,true) === data.length-512 && view.getUint32(20,true) === ((crc^0xFFFFFFFF)>>>0);
         if (valid) {
           for (let k = 0; k < 3; k++) {
@@ -115,8 +115,8 @@ if (typeof registerProcessor === "function") {
         if (slot < 0) this.port.postMessage({type: "percussion-result", message: valid ? "No empty sample slot. Existing samples were kept." : "Invalid percussion pack. Existing samples were kept."});
         else {
           flash.set(data, 0xA0000 + slot * 0x14000);
-          const ok = ex.web_percussion_select(slot);
-          this.port.postMessage({type: "percussion-result", message: ok ? `Loaded USR${slot+1} on the selected track. Play F3 rim, G3 conga, A3 claves, B3 shaker, C4 tambourine. Hold notes for their tails.` : "Sample pack could not be loaded."});
+          const ok = (m.type === "drums" ? ex.web_drums_select(slot) : ex.web_percussion_select(slot));
+          this.port.postMessage({type: "percussion-result", message: ok && m.type === "drums" ? "Acoustic pack loaded. Roots Kit, Dusty HipHop, Soft LoFi and Ambient Perc are ready in the drum category." : ok ? `Loaded USR${slot+1} on the selected track. Play F3 rim, G3 conga, A3 claves, B3 shaker, C4 tambourine. Hold notes for their tails.` : "Sample pack could not be loaded."});
         }
       }
       else if (m.type === "visible") this.period = m.on ? 1 / 30 : 1 / 4;

@@ -4,6 +4,14 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
+**0.8.2 drum audition preview:** eight acoustic one-shots, revised Roots Kit,
+Dusty HipHop, Soft LoFi and Ambient Perc. [Auditions](https://kemsthesage.github.io/reggae-os/preview-0.8.2/drums/)
+· [Emulator](https://kemsthesage.github.io/reggae-os/preview-0.8.2/).
+After Switch on, tap **Load new acoustic drum kits**. Without the optional pack,
+these kits use synthesized fallback sounds. [Details, controls and limitations](docs/drums-0.8.2.md).
+Hardware build verified; not yet flashed or physically tested. Existing beats and
+approved organ/piano/bass sounds are preserved.
+
 **0.8.1 preview:** 28 instruments grouped by type, a revised Roots Kit and four new
 synthesized kits: Sub Machine, Circuit Kit, Break Kit and Hand Perc. Track four's
 HOME browser now cycles through all five kits. Existing preset identities and

@@ -96,9 +96,10 @@ footer small { font-size: 11px; opacity: .8; }
   </select></span>
 </p>
 
+<p class="keys"><a href="drums/">Hear the new drums: grooves and individual hits</a><br><button id="drums" disabled>Load new acoustic drum kits</button><br><small>Uses an empty sample slot. Without this pack, the new kits use synthesized fallback drums.</small></p>
 <p class="keys"><button id="percussion" disabled>Load CC0 percussion on selected track</button><br><small id="percussion-status" role="status"></small></p>
 <footer>
-  <small class="version">Riddim OS · sound bank 0.6 / UI 0.8.1 PREVIEW (grouped instruments / five drum kits) · Felucca @VERSION@@PREVIEW@</small><br>
+  <small class="version">Riddim OS · sound bank 0.6 / UI 0.8.2 PREVIEW (Roots hybrid drums) · Felucca @VERSION@@PREVIEW@</small><br>
   Felucca by Leo Kuroshita, Hügelton Instruments · <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a> · browser build after charlesvestal's <a href="https://github.com/charlesvestal/fm1-x0x">X0X</a> · DotGothic16 font, <a href="fonts/OFL.txt">SIL OFL 1.1</a><br>
   <nav><a href="guide/">Screenshot quick guide</a> · <a href="SEQUENCER.md">Song-making guide</a> · <a href="reggae-os-source.tar.gz">Riddim OS source</a> · <a href="LICENSING.md">Licences</a> · <a href="https://github.com/hugelton/Felucca">Felucca upstream</a> · Riddim OS development build — hardware untested</nav>
   <small>M-VAVE and FM-1 are trademarks of their respective owners. Felucca is not affiliated with or endorsed by them.</small>
@@ -496,8 +497,8 @@ async function switchOn() {
     const resumed = ac.resume(); // start in the physical Switch on gesture, before network awaits
     if (ac.sampleRate !== 44100) throw new Error("This emulator requires a 44.1 kHz audio context");
     const [wasm] = await Promise.all([
-      fetch("felucca.wasm?v=ui-0.8.1-preview").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
-      ac.audioWorklet.addModule("worklet.js?v=ui-0.8.1-preview")]);
+      fetch("felucca.wasm?v=ui-0.8.2-preview").then((r) => { if (!r.ok) throw new Error(`felucca.wasm: ${r.status}`); return r.arrayBuffer(); }),
+      ac.audioWorklet.addModule("worklet.js?v=ui-0.8.2-preview")]);
     node = new AudioWorkletNode(ac, "felucca", { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] });
     node.connect(ac.destination);
     let warned = false;
@@ -509,6 +510,7 @@ async function switchOn() {
         else if (m.type === "percussion-result") {
           document.getElementById("percussion-status").textContent = m.message;
           document.getElementById("percussion").disabled = false;
+    document.getElementById("drums").disabled = false;
         }
         else if (m.type === "frame") {
           if (m.fb) drawScreen(m.fb);
@@ -525,6 +527,7 @@ async function switchOn() {
     document.getElementById("start").hidden = true;
     go.textContent = "On";
     document.getElementById("percussion").disabled = false;
+    document.getElementById("drums").disabled = false;
     if (ac.sampleRate !== 44100) console.warn(`Felucca: the browser plays at ${ac.sampleRate} Hz, the pitch is off by ${(1200 * Math.log2(ac.sampleRate / 44100)).toFixed(0)} cents.`);
     syncButtons();
     syncKeys();
@@ -538,6 +541,11 @@ async function switchOn() {
     say("Could not start: " + (err && err.message || err) + ". A current Chrome, Edge, Firefox or Safari should work.");
   }
 }
+document.getElementById("drums").addEventListener("click", async () => {
+  const button=document.getElementById("drums");button.disabled=true;
+  try {const r=await fetch("drums/RDMDRM2.slot");if(!r.ok)throw new Error("Pack unavailable");send({type:"drums",data:await r.arrayBuffer()});}
+  catch(e){document.getElementById("percussion-status").textContent=String(e);button.disabled=false;}
+});
 document.getElementById("percussion").addEventListener("click", async () => {
   const button = document.getElementById("percussion");button.disabled = true;
   try {

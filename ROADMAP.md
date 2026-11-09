@@ -166,3 +166,8 @@ track-four kit browsing and a manual Mac browser installer with backup instructi
 Emulator/native audio and storage checks pass; hardware build fits. Next: musician
 kit audition and a backed-up physical-device installation/test. No claim of physical
 validation or acoustic drum realism.
+
+## 0.8.2 acoustic drum candidate
+
+See [drum sound design, compatibility and validation](docs/drums-0.8.2.md).
+Four audition kits implemented; physical audition and installation remain pending.

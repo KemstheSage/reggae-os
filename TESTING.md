@@ -666,3 +666,8 @@ or per-note repeats. See [scope and limitations](docs/reports/ui-0.7.7-workflow.
 The editor protocol still supplies at most 24 enumeration labels. The last chord
 (6/9, value 24) remains available on the hardware; its label is not transmitted
 by the legacy descriptor response. This update does not change that protocol.
+
+## 0.8.2 acoustic drum candidate
+
+See [drum sound design, compatibility and validation](docs/drums-0.8.2.md).
+Four audition kits implemented; physical audition and installation remain pending.

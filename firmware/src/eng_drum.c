@@ -38,11 +38,11 @@
 
 /* 1.5.6 (Discussion #216): DEEP TIGHT PERC (9..11), kits put together from the five's pieces (drum_voice.c DV_KIT),
  * appended. Firmware before 1.5.6 clamps 9..11 to 8 (77) when it loads them (param_fit) */
-enum { DK_STD, DK_HAND, DK_CYM, DK_HCYM, DK_80, DK_10, DK_66, DK_55, DK_77, DK_DEEP, DK_TIGHT, DK_PERC, DK_COUNT };   /* (stored values) */
+enum { DK_STD, DK_HAND, DK_CYM, DK_HCYM, DK_80, DK_10, DK_66, DK_55, DK_77, DK_DEEP, DK_TIGHT, DK_PERC, DK_ROOTS, DK_DUSTY, DK_LOFI, DK_AIR, DK_COUNT };   /* (stored values) */
 /* the kit a stored KIT value plays: HAND CYM H+CYM (retired after 1.0.4) -> 66 (a conga on TOM), 10 (a cymbal on
  * BELL), 77 (claves on RIM, a cymbal on BELL) */
 static const uint8_t DK_PLAYS[DK_COUNT] = {DK_STD, DK_66, DK_10, DK_77, DK_80, DK_10, DK_66, DK_55, DK_77, DK_DEEP,
-                                           DK_TIGHT, DK_PERC};
+                                           DK_TIGHT, DK_PERC, DK_ROOTS, DK_DUSTY, DK_LOFI, DK_AIR};
 static uint32_t drum_kit_plays(int32_t v) { return DK_PLAYS[clamp(v, 0, DK_COUNT - 1)]; }
 /* the model kits' pieces where a lane plays another than its own (the lane's name): 1 TOM -> CONGA, 2 RIM -> CLAVE,
  * 4 BELL -> CYM */
@@ -52,6 +52,11 @@ static const uint8_t DV_TYPE_LANE[DVT_COUNT] = {
 };
 
 typedef struct {
+    uint32_t sample_phase, sample_env;
+    int32_t sample_filter;
+    uint16_t sample_choke;
+    uint32_t sample_decoded;
+    int32_t sample_pred, sample_idx, sample_prev, sample_cur;
     dv_param_t key;              /* the parameters the coefficients were set up with */
     dv_coef_t c;
     dv_voice_t v;
@@ -70,7 +75,7 @@ ENG_MEM_FITS("DRUM", sizeof(drum_lane_t) * DV_NLANE);
 static uint8_t drum_mute[NPART];
 
 /* 1..3 named as the kit they play: aliases, never shown or offered (EDITOR_PROTOCOL.md: retired values) */
-static const char *const N_DRUM_KIT[] = {"STD", "66", "10", "77", "80", "10", "66", "55", "77", "DEEP", "TIGHT", "PERC"};
+static const char *const N_DRUM_KIT[] = {"STD", "66", "10", "77", "80", "10", "66", "55", "77", "DEEP", "TIGHT", "PERC", "ROOTS", "DUSTY", "LOFI", "AIR"};
 static const char *const N_DRUM_KICK[] = {"PUNCH", "ROUND"};
 
 /* General MIDI notes 35..81 -> the drum (DVT_*; DVT_PUNCH: the kick KICK picks) and semitones from its
@@ -92,6 +97,7 @@ static uint32_t drum_gm(const int16_t *p, uint32_t note, int32_t *st)
     uint32_t n = note >= 35u && note <= 81u ? note : 36u + (note + 120u - 36u) % 12u, t = (uint32_t)DRUM_GM[n - 35u][0];
     uint32_t kit = drum_kit_plays(p[P_E0]);           /* STD, the model kits */
     *st = DRUM_GM[n - 35u][1];
+    if (kit >= DK_ROOTS) kit = kit == DK_AIR ? DK_PERC : DK_DEEP; /* unchanged synthesis for the remaining lanes */
     if (kit >= DK_80)
         return DV_KTYPE(kit - DK_80 + 1u, DV_TYPE_LANE[t]);
     return t == DVT_PUNCH && p[P_E6] > 0 ? DVT_ROUND : t;
@@ -114,6 +120,7 @@ static uint32_t drum_lane(uint32_t note)
 static uint32_t drum_swaps(const track_t *t)
 {
     uint32_t kit = drum_kit_plays(t->p[P_E0]);
+    if (kit >= DK_ROOTS) return kit == DK_AIR ? 1u : 0u;
     return kit >= DK_80 ? DK_SWAP[kit - DK_80] : 0u;
 }
 
@@ -234,8 +241,9 @@ static void drum_note_on(track_t *t, voice_t *v)
     v->env = 1 << 24;                                    /* the ADSR held at full from here, not from drum_amp:
                                                           * a key-off before the first block (zero-length MIDI
                                                           * notes) would end a fresh voice at env 0 in env_tick */
+    L->v.choke=0; /* A newly struck hat is not still choked by its previous hit. */
     dv_trigger(&L->v);
-    if (lane == DV_HATC && K[DV_HATO].v.live)            /* a closed hat chokes the open one */
+    if (lane == DV_HATC && (K[DV_HATO].v.live || K[DV_HATO].v.trig))            /* a closed hat chokes the open one */
         dv_choke(&K[DV_HATO].v);
 }
 
@@ -255,6 +263,61 @@ static int32_t drum_amp(track_t *t, voice_t *v, int32_t adsr)
     }
     v->env = 1 << 24;
     return 32767;
+}
+
+/* One-shot acoustic components. State lives in the existing per-track engine pool.
+ * Old KIT identities never enter this path. No looping, heap allocation or UI work. */
+static int roots_sample_run(track_t *t, voice_t *v, drum_lane_t *L, int32_t *y, uint32_t n)
+{
+    uint32_t lane=(uint32_t)v->s[0], i, kit=t->p[P_E0];
+    if(kit<DK_ROOTS)return 0;
+    /* Ambient keeps synthesized low drum / conga / bell alongside acoustic tops. */
+    if(kit==DK_AIR && (lane==DV_KICK||lane==DV_TOM||lane==DV_BELL))return 0;
+    const smp_zone_t *z=0;
+    for(unsigned k=0;k<SMP_USER_SLOTS;k++) {
+        const smp_user_hdr_t *h=(const smp_user_hdr_t *)smp_user_xip(k);
+        if(usr_nz[k]!=8 || memcmp(h->name,"RDMDRM2",8))continue;
+        for(unsigned j=0;j<8;j++)if(usr_zone[k][j].root16==DRUM_LANE_NOTE[lane]*16)z=&usr_zone[k][j];
+    }
+    if(!z)return 0; /* Missing pack: synthesized kit, never unrelated samples. */
+    if(L->v.trig) {
+        L->sample_phase=0;L->sample_env=65536;L->sample_filter=0;L->sample_choke=64;
+        L->sample_decoded=0;L->sample_pred=L->sample_idx=L->sample_prev=L->sample_cur=0;
+        L->v.trig=0;L->v.live=1;
+    }
+    int pitch=clamp(960+L->st*16+(t->p[P_E1]-64)*3,576,1344);
+    uint32_t inc=pow2_q16(pitch-960)>>1;
+    uint32_t decay=dv_k(20000u+(uint32_t)clamp(t->p[P_E3],0,127)*5000u);
+    int tone=clamp(t->p[P_E2],0,127),snap=clamp(t->p[P_E4],0,127);
+    int alpha=clamp(3000+tone*180+v->vel*40,3000,32000);
+    for(i=0;i<n;i++) {
+        uint32_t at=L->sample_phase>>16,frac=L->sample_phase&65535;
+        if(!L->v.live || at+1>=z->n || !L->sample_env || (L->v.choke&&!L->sample_choke)) {
+            y[i]=0;L->v.live=0;continue;
+        }
+        while(L->sample_decoded<=at+1) {
+            uint32_t pos=L->sample_decoded++,b=SMP_DATA[z->off+(pos>>1)];
+            unsigned code=(pos&1)?b>>4:b&15;
+            int step=IMA_STEP[L->sample_idx],d=step>>3;
+            if(code&4)d+=step;if(code&2)d+=step>>1;if(code&1)d+=step>>2;
+            L->sample_pred=clamp(L->sample_pred+((code&8)?-d:d),-32768,32767);
+            L->sample_idx=clamp(L->sample_idx+IMA_IDX[code&7],0,88);
+            L->sample_prev=L->sample_cur;L->sample_cur=L->sample_pred;
+        }
+        int32_t a=L->sample_prev,b=L->sample_cur;
+        int32_t x=a+(int32_t)(((int64_t)(b-a)*frac)>>16);
+        L->sample_filter+=((x-L->sample_filter)*alpha)>>15;
+        x=L->sample_filter;
+        if(kit==DK_AIR && at<440)x=x*(int32_t)at/440;
+        /* SNAP changes the first ~10 ms, without boosting the sustained hat tail. */
+        if(at<220)x=(x*(96+snap))>>7;
+        x=(int32_t)(((int64_t)x*L->sample_env)>>16);
+        if(L->v.choke)x=x*L->sample_choke--/64;
+        y[i]=x/2;
+        L->sample_env=(L->sample_env*decay)>>15;
+        L->sample_phase+=inc;
+    }
+    return 1;
 }
 
 static void drum_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const vmod_t *m)
@@ -278,6 +341,7 @@ static void drum_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const 
     if (n > CTL)
         n = CTL;
     r = L->role;
+    if (!roots_sample_run(t,v,L,y,n)) {
     dv_default(&k, r);                                   /* the knobs move every lane from its design (64) */
     k.decay = (uint8_t)clamp(k.decay + p[P_E3] - 64, 0, 127);
     k.tone = (uint8_t)clamp(k.tone + p[P_E2] - 64, 0, 127);
@@ -294,6 +358,7 @@ static void drum_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const 
     if (dv_uses_metal(L->c.type) && (L->v.live || L->v.trig))
         dv_metal_run(&L->mb, mb, n);
     dv_run(&L->c, &L->v, mb, y, n);
+    }
     if ((drum_mute[(uint32_t)(t - trk) % NPART] >> ((uint32_t)v->s[0] & (DV_NLANE - 1u))) & 1u)
         return;                                          /* (a muted lane rings on unheard) */
     if (drv > 0) {                                       /* DRV: x1..x4 into the soft clip, the level kept (Q12) */
@@ -322,11 +387,14 @@ static const preset_t DRUM_PRESETS[] = {
     {"DEEP KIT", {DK_DEEP, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 28), PAT(12)},
     {"TIGHT KIT", {DK_TIGHT, 64, 64, 56, 64, 100, 0, 16}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 8), PAT(12)},
     {"PERC KIT", {DK_PERC, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 24), PAT(12)},
-    {"ROOTS KIT", {DK_DEEP, 64, 59, 59, 69, 88, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 0), PAT(0)},
+    {"ROOTS KIT", {DK_ROOTS, 64, 64, 64, 64, 88, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 0), PAT(0)},
     {"SUB MACHINE", {DK_80, 64, 62, 76, 64, 94, 0, 0}, {0,100,127,100}, 0,0, FX(0,0,0,0), PAT(0)},
     {"CIRCUIT KIT", {DK_77, 64, 67, 62, 70, 94, 0, 6}, {0,100,127,100}, 0,0, FX(0,0,0,0), PAT(0)},
     {"BREAK KIT", {DK_55, 66, 70, 49, 78, 104, 0, 9}, {0,100,127,100}, 0,0, FX(0,0,0,0), PAT(0)},
     {"HAND PERC", {DK_PERC, 64, 59, 59, 58, 92, 0, 0}, {0,100,127,100}, 0,0, FX(0,0,0,0), PAT(0)},
+    {"DUSTY HIPHOP", {DK_DUSTY,58,47,48,92,100,0,26}, {0,100,127,100},0,0,FX(0,0,0,0),PAT(0)},
+    {"SOFT LOFI", {DK_LOFI,48,22,74,28,72,0,8}, {0,100,127,100},0,0,FX(0,0,0,0),PAT(0)},
+    {"AMBIENT PERC", {DK_AIR,72,40,108,38,74,0,0}, {0,100,127,100},0,0,FX(0,0,0,24),PAT(0)},
 };
 
 static const engine_t ENG_DRUM = {

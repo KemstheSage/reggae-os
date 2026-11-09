@@ -3,11 +3,14 @@
 set -eu
 cd "$(dirname "$0")/../.."
 test -f build/emu/felucca.wasm
+# Refresh the wrapper when only HTML changed after the WASM build.
+sed -e 's/@VERSION@/v1.6.1/g' -e 's/@PREVIEW@/ (preview)/g' web/emu/index.html > build/emu/index.html
+cp web/emu/worklet.js build/emu/
 cp LICENSE LICENSING.md CREDITS.md SEQUENCER.md build/emu/
 cp -R LICENSES build/emu/
 # The checked-in guide is generated from shared-firmware framebuffer captures.
 mkdir -p build/emu/guide
-cp -R docs/guide/. build/emu/guide/
+cp -R docs/preview-0.8.2/. build/emu/guide/
 # Include the submodule's actual source, not only its gitlink. Build tools included.
 tar --exclude=.git --exclude=__pycache__ -czf build/emu/reggae-os-source.tar.gz \
   firmware tools tests assets web docs .github .gitmodules build.sh LICENSE LICENSES ./*.md
@@ -46,3 +49,12 @@ python3 tools/reggae/percussion-pack.py
 mkdir -p build/emu/percussion
 cp build/reggae/percussion/* build/emu/percussion/
 cp assets/samples-cc0/REGGAE_PERC/ATTRIBUTION.md build/emu/percussion/
+
+python3 tools/reggae/gen-roots-drums.py
+mkdir -p build/emu/drums
+cp build/reggae/drums/RDMDRM2.slot build/emu/drums/
+cp assets/samples-cc0/ROOTS_DRUM/ATTRIBUTION.md build/emu/drums/
+cp docs/drums-preview/index.html build/emu/drums/
+for file in build/reggae/drums/*.wav build/reggae/drums/kit-*.png; do
+  if test -f "$file"; then cp "$file" build/emu/drums/; fi
+done
