@@ -1,0 +1,20 @@
+{
+  "version": "0.8.2",
+  "hardware_tested": false,
+  "flashed": false,
+  "app_bytes": 580000,
+  "files": {
+    "felucca.wasm": {
+      "bytes": 867630,
+      "sha256": "49f7235adbe0f8950f605ee10d2c7fb183f9fc8b4d19d2b686f156e669154656"
+    },
+    "drums/RDMDRM2.slot": {
+      "bytes": 33258,
+      "sha256": "1db08a3b5b0c09fca2beeddb487e109b95e2474bdaf39fbeaf4059436f83dc1e"
+    },
+    "reggae-os-source.tar.gz": {
+      "bytes": 15902246,
+      "sha256": "fceef7980f9b067bd34f2aeab06a5fd6874f2ad56a485e92320a392a8085ea9d"
+    }
+  }
+}
