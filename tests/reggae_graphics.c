@@ -10,7 +10,7 @@ int main(void) {
     web_nor_erase();web_boot();advance(1000);
     for(unsigned i=0;i<NELEM(REGGAE_BANK);i++) {
         char path[80];snprintf(path,sizeof path,"build/reggae/screen-%u.ppm",i);
-        if(i){web_enc(EN_PRESET,1);advance(200);}
+        preset_go(riddim_position(i));advance(200);
         web_midi(0x90,60,100);advance(100);picture(path);
         web_midi(0x80,60,0);advance(1500);
     }
@@ -29,8 +29,8 @@ int main(void) {
     picture("build/reggae/focus-resonance.ppm");
     web_enc(EN_PRESET,1);advance(110);assert(!reggae_focus_active());
     puts("PASS: focused parameter follows panel turns, expires, and clears on preset change");
-    puts("PASS: real rotary changes the illustration; ANIM OFF freezes it; fifteen native screens captured");
-    web_enc(EN_PRESET,1);advance(1500);assert(reggae_index(TSEL)==4);
+    puts("PASS: real rotary changes the illustration; ANIM OFF freezes it; native instrument screens captured");
+    preset_go(riddim_position(4));advance(1500);assert(reggae_index(TSEL)==4);
     /* Render deterministic rest/play frames and inspect the actual mouth. */
     cv_begin(240,124,RG_BG);reggae_art(TSEL,RG_REED,0,1);
     uint16_t closed=cv_px[74*240+174];cv_blit(0,56);
