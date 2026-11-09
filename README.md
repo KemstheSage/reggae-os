@@ -4,6 +4,18 @@ An experimental reggae instrument firmware for the **M-VAVE FM-1**, based on
 [Felucca 1.6.1](https://github.com/hugelton/Felucca). The browser is a hardware
 emulator running the same C synthesis and screen renderer, not the product.
 
+**0.8.1 preview:** 28 instruments grouped by type, a revised Roots Kit and four new
+synthesized kits: Sub Machine, Circuit Kit, Break Kit and Hand Perc. Track four's
+HOME browser now cycles through all five kits. Existing preset identities and
+saved project formats are unchanged. Approved organ/piano/bass audio passes all
+40 golden renders unchanged.
+
+[Emulator](https://kemsthesage.github.io/reggae-os/preview-0.8.1/) ·
+[Kit auditions and controls](https://kemsthesage.github.io/reggae-os/preview-0.8.1/guide/) ·
+[Manual FM-1 update](https://kemsthesage.github.io/reggae-os/update-0.8.1/).
+Read [backup and installation instructions](MANUAL_UPDATE.md) before flashing.
+Hardware cross-build supported; this candidate has not been physically tested.
+
 **0.8.0 / Riddim OS preview:** the library expands from 15 to 24 instruments.
 New pads, leads, plucks, mallets and winds broaden it beyond reggae. The trumpet
 now uses a 1.6-second source one-shot with a smooth fade; flute and sax use short

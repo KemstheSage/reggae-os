@@ -158,3 +158,11 @@ pending the musician returning home. Multi-band EQ is not implemented.
 - 24 curated instruments; nine broader synth, wind and mallet additions.
 - Replaced repetitive built-in trumpet/flute/sax sustain loops with finite faded samples.
 - No hardware flashing; new bank awaits musician evaluation and physical CPU testing.
+
+### 0.8.1 — grouped instruments and drum bank
+
+Implemented presentation-only instrument grouping, five curated drum kits,
+track-four kit browsing and a manual Mac browser installer with backup instructions.
+Emulator/native audio and storage checks pass; hardware build fits. Next: musician
+kit audition and a backed-up physical-device installation/test. No claim of physical
+validation or acoustic drum realism.

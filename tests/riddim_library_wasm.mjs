@@ -6,7 +6,7 @@ for(const preset of [7,15,16,17,18,19,20,21,22,23]){
  const {instance}=await WebAssembly.instantiate(bytes,{}),e=instance.exports;
  e._initialize();e.web_nor_erase();e.web_boot();
  const advance=ms=>{for(let n=0;n<ms*44.1;n+=128)e.web_render(128);};advance(3500);
- for(let k=0;k<preset;k++){e.web_enc(2,1);advance(100);}
+ for(let k=0;k<[0,1,11,2,3,10,5,6,18,4,20,21,7,19,8,15,17,16,22,23,9,13,14,12,24,25,26,27].indexOf(preset);k++){e.web_enc(2,1);advance(100);}
  e.web_midi(0x90,60,96);let energy=0,late=0,peak=0;
  for(let block=0;block<1380;block++){
   e.web_render(128);for(const x of new Float32Array(e.memory.buffer,e.web_out_l(),128)){

@@ -36,7 +36,7 @@ int main(int argc,char **argv) {
     unsigned preset=atoi(argv[1]); int knob=atoi(argv[2]);
     assert(preset<NELEM(REGGAE_BANK) && knob>=-1 && knob<4);
     web_nor_erase(); web_boot(); advance(1000);
-    for(unsigned i=0;i<preset;i++){ web_enc(EN_PRESET,1); advance(100); }
+    for(unsigned i=0;i<preset;i++){ preset_go(riddim_position(i+1)); advance(100); }
     assert(TSEL->eng_req==REGGAE_BANK[preset].engine);
     assert(TSEL->preset==REGGAE_BANK[preset].preset);
     int knob_delta=0;

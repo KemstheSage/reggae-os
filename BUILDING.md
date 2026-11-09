@@ -211,3 +211,12 @@ After the emulator build, `node tests/reggae_performance_wasm.mjs` verifies its
 actual SAMPLE playback and writes `firmware-tour.wav`.
 `node tests/reggae_percussion_upload.mjs` checks non-destructive slot selection,
 CRC rejection and persistent flash reload. Packaging includes the pack/credits.
+
+### Manual update site (0.8.1)
+
+After the firmware and emulator builds, run `sh tools/reggae/package-emulator.sh`
+and `.venv312/bin/python tools/reggae/package-update.py 0.8.1`. This creates
+`build/update-0.8.1/` with firmware, source, licences, backup editor, installer and
+manual instructions. Publish over HTTPS for Web MIDI. It does not open MIDI or
+flash a device. The installer requires the user to acknowledge a downloaded backup.
+See [MANUAL_UPDATE.md](MANUAL_UPDATE.md).

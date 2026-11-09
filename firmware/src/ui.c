@@ -1576,15 +1576,15 @@ static uint32_t preset_all_pos(uint32_t *total)          /* list index of the se
     uint32_t n = NELEM(REGGAE_BANK), u = user_of(TSEL);
     int r = reggae_index(TSEL);
     *total = n + up_count();
-    return u < UP_SLOTS ? n + up_rank(u) : r >= 0 ? (uint32_t)r : *total;
+    return u < UP_SLOTS ? n + up_rank(u) : r >= 0 ? riddim_position((unsigned)r) : *total;
 }
 
 /* list index n (< total) -> engine, *k its preset; NENGINES = user preset, *k its slot */
 static uint32_t preset_all_at(uint32_t n, uint32_t *k)
 {
     if (n < NELEM(REGGAE_BANK)) {
-        *k = REGGAE_BANK[n].preset;
-        return REGGAE_BANK[n].engine;
+        *k = REGGAE_BANK[RIDDIM_ORDER[n]].preset;
+        return REGGAE_BANK[RIDDIM_ORDER[n]].engine;
     }
     *k = up_nth(n - NELEM(REGGAE_BANK));
     return NENGINES;
@@ -1745,15 +1745,12 @@ static void preset_step(int32_t direction)
      * Other pages use the same bank plus saved user sounds. */
     int r = reggae_index(TSEL);
     if (ui.home && !home_levels() && !list_mode()) {
-        /* Performance bank: track four stays the Roots drum kit; other tracks
-         * retain the complete bank. Full editor/user-preset compatibility stays intact. */
-        if (song.sel == 3) {
-            if (r < 0) for (uint32_t i=0;i<NELEM(REGGAE_BANK);i++) if(REGGAE_BANK[i].kind==RG_DRUM) {
-                select_engine(REGGAE_BANK[i].engine);apply_preset(REGGAE_BANK[i].preset);preset_hinted();return;
-            }
-            ui_message("DRUM TRACK / EDIT KIT"); return;
+        unsigned pos=r<0 ? NELEM(RIDDIM_ORDER)-1 : riddim_position((unsigned)r);
+        for(unsigned tries=0;tries<NELEM(RIDDIM_ORDER);tries++) {
+            pos=(pos+(direction>0?1:NELEM(RIDDIM_ORDER)-1))%NELEM(RIDDIM_ORDER);
+            r=RIDDIM_ORDER[pos];
+            if(song.sel!=3 || REGGAE_BANK[r].kind==RG_DRUM)break;
         }
-        r = r < 0 ? 0 : (r + (direction > 0 ? 1 : NELEM(REGGAE_BANK)-1)) % NELEM(REGGAE_BANK);
         if (TSEL->eng_req != REGGAE_BANK[r].engine) select_engine(REGGAE_BANK[r].engine);
         apply_preset(REGGAE_BANK[r].preset);
         preset_hinted();

@@ -8,7 +8,7 @@ int main(int argc,char **argv){
  uint16_t splash[240*240];memcpy(splash,web_fb,sizeof splash);advance(1500);
  assert(!memcmp(splash,web_fb,sizeof splash));picture("build/reggae/riddim-startup.ppm");advance(2000);
  assert(memcmp(splash,web_fb,sizeof splash));
- for(unsigned i=0;i<preset;i++){web_enc(EN_PRESET,1);advance(100);}
+ for(unsigned i=0;i<riddim_position(preset);i++){web_enc(EN_PRESET,1);advance(100);}
  assert(reggae_index(TSEL)==(int)preset);
  char path[128];snprintf(path,sizeof path,"build/reggae/riddim-%u.wav",preset);
  FILE *f=fopen(path,"wb");assert(f);unsigned frames=44100*7;wav_hdr(f,frames);

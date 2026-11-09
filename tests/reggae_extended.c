@@ -6,7 +6,7 @@
 int main(int argc,char **argv) {
     assert(argc==3); unsigned preset=atoi(argv[1]); assert(preset>=4 && preset<NELEM(REGGAE_BANK));
     web_nor_erase();web_boot();advance(1000);
-    for(unsigned i=0;i<preset;i++){web_enc(EN_PRESET,1);advance(100);}
+    for(unsigned i=0;i<riddim_position(preset);i++){web_enc(EN_PRESET,1);advance(100);}
     FILE *f=fopen(argv[2],"wb");assert(f);
     unsigned frames=44100*10;wav_hdr(f,frames);
     int kind=REGGAE_BANK[preset].kind,held[3]={0};

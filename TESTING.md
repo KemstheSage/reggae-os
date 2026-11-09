@@ -646,3 +646,23 @@ WASM SHA-256: `71c1e99ac20f74aa1880e239f91df3d2b0353ef7385e4b896bd18ec1d984f9af`
 
 This slice does **not** implement the requested EQ, compressor, per-note lengths
 or per-note repeats. See [scope and limitations](docs/reports/ui-0.7.7-workflow.md).
+
+## Riddim OS 0.8.1
+
+- `tests/riddim_browser.c`: AddressSanitizer checks browse-order permutation,
+  unchanged engine/preset identities, forward/reverse wrap and track-four kit browsing.
+- `tests/riddim_drums_wasm.mjs`: actual WASM renders all eight lanes of five kits;
+  non-silence, finite output, distinct fingerprints, simultaneous hits, rapid hat
+  retrigger and decay to silence. Native auditions use `tests/reggae_extended.c`.
+- Forty protected organ/piano/bass PCM renders remain byte-identical.
+- `tests/reggae_project_wasm.mjs`: independent A/B slot saves and fresh-instance recall.
+- Web editor descriptor tests use a newly generated `build/host/desc.json` from
+  `tests/descdump.c`; backup and installer tests simulate devices, not physical USB.
+- Hardware build: app 578948 bytes; static RAM 61960/73728; pool 338124/368640.
+  No change to project format, preset IDs, flash addresses or voice allocations.
+- Physical audio, timing, installation and recovery remain HARDWARE UNTESTED for
+  this candidate. No device was flashed during preparation.
+
+The editor protocol still supplies at most 24 enumeration labels. The last chord
+(6/9, value 24) remains available on the hardware; its label is not transmitted
+by the legacy descriptor response. This update does not change that protocol.

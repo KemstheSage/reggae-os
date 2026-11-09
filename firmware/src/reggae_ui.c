@@ -53,6 +53,11 @@ static const char *const RG_CONTROL_NAME[][4]={
     {"TONE","ATTACK","DRIVE","RELEASE"},
     {"BRIGHT","DAMP","STRIKE","RELEASE"},
     {"BODY","BRIGHT","DAMP","RELEASE"},
+    {"TONE","DECAY","SNAP","DRIVE"},
+    {"TONE","DECAY","SNAP","DRIVE"},
+    {"TONE","DECAY","SNAP","DRIVE"},
+    {"TONE","DECAY","SNAP","DRIVE"},
+
 };
 _Static_assert(NELEM(RG_CONTROL_NAME)==NELEM(REGGAE_BANK), "Every instrument needs four control labels");
 static struct {

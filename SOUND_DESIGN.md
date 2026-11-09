@@ -266,3 +266,20 @@ has been sampled. Attribution remains in assets/samples-cc0/ and CREDITS.md.
 
 Organ, piano and bass preset settings were not edited. New synth/mallet panels
 use an animated keyboard-box character; the existing family graphics remain.
+
+## Riddim OS 0.8.1 drum bank
+
+Five curated synthesized kits use the existing fixed-point drum voices. Roots Kit
+now uses the DEEP hybrid with shortened decay and a darker tone, retaining a fuller
+shell/body than the earlier very short TIGHT voicing. Sub Machine uses model 80's
+long sine kick and metal hats. Circuit uses model 77's clap cluster, pulse hats and
+cymbal. Break uses model 55, raised tuning, shorter decay and stronger snare balance.
+Hand Perc uses the PERC hybrid with conga and claves. These are rhythm-box sounds,
+not acoustic drum samples or sampled jungle breaks. All eight lane levels are
+individually set on factory load; saved patches keep their existing values.
+
+Reference reviewed: [SLOOP FM-1](https://github.com/isod89/sloop-fm1), particularly
+its differentiated kits and per-lane level calibration. This release reuses our
+existing Felucca drum DSP with original preset/balance settings; it does not import
+SLOOP's drum engine or sample library. Larger sample kits remain a separate storage
+and licensing task. Sound-quality approval still requires the musician's audition.

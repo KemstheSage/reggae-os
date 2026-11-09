@@ -6,7 +6,7 @@
 int main(int argc,char **argv) {
     assert(argc==3); unsigned preset=atoi(argv[1]); assert(preset<4);
     web_nor_erase(); web_boot(); advance(1000);
-    for(unsigned i=0;i<preset;i++){web_enc(EN_PRESET,1);advance(100);}
+    for(unsigned i=0;i<preset;i++){preset_go(riddim_position(i+1));advance(100);}
     unsigned total=44100*8; FILE *f=fopen(argv[2],"wb");assert(f);wav_hdr(f,total);
     unsigned step=0,next=0,off=0; int held[3]={0};
     for(unsigned frame=0;frame<total;frame+=128) {
